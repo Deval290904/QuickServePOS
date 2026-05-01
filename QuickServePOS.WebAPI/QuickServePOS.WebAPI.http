@@ -1,0 +1,6 @@
+@QuickServePOS.WebAPI_HostAddress = http://localhost:5067
+
+GET {{QuickServePOS.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

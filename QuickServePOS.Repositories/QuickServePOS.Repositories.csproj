@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="IRepositories\" />
+    <Folder Include="IUnitofWork\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="UnitofWork\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.23" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QuickServePOS.DbContext\QuickServePOS.DbContextData.csproj" />
+    <ProjectReference Include="..\QuickServePOS.Models\QuickServePOS.Models.csproj" />
+  </ItemGroup>
+
+</Project>
