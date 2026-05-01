@@ -55,7 +55,7 @@ namespace QuickServePOS.Services.Service
                 {
                     Message = "Invalid credentials",
                     AccessToken = null
-                };
+                }; 
 
             var result = await _signInManager.CheckPasswordSignInAsync(
                 user, dto.Password, lockoutOnFailure: true);
