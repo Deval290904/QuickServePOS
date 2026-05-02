@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewData["Title"] = "_Alert";
+}
+
+@if (TempData["Success"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            showSuccess("@TempData["Success"]");
+        });
+    </script>
+}
+
+@if (TempData["Error"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            showError("@TempData["Error"]");
+        });
+    </script>
+}

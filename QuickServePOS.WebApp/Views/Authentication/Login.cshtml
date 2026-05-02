@@ -1,0 +1,95 @@
+﻿@model QuickServePOS.Models.ViewModel.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml"; // or use _Layout if needed
+}
+
+<div class="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <div class="card-group d-block d-md-flex row">
+
+                    <!-- LOGIN FORM -->
+                    <div class="card col-md-7 p-4 mb-0">
+                        <div class="card-body">
+
+                            <h1>QuickServe POS</h1>
+                            <p class="text-body-secondary">Sign In to your account</p>
+
+                            <form asp-action="Login" method="post">
+
+                                <!-- EMAIL -->
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text">📧</span>
+                                    <input asp-for="Email" class="form-control" placeholder="Email" />
+                                </div>
+                                <div class="mb-2">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <!-- PASSWORD -->
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text">🔒</span>
+                                    <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+                                </div>
+                                <div class="mb-2">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+
+                                <!-- REMEMBER -->
+                                <div class="form-check mb-3">
+                                    <input asp-for="RememberMe" class="form-check-input" />
+                                    <label class="form-check-label">Remember Me</label>
+                                </div>
+                               
+
+                                <!-- BUTTON -->
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button class="btn btn-primary px-4" type="submit">
+                                            Login
+                                        </button>
+                                    </div>
+
+                                    <div class="col-6 text-end">
+                                        <a href="#" class="btn btn-link px-0">
+                                            Forgot password?
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+
+                    <!-- REGISTER SIDE -->
+                    <div class="card col-md-5 text-white bg-primary py-5">
+                        <div class="card-body text-center">
+
+                            <h2>Sign up</h2>
+                            <p>Create your account to manage restaurant.</p>
+
+                            <a class="btn btn-lg btn-outline-light mt-3"
+                               asp-controller="Authentication"
+                               asp-action="Register">
+                                Register Now!
+                            </a>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

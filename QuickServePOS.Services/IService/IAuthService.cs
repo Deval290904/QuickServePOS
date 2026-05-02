@@ -5,6 +5,6 @@ namespace QuickServePOS.Services.IService
     public interface IAuthService
     {
         Task<string> RegisterAsync(RegisterDto dto);
-        Task<AuthResponseDto> LoginAsync(LoginDto dto);
+        Task<LoginApiResponseDto> LoginAsync(LoginDto dto);
     }
 }

@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - QuickServe POS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- CoreUI CSS -->
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/vendors/simplebar/css/simplebar.css" />
+
+</head>
+
+<body>
+
+    @RenderBody()
+
+    <!-- Scripts -->
+    <script src="~/vendors/coreui/js/coreui.bundle.min.js"></script>
+    <script src="~/vendors/simplebar/js/simplebar.min.js"></script>
+
+    <!-- Validation -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Custom Alerts -->
+    <script src="~/js/AlertboxJavascript.js"></script>
+
+    <partial name="_Alert"/>
+   
+
+</body>
+</html>

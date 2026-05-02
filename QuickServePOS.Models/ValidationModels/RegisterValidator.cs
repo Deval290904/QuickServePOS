@@ -14,6 +14,7 @@ namespace QuickServePOS.Models.ValidationModels
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required")
+                .NotEqual("string").WithMessage("Not valid default value")
                 .MinimumLength(3);
 
             RuleFor(x => x.Email)

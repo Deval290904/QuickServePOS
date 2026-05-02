@@ -8,5 +8,8 @@ namespace QuickServePOS.Models.Entities
         public bool IsDeleted { get; set; } = false;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public bool  IsEmailVerified { get; set; } = false;
+
     }
 }

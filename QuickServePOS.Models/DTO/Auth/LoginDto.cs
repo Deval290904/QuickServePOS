@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace QuickServePOS.Models.DTO.Auth
-{
+{ 
     public class LoginDto
     {
         public string Email { get; set; }
         public string Password { get; set; }
     }
-    //public string aceestoken { get; set; }
+    
 }

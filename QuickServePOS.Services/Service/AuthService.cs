@@ -44,41 +44,53 @@ namespace QuickServePOS.Services.Service
             return "Registered Successfully";
         }
 
-        public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
+        public async Task<LoginApiResponseDto> LoginAsync(LoginDto dto)
         {
             var emaillower = dto.Email.ToLower();
 
             var user = await _userManager.FindByEmailAsync(emaillower);
 
             if (user == null)
-                return new AuthResponseDto
+                return new LoginApiResponseDto
                 {
-                    Message = "Invalid credentials",
+                    Message = "Login successful",
+                    Email = null,
+                    Role = null,
                     AccessToken = null
+                   
                 }; 
 
             var result = await _signInManager.CheckPasswordSignInAsync(
                 user, dto.Password, lockoutOnFailure: true);
 
             if (result.IsLockedOut)
-                return new AuthResponseDto
+                return new LoginApiResponseDto
                 {
                     Message = "Account locked. Try later",
+                    Email = null,
+                    Role = null,
                     AccessToken = null
                 };
 
             if (!result.Succeeded)
-                return new AuthResponseDto
+                return new LoginApiResponseDto
                 {
                     Message = "Invalid credentials",
+                    Email = null,
+                    Role = null,
                     AccessToken = null
                 };
 
+            var roles = await _userManager.GetRolesAsync(user);
+            var role = roles.FirstOrDefault();
+
             var token = await GenerateJwtToken(user);
 
-            return new AuthResponseDto
+            return new LoginApiResponseDto
             {
                 Message = "Login successful",
+                Email = user.Email,
+                Role = role,
                 AccessToken = token
             };
         }

@@ -18,7 +18,7 @@ namespace QuickServePOS.Models.ValidationModels
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Password is required")
-                .NotEqual("string").WithMessage("not valid default value");
+                .NotEqual("string").WithMessage("Not valid default value");
         }
     }
 }
