@@ -1,0 +1,21 @@
+﻿:root {
+    --cui-primary: #f7681b;
+    --cui-primary-rgb: 247, 104, 27;
+}
+
+.sidebar {
+    background-color: #303c54 !important;
+}
+.sidebar .nav-link.active {
+    background-color: #f7681b !important;
+    color: #fff !important;
+}
+
+.btn-primary {
+    background-color: #f7681b !important;
+    border-color: #f7681b !important;
+}
+
+.header {
+    border-bottom: 2px solid #f7681b;
+}

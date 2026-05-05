@@ -1,0 +1,72 @@
+﻿@using QuickServePOS.Models.ViewModel
+@model List<StaffListViewModel>
+
+@{
+    bool isTrash = ViewBag.IsTrash ?? false;
+}
+
+@if (!Model.Any())
+{
+    <div class="text-center text-muted">
+        No staff found.
+    </div>
+}
+else
+{
+    <table class="table table-hover table-striped align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>   
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Email</td>
+                    <td>@item.Phone</td>
+                    <td>
+                        <span class="badge bg-info text-dark">
+                            @item.Role
+                        </span>
+                    </td>
+                    <td class="text-center">
+
+                        @if (!isTrash)
+                        {
+                            <!-- ACTIVE MODE -->
+                            <a href="/Admin/Edit/@item.Id" class="btn btn-sm btn-warning">Edit</a>
+
+                            <button class="btn btn-sm btn-danger"
+                                    onclick="DeletehandleAction('/Admin/DeleteStaff', '@item.Id', this, 'delete')">
+                                Delete
+                            </button>
+                        }
+                        else
+                        {
+                            <!-- TRASH MODE -->
+                            <button class="btn btn-sm btn-success"
+                                    onclick="DeletehandleAction('/Admin/RestoreStaff', '@item.Id', this, 'restore')">
+                                Restore
+                            </button>
+
+                            <button class="btn btn-sm btn-danger"
+                                    onclick="DeletehandleAction('/Admin/DeletePermanentStaff', '@item.Id', this, 'permanentDelete')">
+                                Delete Permanently
+                            </button>
+                            
+                        }
+
+                    </td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,123 @@
+﻿
+@{
+    ViewData["Title"] = "_Sidebar";
+}
+
+<div class="sidebar sidebar-dark sidebar-fixed border-end" id="sidebar">
+
+    <!-- BRAND -->
+    <div class="sidebar-header border-bottom">
+        <div class="sidebar-brand">
+            <h5 class="text-white">QuickServe POS</h5>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
+
+        <!-- COMMON DASHBOARD -->
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Dashboard" asp-action="Index">
+                Dashboard
+            </a>
+        </li>
+
+        <!-- ================= ADMIN ================= -->
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="nav-title">Admin</li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="User" asp-action="Index">
+                    User Management
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Admin" asp-action="StaffList">
+                    Staff Management
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Menu" asp-action="Index">
+                    Menu
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Reports" asp-action="Index">
+                    Reports
+                </a>
+            </li>
+        }
+
+        <!-- ================= OWNER ================= -->
+        @if (User.IsInRole("Owner"))
+        {
+            <li class="nav-title">Owner</li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Menu" asp-action="Index">
+                    Menu
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Reports" asp-action="Index">
+                    Sales Report
+                </a>
+            </li>
+        }
+
+        <!-- ================= WAITER ================= -->
+        @if (User.IsInRole("Waiter"))
+        {
+            <li class="nav-title">Waiter</li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Order" asp-action="Index">
+                    New Order
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Table" asp-action="Index">
+                    Tables
+                </a>
+            </li>
+        }
+
+        <!-- ================= CASHIER ================= -->
+        @if (User.IsInRole("Cashier"))
+        {
+            <li class="nav-title">Cashier</li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Billing" asp-action="Index">
+                    Billing
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Payment" asp-action="Index">
+                    Payments
+                </a>
+            </li>
+        }
+
+        <!-- ================= KITCHEN ================= -->
+        @if (User.IsInRole("KitchenStaff"))
+        {
+            <li class="nav-title">Kitchen</li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Kitchen" asp-action="Index">
+                    KDS Screen
+                </a>
+            </li>
+        }
+
+    </ul>
+</div>
+

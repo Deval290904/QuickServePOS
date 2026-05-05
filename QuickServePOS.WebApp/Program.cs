@@ -1,4 +1,9 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using QuickServePOS.Models.ValidationModels.MVCSideValidation;
+using QuickServePOS.Services.AutoMapper;
+using QuickServePOS.WebApp.HttpHelper;
 
 namespace QuickServePOS.WebApp
 {
@@ -10,6 +15,10 @@ namespace QuickServePOS.WebApp
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddFluentValidationClientsideAdapters();
+
+            builder.Services.AddValidatorsFromAssemblyContaining<CreateStaffViewModelValidation>();
 
             builder.Services.AddHttpClient("ApiClient", client =>
             {
@@ -23,6 +32,10 @@ namespace QuickServePOS.WebApp
                     options.LoginPath = "/Authentication/Login";
                     options.AccessDeniedPath = "/Authentication/Login";
                 });
+
+            builder.Services.AddScoped<IApiHelper, ApiHelper>();
+            builder.Services.AddAutoMapper(typeof(AdminMappingProfile));
+
 
             builder.Services.AddAuthorization();
 

@@ -53,6 +53,8 @@ namespace QuickServePOS.WebAPI
             .AddDefaultTokenProviders();
 
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IAdminService, AdminService>();
+          
 
             builder.Services.AddAuthentication()
                 .AddJwtBearer(options =>
@@ -95,8 +97,10 @@ namespace QuickServePOS.WebAPI
             using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
                 await RoleSeeder.SeedRolesAsync(roleManager);
+                await AdminSeeder.SeedAdminAsync(userManager);
             }
 
             app.Run();

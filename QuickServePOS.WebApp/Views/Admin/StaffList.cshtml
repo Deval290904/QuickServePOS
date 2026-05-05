@@ -1,0 +1,51 @@
+﻿@using QuickServePOS.Models.ViewModel
+@model List<StaffListViewModel>
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Staff Management</h3>
+        <button class="btn btn-primary w-25" onclick="OpenModal('/Admin/CreateStaff', 'Add Staff')">+ Add Staff</button>
+
+        <button class="btn btn-danger" onclick="loadTrash()">
+            🗑 Trash
+        </button>
+
+        <button class="btn btn-secondary" onclick="loadActive()">
+            Active
+        </button>
+    </div>
+
+    <!-- Card -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <strong>Staff List</strong>
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive" id="staffTableContainer">
+                <partial name="_StaffTablePartialView" model="Model" />
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="AllModals">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Modal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" id="modalBody">
+            </div>
+
+        </div>
+    </div>
+</div>
