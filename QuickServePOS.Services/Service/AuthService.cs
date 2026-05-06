@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using QuickServePOS.DbContextData.Data;
 using QuickServePOS.Models.DTO.Auth;
@@ -16,15 +14,15 @@ namespace QuickServePOS.Services.Service
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IConfiguration _config;
         private readonly AppDbContext _AppDbcontext;
+        private readonly IJwtService _jwtService;
 
-        public AuthService(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager, IConfiguration config, AppDbContext context)
+        public AuthService(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager, AppDbContext context, IJwtService jwtService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _config = config;
             _AppDbcontext = context;
+            _jwtService = jwtService;
         }
 
         public async Task<string> RegisterAsync(RegisterDto dto)
@@ -98,7 +96,10 @@ namespace QuickServePOS.Services.Service
             var roles = await _userManager.GetRolesAsync(user);
             var role = roles.FirstOrDefault();
 
-            var token = await GenerateJwtToken(user);
+            // GENERATE JWT TOKEN USING JWT SERVICE
+          
+            var token =_jwtService.GenerateToken(user.Id,user.Email!, role!);
+            
 
             return new LoginApiResponseDto
             {
@@ -109,31 +110,5 @@ namespace QuickServePOS.Services.Service
             };
         }
 
-
-        private async Task<string> GenerateJwtToken(ApplicationUser user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Email),
-                new Claim("UserId", user.Id)
-            };
-
-            var roles = await _userManager.GetRolesAsync(user);
-            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
-
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddHours(2),
-                signingCredentials: creds);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
     }
 }
