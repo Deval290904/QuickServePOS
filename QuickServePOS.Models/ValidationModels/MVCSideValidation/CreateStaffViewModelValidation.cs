@@ -24,7 +24,12 @@ namespace QuickServePOS.Models.ValidationModels.MVCSideValidation
                 .Matches(@"^(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{6,}$")
                 .WithMessage("Password must be at least 6 characters and include 1 uppercase letter, 1 number, and 1 special character.");
 
-            RuleFor(x => x.Phone)
+            RuleFor(x => x.ConfirmPassword)
+                .NotEmpty().WithMessage("Confirm password is required")
+                .Equal(x => x.Password)
+                .WithMessage("Passwords do not match");
+
+            RuleFor(x => x.PhoneNumber)
                 .NotEmpty().WithMessage("Phone number is required.")
                 .Matches(@"^[0-9]{10}$").WithMessage("Phone number must be exactly 10 digits.");
 

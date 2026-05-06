@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using QuickServePOS.DbContextData.Data;
 using QuickServePOS.Models.DTO.Auth;
 using QuickServePOS.Models.Entities;
 using QuickServePOS.Services.IService;
@@ -15,12 +17,14 @@ namespace QuickServePOS.Services.Service
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _config;
+        private readonly AppDbContext _AppDbcontext;
 
-        public AuthService(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager, IConfiguration config)
+        public AuthService(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager, IConfiguration config, AppDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _config = config;
+            _AppDbcontext = context;
         }
 
         public async Task<string> RegisterAsync(RegisterDto dto)
@@ -30,7 +34,8 @@ namespace QuickServePOS.Services.Service
             {
                 UserName = emaillower,
                 Email = emaillower,
-                Name = dto.Name
+                Name = dto.Name,
+                PhoneNumber = dto.PhoneNumber
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
@@ -41,6 +46,16 @@ namespace QuickServePOS.Services.Service
             // Default role
             await _userManager.AddToRoleAsync(user, "Customer");
 
+            // Create UserProfile
+            var profile = new UserProfile
+            {
+                UserId = user.Id,
+                JoiningDate = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _AppDbcontext.UserProfiles.AddAsync(profile);
+            await _AppDbcontext.SaveChangesAsync();
             return "Registered Successfully";
         }
 
@@ -53,12 +68,11 @@ namespace QuickServePOS.Services.Service
             if (user == null)
                 return new LoginApiResponseDto
                 {
-                    Message = "Login successful",
+                    Message = "User not found",
                     Email = null,
                     Role = null,
                     AccessToken = null
-                   
-                }; 
+                };
 
             var result = await _signInManager.CheckPasswordSignInAsync(
                 user, dto.Password, lockoutOnFailure: true);

@@ -6,9 +6,12 @@ namespace QuickServePOS.DbContextData.Data
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options): base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
         {
         }
+
+        public DbSet<UserProfile> UserProfiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -16,6 +19,11 @@ namespace QuickServePOS.DbContextData.Data
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasQueryFilter(x => !x.IsDeleted);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(x => x.UserProfile)
+                .WithOne(x => x.User)
+                .HasForeignKey<UserProfile>(x => x.UserId);
         }
     }
 }

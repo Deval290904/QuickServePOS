@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QuickServePOS.DbContextData.Data;
 using QuickServePOS.Models.DTO.Admin;
 using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.Entities;
@@ -10,13 +11,16 @@ public class AdminService : IAdminService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly AppDbContext _AppDbcontext;
 
     public AdminService(
         UserManager<ApplicationUser> userManager,
-        RoleManager<IdentityRole> roleManager)
+        RoleManager<IdentityRole> roleManager,
+        AppDbContext context)
     {
         _userManager = userManager;
         _roleManager = roleManager;
+        _AppDbcontext = context;
     }
 
     public async Task<ApiResponse> CreateStaffAsync(CreateStaffAccountDto model)
@@ -63,7 +67,7 @@ public class AdminService : IAdminService
             UserName = emaillower,
             Email = emaillower,
             Name = model.Name,
-            PhoneNumber = model.Phone
+            PhoneNumber = model.PhoneNumber
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
@@ -79,6 +83,17 @@ public class AdminService : IAdminService
 
         // ✅ Assign role
         await _userManager.AddToRoleAsync(user, model.Role);
+
+        // Create UserProfile
+        var profile = new UserProfile
+        {
+            UserId = user.Id,
+            JoiningDate = DateTime.UtcNow
+        };
+
+        await _AppDbcontext.UserProfiles.AddAsync(profile);
+
+        await _AppDbcontext.SaveChangesAsync();
 
         return new ApiResponse
         {

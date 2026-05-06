@@ -20,7 +20,7 @@ namespace QuickServePOS.Models.ValidationModels
                 .NotEmpty().WithMessage("Password is required")
                 .MinimumLength(6).WithMessage("Password must be at least 6 characters");
 
-            RuleFor(x => x.Phone)
+            RuleFor(x => x.PhoneNumber)
                 .NotEmpty().WithMessage("Phone is required")
                 .Matches(@"^[0-9]{10}$").WithMessage("Phone must be 10 digits");
 
@@ -29,6 +29,11 @@ namespace QuickServePOS.Models.ValidationModels
                 .NotEmpty().WithMessage("Role is required")
                 .Must(role => new[] { "Owner", "Waiter", "Cashier", "KitchenStaff" }.Contains(role))
                 .WithMessage("Invalid role selected");
+
+           RuleFor(x => x.ConfirmPassword)
+                .NotEmpty().WithMessage("Confirm password is required")
+                .Equal(x => x.Password)
+                .WithMessage("Passwords do not match");
         }
     }
 }
