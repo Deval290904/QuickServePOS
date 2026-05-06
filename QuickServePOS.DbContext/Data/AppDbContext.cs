@@ -11,7 +11,9 @@ namespace QuickServePOS.DbContextData.Data
         {
         }
 
-        public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<UserProfileEntity> UserProfiles { get; set; }
+
+        public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,7 +25,7 @@ namespace QuickServePOS.DbContextData.Data
             modelBuilder.Entity<ApplicationUser>()
                 .HasOne(x => x.UserProfile)
                 .WithOne(x => x.User)
-                .HasForeignKey<UserProfile>(x => x.UserId);
+                .HasForeignKey<UserProfileEntity>(x => x.UserId);
         }
     }
 }

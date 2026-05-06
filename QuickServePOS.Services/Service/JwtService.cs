@@ -4,6 +4,7 @@ using QuickServePOS.Models.Configurations;
 using QuickServePOS.Services.IService;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace QuickServePOS.Services.Service
@@ -44,6 +45,15 @@ namespace QuickServePOS.Services.Service
 
         }
 
+        public string GenerateRefreshToken()
+        {
+            var randomBytes = new byte[64];
 
+            using var rng = RandomNumberGenerator.Create();
+
+            rng.GetBytes(randomBytes);
+
+            return Convert.ToBase64String(randomBytes);
+        }
     }
 }

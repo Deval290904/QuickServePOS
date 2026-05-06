@@ -61,7 +61,7 @@ namespace QuickServePOS.Services.Service
             // Create profile if not exists
             if (user.UserProfile == null)
             {
-                user.UserProfile = new UserProfile
+                user.UserProfile = new UserProfileEntity
                 {
                     UserId = user.Id
                 };

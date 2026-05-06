@@ -15,5 +15,7 @@ namespace QuickServePOS.Models.Configurations
         public string Audience { get; set; } = string.Empty;
 
         public int ExpiryMinutes { get; set; }
+
+        public int RefreshTokenExpiryInDays { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace QuickServePOS.Models.Entities
 {
-    public class UserProfile
+    public class UserProfileEntity
     {
         public int Id { get; set; }
 

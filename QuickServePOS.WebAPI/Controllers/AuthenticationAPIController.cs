@@ -5,6 +5,7 @@ using QuickServePOS.Services.IService;
 
 namespace QuickServePOS.WebAPI.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationAPIController : ControllerBase
@@ -32,6 +33,21 @@ namespace QuickServePOS.WebAPI.Controllers
                 return BadRequest(response);
 
             return Ok(response);
+        }
+
+        [HttpPost("Refresh-token")]
+        public async Task<IActionResult> RefreshToken(RefreshTokenRequestDto refreshDto)
+        {
+            var result= await _service.RefreshTokenAsync(refreshDto);
+
+            if(result==null)
+            {
+                return Unauthorized(new
+                {
+                        Message = "Invalid refresh token."
+                });
+            }
+            return Ok(result);
         }
     }
 }

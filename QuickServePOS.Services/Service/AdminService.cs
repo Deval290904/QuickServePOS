@@ -71,7 +71,7 @@ public class AdminService : IAdminService
         await _userManager.AddToRoleAsync(user, model.Role);
 
         // Create UserProfile
-        var profile = new UserProfile
+        var profile = new UserProfileEntity
         {
             UserId = user.Id,
             JoiningDate = DateTime.UtcNow

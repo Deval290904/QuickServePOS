@@ -11,7 +11,7 @@ namespace QuickServePOS.Models.Entities
 
         public bool  IsEmailVerified { get; set; } = false;
 
-        public UserProfile? UserProfile { get; set; }
+        public UserProfileEntity? UserProfile { get; set; }
 
     }
 }

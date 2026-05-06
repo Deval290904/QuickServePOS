@@ -6,5 +6,6 @@ namespace QuickServePOS.Services.IService
     {
         Task<string> RegisterAsync(RegisterDto dto);
         Task<LoginApiResponseDto> LoginAsync(LoginDto dto);
+        Task<LoginApiResponseDto> RefreshTokenAsync(RefreshTokenRequestDto refreshDto);
     }
 }
