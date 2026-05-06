@@ -31,11 +31,8 @@ public class AdminService : IAdminService
 
         if (!roleExists)
         {
-            return new ApiResponse
-            {
-                Success = false,
-                Message = "Role does not exist in system"
-            };
+            return Fail("Role does not exist in system");
+            
         }
 
         // ❌ Prevent creating customer/admin from here (business rule)
@@ -43,22 +40,15 @@ public class AdminService : IAdminService
 
         if (restrictedRoles.Contains(model.Role))
         {
-            return new ApiResponse
-            {
-                Success = false,
-                Message = "This role cannot be created from admin panel"
-            };
+            return Fail("This role cannot be created from admin panel");
         }
 
         // ✅ Check email already exists
         var existingUser = await _userManager.FindByEmailAsync(model.Email);
         if (existingUser != null)
         {
-            return new ApiResponse
-            {
-                Success = false,
-                Message = "User already exists with this email"
-            };
+            return Fail("User already exists with this email");
+            
         }
 
         // ✅ Create user
@@ -74,11 +64,7 @@ public class AdminService : IAdminService
 
         if (!result.Succeeded)
         {
-            return new ApiResponse
-            {
-                Success = false,
-                Message = string.Join(", ", result.Errors.Select(e => e.Description))
-            };
+            return Fail(string.Join(", ", result.Errors.Select(e => e.Description)));
         }
 
         // ✅ Assign role
@@ -95,11 +81,7 @@ public class AdminService : IAdminService
 
         await _AppDbcontext.SaveChangesAsync();
 
-        return new ApiResponse
-        {
-            Success = true,
-            Message = "Staff account created successfully"
-        };
+        return Success("Staff account created successfully");       
     }
 
     public async Task<List<string>> GetStaffRolesAsync()
@@ -136,7 +118,7 @@ public class AdminService : IAdminService
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Phone = user.PhoneNumber,
+                PhoneNumber = user.PhoneNumber,
                 Role = role
             });
         }
@@ -144,24 +126,77 @@ public class AdminService : IAdminService
         return staffList;
     }
 
+    public async Task<UpdateStaffDto?> GetStaffByIdAsync(string userId)
+    {
+        var user = await _userManager.Users
+            .FirstOrDefaultAsync(x => x.Id == userId);
+
+        if (user == null)
+            return null;
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        return new UpdateStaffDto
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
+            Role = roles.FirstOrDefault()
+        };
+    }
+
+    public async Task<ApiResponse> UpdateStaffAsync(UpdateStaffDto model)
+    {
+        var user = await _userManager.FindByIdAsync(model.Id);
+
+        if (user == null)
+            return Fail("User not found");
+
+        // ✅ Duplicate email check
+        var existingUser = await _userManager.FindByEmailAsync(model.Email);
+
+        if (existingUser != null && existingUser.Id != model.Id)
+            return Fail("Email already exists");
+
+        user.Name = model.Name;
+        user.Email = model.Email.ToLower();
+        user.UserName = model.Email.ToLower();
+        user.PhoneNumber = model.PhoneNumber;
+
+        var result = await _userManager.UpdateAsync(user);
+
+        if (!result.Succeeded)
+            return Fail("Update failed");
+
+        // ✅ Update role
+        var currentRoles = await _userManager.GetRolesAsync(user);
+
+        await _userManager.RemoveFromRolesAsync(user, currentRoles);
+
+        await _userManager.AddToRoleAsync(user, model.Role);
+
+        return Success("Staff updated successfully");
+    }
     public async Task<ApiResponse> DeleteStaffAsync(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
 
         if (user == null)
-            return new ApiResponse { Success = false, Message = "User not found" };
+
+            return Fail("User not found");
 
         if (user.IsDeleted)
-            return new ApiResponse { Success = false, Message = "User already deleted" };
+            return Fail("User already deleted");
 
         user.IsDeleted = true;
 
         var result = await _userManager.UpdateAsync(user);
 
         if (!result.Succeeded)
-            return new ApiResponse { Success = false, Message = "Delete failed" };
+            return Fail("Delete failed");
 
-        return new ApiResponse { Success = true, Message = "Staff deleted successfully" };
+        return Success("Staff deleted successfully");
     }
 
     public async Task<ApiResponse> RestoreStaffAsync(string userId)
@@ -169,19 +204,19 @@ public class AdminService : IAdminService
         var user = await _userManager.Users.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == userId);
 
         if (user == null)
-            return new ApiResponse { Success = false, Message = "User not found" };
+            return Fail("User not found");
 
         if (!user.IsDeleted)
-            return new ApiResponse { Success = false, Message = "User is not deleted" };
+            return Fail("User is not deleted");
 
         user.IsDeleted = false;
 
         var result = await _userManager.UpdateAsync(user);
 
         if (!result.Succeeded)
-            return new ApiResponse { Success = false, Message = "Restore failed" };
+            return Fail("Restore failed");
 
-        return new ApiResponse { Success = true, Message = "Staff restored successfully" };
+        return Success("Staff restored successfully");
     }
 
     public async Task<List<StaffListDto>> GetDeletedStaffAsync()
@@ -195,7 +230,6 @@ public class AdminService : IAdminService
 
             var role = roles.FirstOrDefault();
 
-          
             if (role == "Admin" || role == "Customer")
                 continue;
 
@@ -204,7 +238,7 @@ public class AdminService : IAdminService
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Phone = user.PhoneNumber,
+                PhoneNumber = user.PhoneNumber,
                 Role = role
             });
         }
@@ -216,18 +250,70 @@ public class AdminService : IAdminService
         var user = await _userManager.Users.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == userId);
 
         if (user == null)
-            return new ApiResponse { Success = false, Message = "User not found" };
+            return Fail("User not found");
 
         if (!user.IsDeleted)
-            return new ApiResponse { Success = false, Message = "User must be deleted first" };
+            return Fail("User must be deleted first");
 
         var result = await _userManager.DeleteAsync(user);
 
         if (!result.Succeeded)
-            return new ApiResponse { Success = false, Message = "Permanent delete failed" };
+            return Fail("Permanent delete failed");
 
-        return new ApiResponse { Success = true, Message = "Staff permanently deleted" };
+        return Success("Staff permanently deleted");
     }
 
+    public async Task<DashboardStatsDto> GetStaffStatsAsync()
+    {
+        var users = await _userManager.Users
+        .IgnoreQueryFilters()
+        .ToListAsync();
 
+        int total = 0;
+        int active = 0;
+        int deleted = 0;
+
+        foreach (var user in users)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var role = roles.FirstOrDefault();
+
+            // ❌ Skip Admin & Customer
+            if (role == "Admin" || role == "Customer")
+                continue;
+
+            total++;
+
+            if (user.IsDeleted)
+                deleted++;
+            else
+                active++;
+        }
+
+        return new DashboardStatsDto
+        {
+            TotalStaff = total,
+            ActiveStaff = active,
+            DeletedStaff = deleted
+        };
+    }
+
+    private ApiResponse Fail(string message)
+    {
+        return new ApiResponse
+        {
+            Success = false,
+            Message = message
+        };
+    }
+
+        private ApiResponse Success(string message)
+    {
+        return new ApiResponse
+        {
+            Success = true,
+            Message = message
+        };
+    }
 }

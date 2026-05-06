@@ -29,13 +29,13 @@
 
     <div class="mb-3">
         <label>Confirm Password</label>
-        <input asp-for="ConfirmPassword"type="password" class="form-control" />
+        <input asp-for="ConfirmPassword" type="password" class="form-control" />
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label>Role</label>
-        <select asp-for="Role" asp-items="Model.Roles" class="form-control">
+        <select asp-for="Role" asp-items="Model.Roles" class="form-select">
             <option value="">-- Select Role --</option>
         </select>
         <span asp-validation-for="Role" class="text-danger"></span>

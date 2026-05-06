@@ -1,0 +1,48 @@
+﻿@using QuickServePOS.Models.ViewModel
+@model DashboardStatsViewModel
+
+<div class="row mb-4">
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+
+                <h6 class="text-muted">Total Staff</h6>
+
+                <h2 class="fw-bold">
+                    @Model.TotalStaff
+                </h2>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+
+                <h6 class="text-muted">Active Staff</h6>
+
+                <h2 class="fw-bold text-success">
+                    @Model.ActiveStaff
+                </h2>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+
+                <h6 class="text-muted">Deleted Staff</h6>
+
+                <h2 class="fw-bold text-danger">
+                    @Model.DeletedStaff
+                </h2>
+
+            </div>
+        </div>
+    </div>
+
+</div>

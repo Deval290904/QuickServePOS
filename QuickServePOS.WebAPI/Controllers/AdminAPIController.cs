@@ -36,11 +36,34 @@ namespace QuickServePOS.WebAPI.Controllers
             return Ok(roles);
         }
 
+
         [HttpGet("StaffList")]
         public async Task<IActionResult> GetStaffList()
         {
             var staffList = await _adminService.GetStaffListAsync();
             return Ok(staffList);
+        }
+
+        [HttpGet("Get-Staff/{id}")]
+        public async Task<IActionResult> GetStaff(string id)
+        {
+            var result = await _adminService.GetStaffByIdAsync(id);
+
+            if (result == null)
+                return NotFound();
+
+            return Ok(result);
+        }
+
+        [HttpPut("Update-Staff")]
+        public async Task<IActionResult> UpdateStaff(UpdateStaffDto model)
+        {
+            var result = await _adminService.UpdateStaffAsync(model);
+
+            if (!result.Success)
+                return BadRequest(result);
+
+            return Ok(result);
         }
 
         [HttpDelete("Delete-Staff/{id}")]
@@ -80,6 +103,14 @@ namespace QuickServePOS.WebAPI.Controllers
                 return BadRequest(new { success = false, message = result.Message });
 
             return Ok(new { success = true, message = result.Message });
+        }
+
+        [HttpGet("Staff-Stats")]
+        public async Task<IActionResult> GetStaffStats()
+        {
+            var result = await _adminService.GetStaffStatsAsync();
+
+            return Ok(result);
         }
     }
 }

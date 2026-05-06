@@ -7,66 +7,137 @@
 
 @if (!Model.Any())
 {
-    <div class="text-center text-muted">
-        No staff found.
+    <div class="text-center py-5">
+
+        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486740.png"
+             width="120" class="mb-3" />
+
+        <h5 class="fw-bold">No Staff Found</h5>
+
+        <p class="text-muted mb-0">
+            Staff members will appear here.
+        </p>
+
     </div>
 }
 else
 {
-    <table class="table table-hover table-striped align-middle">
-        <thead class="table-dark">
+    <table class="table table-hover align-middle">
+
+        <thead class="table-light">
             <tr>
-                <th>Name</th>
+                <th class="ps-3">Staff</th>
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Role</th>
                 <th class="text-center">Actions</th>
             </tr>
-        </thead>   
+        </thead>
 
         <tbody>
+
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Email</td>
-                    <td>@item.Phone</td>
-                    <td>
-                        <span class="badge bg-info text-dark">
-                            @item.Role
-                        </span>
+
+                    <!-- STAFF INFO -->
+                    <td class="ps-3">
+
+                        <div class="d-flex align-items-center">
+
+                            <!-- Avatar -->
+                            <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center me-3"
+                                 style="width:40px;height:40px;font-weight:600;">
+
+                                @(item.Name?.Substring(0, 1).ToUpper())
+
+                            </div>
+
+                            <div>
+                                <div class="fw-semibold">
+                                    @item.Name
+                                </div>
+
+                                <small class="text-muted">
+                                    Staff Member
+                                </small>
+                            </div>
+
+                        </div>
+
                     </td>
+
+                    <!-- EMAIL -->
+                    <td>
+                        @item.Email
+                    </td>
+
+                    <!-- PHONE -->
+                    <td>
+                        @item.PhoneNumber
+                    </td>
+
+                    <!-- ROLE -->
+                    <td>
+
+                        <span class="badge rounded-pill px-3 py-2
+                                    @(item.Role == "Owner" ? "bg-primary-subtle text-primary" :
+                                                            item.Role == "Cashier" ? "bg-success-subtle text-success" :
+                                                            item.Role == "KitchenStaff" ? "bg-warning-subtle text-dark" :
+                                                            "bg-info-subtle text-info")">
+                    @item.Role
+
+                        </span>
+
+                    </td>
+
+                    <!-- ACTIONS -->
                     <td class="text-center">
 
                         @if (!isTrash)
-                        {
+                         {
                             <!-- ACTIVE MODE -->
-                            <a href="/Admin/Edit/@item.Id" class="btn btn-sm btn-warning">Edit</a>
 
-                            <button class="btn btn-sm btn-danger"
+                            <button class="btn btn-sm btn-light border me-1 shadow-sm"
+                                    onclick="OpenModal('/Admin/EditStaff/@item.Id', 'Edit Staff')">
+
+                                <i class="fa fa-pen text-warning"></i>
+
+                            </button>
+
+                            <button class="btn btn-sm btn-light border shadow-sm"
                                     onclick="DeletehandleAction('/Admin/DeleteStaff', '@item.Id', this, 'delete')">
-                                Delete
+
+                                <i class="fa fa-trash text-danger"></i>
+
                             </button>
                         }
                         else
                         {
                             <!-- TRASH MODE -->
-                            <button class="btn btn-sm btn-success"
+
+                            <button class="btn btn-sm btn-success me-1 shadow-sm"
                                     onclick="DeletehandleAction('/Admin/RestoreStaff', '@item.Id', this, 'restore')">
+
+                                <i class="fa fa-rotate-left me-1"></i>
                                 Restore
+
                             </button>
 
-                            <button class="btn btn-sm btn-danger"
+                            <button class="btn btn-sm btn-dark shadow-sm"
                                     onclick="DeletehandleAction('/Admin/DeletePermanentStaff', '@item.Id', this, 'permanentDelete')">
-                                Delete Permanently
+
+                                <i class="fa fa-trash-can me-1"></i>
+                                Permanent Delete
+
                             </button>
-                            
                         }
 
                     </td>
-                    
+
                 </tr>
             }
+
         </tbody>
     </table>
 }

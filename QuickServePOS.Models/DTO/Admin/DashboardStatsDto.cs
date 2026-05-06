@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace QuickServePOS.Models.DTO.Admin
 {
-    public class CreateStaffApiResponse
+    public class DashboardStatsDto
     {
-        public bool IsSuccess { get; set; }
-        public string Message { get; set; }
+        public int TotalStaff { get; set; }
+
+        public int ActiveStaff { get; set; }
+
+        public int DeletedStaff { get; set; }
     }
 }

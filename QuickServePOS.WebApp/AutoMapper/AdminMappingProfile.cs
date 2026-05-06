@@ -14,6 +14,8 @@ namespace QuickServePOS.Services.AutoMapper
         public AdminMappingProfile()
         {
             CreateMap<CreateStaffViewModel, CreateStaffAccountDto>().ReverseMap();
+
+            CreateMap<UpdateStaffViewModel, UpdateStaffDto>().ReverseMap();
         }
     }
 }

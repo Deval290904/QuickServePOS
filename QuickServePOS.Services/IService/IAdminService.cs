@@ -19,5 +19,11 @@ namespace QuickServePOS.Services.IService
         Task<List<StaffListDto>> GetDeletedStaffAsync();
 
         Task<ApiResponse> PermanentDeleteStaffAsync(string userId);
+
+        Task<DashboardStatsDto> GetStaffStatsAsync();
+
+        Task<UpdateStaffDto?> GetStaffByIdAsync(string userId);
+
+        Task<ApiResponse> UpdateStaffAsync(UpdateStaffDto model);
     }
 }

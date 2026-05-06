@@ -52,6 +52,18 @@ namespace QuickServePOS.WebApp.HttpHelper
             return new ApiResponse { Success = result?.Success ?? false, Message = result?.Message ?? "Deleted" };
         }
 
+        public async Task<ApiResponse> PutAsync<T>(string url, T data)
+        {
+            var response = await _httpClient.PutAsJsonAsync(url, data);
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                return new ApiResponse { Success = false, Message = error };
+            }
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse>();
+            return new ApiResponse { Success = result?.Success ?? false, Message = result?.Message ?? "Updated" };
+        }
+
         public async Task<ApiResponse> PutAsync(string url)
         {
             var response = await _httpClient.PutAsync(url, null);

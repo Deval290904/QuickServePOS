@@ -23,8 +23,6 @@ namespace QuickServePOS.WebApp.Controllers
         {
             return View();
         }
-
-        // 🔹 Common method (REMOVE duplication)
         private async Task<List<SelectListItem>> GetRolesAsync()
         {
             var roles = await _apiHelper.GetAsync<List<string>>("AdminAPI/RolesList") ?? new List<string>();
@@ -64,17 +62,18 @@ namespace QuickServePOS.WebApp.Controllers
             {
                 return Json(new { success = false, message = result.Message });
             }
-            //TempData["Success"] = "Staff created successfully";
-
             return Json(new { success = true, message = "Staff created successfully" });
 
-            // return RedirectToAction("Index","Admin");
         }
 
         [HttpGet]
         public async Task<IActionResult> StaffList()
         {
             var data = await _apiHelper.GetAsync<List<StaffListViewModel>>("AdminAPI/StaffList");
+
+            var stats = await _apiHelper.GetAsync<DashboardStatsViewModel>("AdminAPI/Staff-Stats");
+
+            ViewBag.Stats = stats;
 
             return View(data ?? new List<StaffListViewModel>());
         }
@@ -85,6 +84,35 @@ namespace QuickServePOS.WebApp.Controllers
             var data = await _apiHelper.GetAsync<List<StaffListViewModel>>("AdminAPI/StaffList");
             ViewBag.IsTrash = false;
             return PartialView("_StaffTablePartialView", data ?? new List<StaffListViewModel>());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditStaff(string id)
+        {
+            var data = await _apiHelper.GetAsync<UpdateStaffViewModel>($"AdminAPI/Get-Staff/{id}");
+
+            if (data == null)
+                return NotFound();
+
+            data.Roles = await GetRolesAsync();
+
+            return PartialView("_EditStaffPartialView", data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditStaff(UpdateStaffViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                vm.Roles = await GetRolesAsync();
+                return PartialView("_EditStaffPartialView", vm);
+            }
+
+           var dto= _mapper.Map<UpdateStaffDto>(vm);
+
+            var result = await _apiHelper.PutAsync("AdminAPI/Update-Staff", dto);
+
+            return Json(new{success = true,message = result.Message});
         }
 
         [HttpPost]
@@ -126,6 +154,13 @@ namespace QuickServePOS.WebApp.Controllers
                 return Json(new { success = false, message = result.Message });
 
             return Json(new { success = result.Success, message = result.Message });
+        }
+
+        public async Task<IActionResult> GetStaffStats()
+        {
+            var data = await _apiHelper.GetAsync<DashboardStatsViewModel>("AdminAPI/Staff-Stats");
+
+            return PartialView("_StaffStatsPartialView", data);
         }
     }
 }

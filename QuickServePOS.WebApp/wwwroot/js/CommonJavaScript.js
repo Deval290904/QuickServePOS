@@ -102,7 +102,7 @@ function bindModalForm() {
                         title: "Success",
                         text: result.message || "Saved successfully!"
                     }).then(() => {
-                        loadActive();
+                        refreshDashboard();
                     });
 
                 } else {
@@ -137,7 +137,21 @@ function loadTrash() {
         });
 }
 
+function reloadStats() {
 
+    fetch('/Admin/GetStaffStats')
+        .then(res => res.text())
+        .then(html => {
+
+            document.getElementById("statsContainer").innerHTML = html;
+
+        });
+}
+
+function refreshDashboard() {
+    loadActive();
+    reloadStats();
+}
 
 function DeletehandleAction(url, id, btn, actionType) {
 
@@ -186,6 +200,7 @@ function DeletehandleAction(url, id, btn, actionType) {
                         title: successTitle,
                         text: result.message || "Success"
                     });
+                    refreshDashboard();
 
                     // ✅ Remove row animation
                     let row = btn.closest("tr");
