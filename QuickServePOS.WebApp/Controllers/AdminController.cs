@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using QuickServePOS.Models.DTO.Admin;
@@ -8,6 +9,7 @@ using System.Net.Http.Json;
 
 namespace QuickServePOS.WebApp.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IApiHelper _apiHelper;

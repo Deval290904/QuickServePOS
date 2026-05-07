@@ -10,7 +10,7 @@
                 <h6 class="text-muted">Total Staff</h6>
 
                 <h2 class="fw-bold">
-                    @Model.TotalStaff
+                    @(Model?.TotalStaff ?? 0)
                 </h2>
 
             </div>
@@ -24,7 +24,7 @@
                 <h6 class="text-muted">Active Staff</h6>
 
                 <h2 class="fw-bold text-success">
-                    @Model.ActiveStaff
+                    @(Model?.ActiveStaff ?? 0)
                 </h2>
 
             </div>
@@ -38,7 +38,7 @@
                 <h6 class="text-muted">Deleted Staff</h6>
 
                 <h2 class="fw-bold text-danger">
-                    @Model.DeletedStaff
+                    @(Model?.DeletedStaff ?? 0)
                 </h2>
 
             </div>

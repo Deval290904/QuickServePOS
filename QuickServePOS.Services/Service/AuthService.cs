@@ -111,7 +111,7 @@ namespace QuickServePOS.Services.Service
             {
                 RefreshToken = refreshToken,
                 UserId = user.Id,
-                ExpiryDate = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpiryInDays),
+                ExpiryDate = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpiryInMinutes),
                 CreatedAt = DateTime.UtcNow,
                 IsRevoked = false
             };
@@ -164,7 +164,7 @@ namespace QuickServePOS.Services.Service
             {
                 RefreshToken = newRefreshToken,
                 UserId = user.Id,
-                ExpiryDate = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpiryInDays),
+                ExpiryDate = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpiryInMinutes),
                 CreatedAt = DateTime.UtcNow,
                 IsRevoked = false
             };

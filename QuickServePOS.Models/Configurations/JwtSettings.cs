@@ -16,6 +16,6 @@ namespace QuickServePOS.Models.Configurations
 
         public int ExpiryMinutes { get; set; }
 
-        public int RefreshTokenExpiryInDays { get; set; }
+        public int RefreshTokenExpiryInMinutes { get; set; }
     }
 }

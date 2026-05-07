@@ -1,30 +1,68 @@
-﻿using QuickServePOS.Models.DTO.Common;
+﻿using NuGet.Common;
+using QuickServePOS.Models.DTO.Common;
+using QuickServePOS.WebApp.Services;
+using System.Net.Http.Headers;
 
 namespace QuickServePOS.WebApp.HttpHelper
 {
     public class ApiHelper : IApiHelper
     {
         private readonly HttpClient _httpClient;
+        private readonly ITokenWebService _tokenWebService;
 
-        public ApiHelper(IHttpClientFactory httpClientFactory)
+        public ApiHelper(IHttpClientFactory httpClientFactory,ITokenWebService tokenWebService)
         {
             _httpClient = httpClientFactory.CreateClient("ApiClient");
+            _tokenWebService = tokenWebService;
+        }
+
+        private async Task<bool> AddTokenAsync()
+        {
+            var token = await _tokenWebService.GetValidAccessTokenAsync();
+            if (string.IsNullOrEmpty(token))
+            {
+                return false;
+            }
+
+           
+
+            _httpClient.DefaultRequestHeaders.Authorization =new AuthenticationHeaderValue( "Bearer",token);
+
+            return true;
         }
 
         // 🔹 GET
         public async Task<T?> GetAsync<T>(string url)
         {
-            var response = await _httpClient.GetAsync(url);
+            await AddTokenAsync();
+
+            var response =
+                await _httpClient.GetAsync(url);
+
+            // TOKEN EXPIRED DURING REQUEST
+
+            if (response.StatusCode ==
+                System.Net.HttpStatusCode.Unauthorized)
+            {
+                await AddTokenAsync();
+
+                response =
+                    await _httpClient.GetAsync(url);
+            }
 
             if (!response.IsSuccessStatusCode)
+            {
                 return default;
+            }
 
-            return await response.Content.ReadFromJsonAsync<T>();
+            return await response.Content
+                .ReadFromJsonAsync<T>();
         }
 
         // 🔹 POST
         public async Task<ApiResponse> PostAsync<T>(string url, T data)
         {
+            await AddTokenAsync();
             var response = await _httpClient.PostAsJsonAsync(url, data);
 
             if (!response.IsSuccessStatusCode)
@@ -39,6 +77,7 @@ namespace QuickServePOS.WebApp.HttpHelper
 
         public async Task<ApiResponse> DeleteAsync(string url)
         {
+            await AddTokenAsync();
             var response = await _httpClient.DeleteAsync(url);
 
             if (!response.IsSuccessStatusCode)
@@ -54,6 +93,7 @@ namespace QuickServePOS.WebApp.HttpHelper
 
         public async Task<ApiResponse> PutAsync<T>(string url, T data)
         {
+            await AddTokenAsync();
             var response = await _httpClient.PutAsJsonAsync(url, data);
             if (!response.IsSuccessStatusCode)
             {
@@ -66,6 +106,7 @@ namespace QuickServePOS.WebApp.HttpHelper
 
         public async Task<ApiResponse> PutAsync(string url)
         {
+            await AddTokenAsync();
             var response = await _httpClient.PutAsync(url, null);
             if (!response.IsSuccessStatusCode)
             {

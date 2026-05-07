@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace QuickServePOS.WebApp.Controllers
 {
-   
+    [Authorize]
     public class DashBoardController : Controller
     {
         public IActionResult Index()

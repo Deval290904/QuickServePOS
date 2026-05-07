@@ -1,9 +1,12 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.DependencyInjection;
 using QuickServePOS.Models.ValidationModels.MVCSideValidation;
 using QuickServePOS.Services.AutoMapper;
+using QuickServePOS.WebApp.Filter;
 using QuickServePOS.WebApp.HttpHelper;
+using QuickServePOS.WebApp.Services;
 
 namespace QuickServePOS.WebApp
 {
@@ -14,12 +17,17 @@ namespace QuickServePOS.WebApp
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<RefreshTokenFilter>();
+            });
+
             builder.Services.AddFluentValidationAutoValidation();
             builder.Services.AddFluentValidationClientsideAdapters();
 
             builder.Services.AddValidatorsFromAssemblyContaining<CreateStaffViewModelValidation>();
 
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddHttpClient("ApiClient", client =>
             {
                 client.BaseAddress = new Uri("https://localhost:7290/api/"); // your API URL
@@ -33,10 +41,25 @@ namespace QuickServePOS.WebApp
                     options.AccessDeniedPath = "/Authentication/Login";
                 });
 
+            builder.Services.AddScoped<RefreshTokenFilter>();
             builder.Services.AddScoped<IApiHelper, ApiHelper>();
+            builder.Services.AddScoped<ITokenWebService, TokenWebService>();
             builder.Services.AddAutoMapper(typeof(AdminMappingProfile));
 
 
+            builder.Services.AddDistributedMemoryCache();
+
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(2);
+                options.Cookie.Name= "QuickServePOS.Session";
+
+                options.Cookie.HttpOnly = true;
+
+                options.Cookie.IsEssential = true;
+            });
+
+           
             builder.Services.AddAuthorization();
 
             var app = builder.Build();
@@ -54,7 +77,7 @@ namespace QuickServePOS.WebApp
 
             app.UseRouting();
 
-       
+            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
 
