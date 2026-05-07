@@ -18,7 +18,8 @@ namespace QuickServePOS.Models.ValidationModels
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Password is required")
-                .MinimumLength(6).WithMessage("Password must be at least 6 characters");
+                .Matches(@"^(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{6,}$")
+                .WithMessage("Password must be at least 6 characters and include 1 uppercase letter, 1 number, and 1 special character.");
 
             RuleFor(x => x.PhoneNumber)
                 .NotEmpty().WithMessage("Phone is required")

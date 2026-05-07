@@ -172,7 +172,7 @@ namespace QuickServePOS.WebAPI
             builder.Services.Configure<DataProtectionTokenProviderOptions>(
                 options =>
                 {
-                    options.TokenLifespan = TimeSpan.FromHours(24);
+                    options.TokenLifespan = TimeSpan.FromMinutes(30);
                 });
 
             // =========================================================

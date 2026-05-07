@@ -69,25 +69,19 @@ namespace QuickServePOS.Services.Service
                 return new ApiResponse
                 {
                     Success = false,
-                    Message = string.Join(
-                        ", ",
-                        result.Errors.Select(x => x.Description))
+                    Message = string.Join(", ",result.Errors.Select(x => x.Description))
                 };
             }
 
             // DEFAULT ROLE
 
-            await _userManager.AddToRoleAsync(
-                user,
-                "Customer");
+            await _userManager.AddToRoleAsync( user,"Customer");
 
             // GENERATE EMAIL TOKEN
 
-            var token = await _userManager
-                .GenerateEmailConfirmationTokenAsync(user);
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var encodedToken =
-                Uri.EscapeDataString(token);
+            var encodedToken =Uri.EscapeDataString(token);
 
             var confirmationLink =
                 $"https://localhost:7290/api/AuthenticationAPI/confirm-email?userId={user.Id}&token={encodedToken}";
@@ -105,8 +99,7 @@ namespace QuickServePOS.Services.Service
             return new ApiResponse
             {
                 Success = true,
-                Message =
-                    "Registration successful. Please confirm your email."
+                Message = "Registration successful. Please confirm your email."
             };
         }
 
@@ -361,6 +354,128 @@ namespace QuickServePOS.Services.Service
                         </p>
 
                     </div>";
+        }
+
+        public async Task<ApiResponse> ForgotPasswordAsync(ForgotPasswordDto dto)
+        {
+            var emailLower = dto.Email.ToLower();
+
+            var user = await _userManager.FindByEmailAsync(emailLower);
+
+            if (user == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message =  "Email not found"
+                };
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var encodedToken =Uri.EscapeDataString(token);
+
+            var resetLink =$"https://localhost:7290/AuthenticationAPI/ResetPassword?email={user.Email}&token={encodedToken}";
+
+            var body = GenerateForgotPasswordEmailDesign(user.Name,resetLink);
+
+            await _emailService.SendEmailAsync(user.Email!,
+                "Reset Password",
+                body);
+
+            return new ApiResponse
+            {
+                Success = true,
+                Message = "Password reset link sent successfully"
+            };
+        }
+
+        public async Task<ApiResponse> ResetPasswordAsync(ResetPasswordDto dto)
+        {
+           
+            var user = await _userManager.FindByEmailAsync(dto.Email.ToLower());
+
+            if (user == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid request."
+                };
+            }
+            // DECODE TOKEN
+            var decodedToken =Uri.UnescapeDataString(dto.Token);
+
+            var result = await _userManager.ResetPasswordAsync(
+                    user,
+                    decodedToken,
+                    dto.NewPassword
+            );
+
+            if (!result.Succeeded)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid or expired token."
+                };
+            }
+
+            return new ApiResponse
+            {
+                Success = true,
+                Message = "Password reset successful."
+            };
+        }
+
+        private string GenerateForgotPasswordEmailDesign(string name,string resetLink)
+        {
+            return $@"
+            <div style='
+                font-family:Arial,sans-serif;
+                max-width:500px;
+                margin:auto;
+                padding:20px;
+                border:1px solid #ddd;
+                border-radius:8px;'>
+
+                <h2 style='color:#f7681b;'>
+                    QuickServe POS
+                </h2>
+
+                <p>Hello <b>{name}</b>,</p>
+
+                <p>
+                    We received a request to reset
+                    your password.
+                </p>
+
+                <div style='margin:30px 0;'>
+
+                    <a href='{resetLink}'
+                       style='
+                        background:#f7681b;
+                        color:white;
+                        padding:12px 20px;
+                        text-decoration:none;
+                        border-radius:5px;'>
+
+                        Reset Password
+
+                    </a>
+
+                </div>
+
+                <p style='font-size:14px;color:gray;'>
+                    This link expires in 30 minutes.
+                </p>
+
+                <p style='font-size:14px;color:gray;'>
+                    If you did not request this,
+                    please ignore this email.
+                </p>
+
+            </div>";
         }
     }
 }

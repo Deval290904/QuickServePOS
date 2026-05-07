@@ -8,7 +8,9 @@ namespace QuickServePOS.Services.IService
         Task<ApiResponse> RegisterAsync(RegisterDto dto);
         Task<LoginApiResponseDto> LoginAsync(LoginDto dto);
         Task<LoginApiResponseDto> RefreshTokenAsync(RefreshTokenRequestDto refreshDto);
-
         Task<ApiResponse> ConfirmEmailAsync(string userId, string token);
+        Task<ApiResponse> ForgotPasswordAsync(ForgotPasswordDto dto);
+
+        Task<ApiResponse> ResetPasswordAsync(ResetPasswordDto dto);
     }
 }
