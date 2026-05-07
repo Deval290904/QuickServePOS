@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using QuickServePOS.DbContextData.Data;
 using QuickServePOS.Models.Configurations;
 using QuickServePOS.Models.DTO.Auth;
+using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.Entities;
 using QuickServePOS.Services.IService;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,46 +21,93 @@ namespace QuickServePOS.Services.Service
         private readonly AppDbContext _AppDbcontext;
         private readonly IJwtService _jwtService;
         private readonly JwtSettings _jwtSettings;
+        private readonly IEmailService _emailService;
 
-        public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, AppDbContext context, IJwtService jwtService, IOptions<JwtSettings> jwtSettings)
+        public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, AppDbContext context, IJwtService jwtService, IOptions<JwtSettings> jwtSettings, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _AppDbcontext = context;
             _jwtService = jwtService;
             _jwtSettings = jwtSettings.Value;
+            _emailService = emailService;
         }
 
-        public async Task<string> RegisterAsync(RegisterDto dto)
+        public async Task<ApiResponse> RegisterAsync(RegisterDto dto)
         {
-            var emaillower = dto.Email.ToLower();
+            var emailLower = dto.Email.ToLower();
+
+            // CHECK EMAIL EXISTS
+
+            var existingUser = await _userManager
+                .FindByEmailAsync(emailLower);
+
+            if (existingUser != null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Email already exists."
+                };
+            }
+
             var user = new ApplicationUser
             {
-                UserName = emaillower,
-                Email = emaillower,
+                UserName = emailLower,
+                Email = emailLower,
                 Name = dto.Name,
                 PhoneNumber = dto.PhoneNumber
             };
 
-            var result = await _userManager.CreateAsync(user, dto.Password);
+            var result = await _userManager
+                .CreateAsync(user, dto.Password);
+
+            // CREATE FAILED
 
             if (!result.Succeeded)
-                return string.Join(", ", result.Errors.Select(x => x.Description));
-
-            // Default role
-            await _userManager.AddToRoleAsync(user, "Customer");
-
-            // Create UserProfile
-            var profile = new UserProfileEntity
             {
-                UserId = user.Id,
-                JoiningDate = DateTime.UtcNow,
-                CreatedAt = DateTime.UtcNow
-            };
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = string.Join(
+                        ", ",
+                        result.Errors.Select(x => x.Description))
+                };
+            }
 
-            await _AppDbcontext.UserProfiles.AddAsync(profile);
-            await _AppDbcontext.SaveChangesAsync();
-            return "Registered Successfully";
+            // DEFAULT ROLE
+
+            await _userManager.AddToRoleAsync(
+                user,
+                "Customer");
+
+            // GENERATE EMAIL TOKEN
+
+            var token = await _userManager
+                .GenerateEmailConfirmationTokenAsync(user);
+
+            var encodedToken =
+                Uri.EscapeDataString(token);
+
+            var confirmationLink =
+                $"https://localhost:7290/api/AuthenticationAPI/confirm-email?userId={user.Id}&token={encodedToken}";
+
+            var body = GenerateConfirmationEmailDesign(
+                    user.Name,
+                    confirmationLink);
+
+
+            await _emailService.SendEmailAsync(
+                user.Email!,
+                "Confirm Your Email",
+                body);
+
+            return new ApiResponse
+            {
+                Success = true,
+                Message =
+                    "Registration successful. Please confirm your email."
+            };
         }
 
         public async Task<LoginApiResponseDto> LoginAsync(LoginDto dto)
@@ -72,6 +120,15 @@ namespace QuickServePOS.Services.Service
                 return new LoginApiResponseDto
                 {
                     Message = "User not found",
+                    Email = null,
+                    Role = null,
+                    AccessToken = null
+                };
+
+            if (!user.EmailConfirmed)
+                return new LoginApiResponseDto
+                {
+                    Message = "Please confirm your email first",
                     Email = null,
                     Role = null,
                     AccessToken = null
@@ -182,6 +239,128 @@ namespace QuickServePOS.Services.Service
                 RefreshToken = newRefreshToken
              };
 
+        }
+
+        public async Task<ApiResponse> ConfirmEmailAsync( string userId,string token)
+        {
+            var user = await _userManager .FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid user."
+                };
+            }
+
+            if (user.EmailConfirmed)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Email already confirmed."
+                };
+            }
+
+            var result = await _userManager .ConfirmEmailAsync(user, token);
+
+            if (!result.Succeeded)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid or expired token."
+                };
+            }
+
+            // CREATE USER PROFILE AFTER CONFIRMATION
+
+            var existingProfile = await _AppDbcontext
+                .UserProfiles
+                .FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+            if (existingProfile == null)
+            {
+                var profile = new UserProfileEntity
+                {
+                    UserId = user.Id,
+                    JoiningDate = DateTime.UtcNow,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _AppDbcontext.UserProfiles
+                    .AddAsync(profile);
+
+                await _AppDbcontext.SaveChangesAsync();
+            }
+
+            return new ApiResponse
+            {
+                Success = true,
+                Message = "Email confirmed successfully."
+            };
+        }
+
+        private string GenerateConfirmationEmailDesign(string name,string confirmationLink)
+        {
+                   return $@"
+                    <div style='
+                        font-family:Arial,sans-serif;
+                        max-width:500px;
+                        margin:auto;
+                        padding:20px;
+                        border:1px solid #ddd;
+                        border-radius:8px;'>
+
+                        <h2 style='color:#f7681b;'>
+                            QuickServe POS
+                        </h2>
+
+                        <p>Hello <b>{name}</b>,</p>
+
+                        <p>
+                            Thank you for registering with
+                            QuickServe POS.
+                        </p>
+
+                        <p>
+                            Please confirm your email address
+                            by clicking the button below.
+                        </p>
+
+                        <div style='margin:30px 0;'>
+
+                            <a href='{confirmationLink}'
+                               style='
+                                background:#f7681b;
+                                color:white;
+                                padding:12px 20px;
+                                text-decoration:none;
+                                border-radius:5px;'>
+
+                                Confirm Email
+
+                            </a>
+
+                        </div>
+
+                        <p style='font-size:14px;color:gray;'>
+                            This link will expire in 24 hours.
+                        </p>
+
+                        <p style='font-size:14px;color:gray;'>
+                            If you did not create this account,
+                            please ignore this email.
+                        </p>
+
+                        <hr />
+
+                        <p style='font-size:12px;color:gray;'>
+                            © 2026 QuickServe POS
+                        </p>
+
+                    </div>";
         }
     }
 }

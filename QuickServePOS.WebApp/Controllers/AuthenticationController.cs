@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using NuGet.Common;
 using NuGet.Protocol.Plugins;
 using QuickServePOS.Models.DTO.Auth;
+using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.ViewModel;
 using System.Security.Claims;
 
@@ -41,15 +42,15 @@ namespace QuickServePOS.WebApp.Controllers
 
             if (!response.IsSuccessStatusCode)
             {
-                TempData["Error"] = "Invalid Email or Password";
-                return View(viewmodel);
+                var errorResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
+                TempData["Error"] =errorResponse?.Message?? "Login failed.";
             }
 
             var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
 
             if (result == null)
             {
-                TempData["Error"] ="Login failed.";
+                TempData["Error"] = result?.Message ?? "Login failed.";
 
                 return View(viewmodel);
             }
@@ -123,12 +124,16 @@ namespace QuickServePOS.WebApp.Controllers
             }
             var client = _httpClientFactory.CreateClient("ApiClient");
             var response = await client.PostAsJsonAsync("AuthenticationAPI/Register", viewmodel);
+
+            var apiResponse =await response.Content.ReadFromJsonAsync<ApiResponse>();
+
             if (!response.IsSuccessStatusCode)
             {
-                TempData["Error"] = "Registration Failed. Please try again.";
+                TempData["Error"] = apiResponse?.Message ?? "Registration failed.";
                 return View(viewmodel);
             }
-            TempData["Success"] = "Registration Successful! Please log in.";
+
+            TempData["Success"] = apiResponse?.Message ?? "Registration successful. Please confirm your email.";
             return RedirectToAction("Login", "Authentication");
 
         }

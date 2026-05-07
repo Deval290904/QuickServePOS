@@ -24,8 +24,6 @@ namespace QuickServePOS.WebApp.HttpHelper
                 return false;
             }
 
-           
-
             _httpClient.DefaultRequestHeaders.Authorization =new AuthenticationHeaderValue( "Bearer",token);
 
             return true;

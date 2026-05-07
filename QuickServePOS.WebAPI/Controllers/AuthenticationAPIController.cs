@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using QuickServePOS.Models.DTO.Auth;
 using QuickServePOS.Services.IService;
+using QuickServePOS.Services.Service;
 
 namespace QuickServePOS.WebAPI.Controllers
 {
@@ -27,6 +28,7 @@ namespace QuickServePOS.WebAPI.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
+
             var response = await _service.LoginAsync(dto);
 
             if (response.AccessToken == null)
@@ -48,6 +50,19 @@ namespace QuickServePOS.WebAPI.Controllers
                 });
             }
             return Ok(result);
+        }
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string userId,string token)
+        {
+            var response = await _service.ConfirmEmailAsync(userId, token);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
     }
 }

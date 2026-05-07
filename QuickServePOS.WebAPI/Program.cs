@@ -31,6 +31,9 @@ namespace QuickServePOS.WebAPI
             builder.Services.Configure<JwtSettings>(
                 builder.Configuration.GetSection("JwtSettings"));
 
+            builder.Services.Configure<EmailSettings>(
+                builder.Configuration.GetSection("EmailSettings"));
+
             var jwtSettings = builder.Configuration
                 .GetSection("JwtSettings")
                 .Get<JwtSettings>();
@@ -166,6 +169,12 @@ namespace QuickServePOS.WebAPI
                 options.SuppressModelStateInvalidFilter = true;
             });
 
+            builder.Services.Configure<DataProtectionTokenProviderOptions>(
+                options =>
+                {
+                    options.TokenLifespan = TimeSpan.FromHours(24);
+                });
+
             // =========================================================
             // DEPENDENCY INJECTION
             // =========================================================
@@ -177,6 +186,8 @@ namespace QuickServePOS.WebAPI
             builder.Services.AddScoped<IProfileService, ProfileService>();
 
             builder.Services.AddScoped<IJwtService, JwtService>();
+
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
             // =========================================================
             // SWAGGER
