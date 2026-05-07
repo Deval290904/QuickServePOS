@@ -375,7 +375,7 @@ namespace QuickServePOS.Services.Service
 
             var encodedToken =Uri.EscapeDataString(token);
 
-            var resetLink =$"https://localhost:7290/AuthenticationAPI/ResetPassword?email={user.Email}&token={encodedToken}";
+            var resetLink =$"https://localhost:7237/Authentication/ResetPassword?email={user.Email}&token={encodedToken}";
 
             var body = GenerateForgotPasswordEmailDesign(user.Name,resetLink);
 

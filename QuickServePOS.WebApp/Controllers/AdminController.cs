@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using QuickServePOS.Models.DTO.Admin;
+using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.ViewModel;
 using QuickServePOS.WebApp.HttpHelper;
 using System.Net.Http.Json;
@@ -60,9 +61,9 @@ namespace QuickServePOS.WebApp.Controllers
 
             var result = await _apiHelper.PostAsync("AdminAPI/Create-Staff", dto);
 
-            if (!result.Success)
+            if (result==null)
             {
-                return Json(new { success = false, message = result.Message });
+                return Json(new { success = false, message = result?.Message ?? "Staff creation failed." });
             }
             return Json(new { success = true, message = "Staff created successfully" });
 

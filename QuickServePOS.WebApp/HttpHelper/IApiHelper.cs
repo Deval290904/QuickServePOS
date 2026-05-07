@@ -1,4 +1,5 @@
-﻿using QuickServePOS.Models.DTO.Common;
+﻿
+using QuickServePOS.Models.DTO.Common;
 
 namespace QuickServePOS.WebApp.HttpHelper
 {

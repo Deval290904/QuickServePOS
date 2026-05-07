@@ -6,6 +6,7 @@ using NuGet.Protocol.Plugins;
 using QuickServePOS.Models.DTO.Auth;
 using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.ViewModel;
+using QuickServePOS.WebApp.HttpHelper;
 using System.Security.Claims;
 
 namespace QuickServePOS.WebApp.Controllers
@@ -39,18 +40,17 @@ namespace QuickServePOS.WebApp.Controllers
             var client = _httpClientFactory.CreateClient("ApiClient");
 
             var response = await client.PostAsJsonAsync("AuthenticationAPI/Login", viewmodel);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
-                TempData["Error"] =errorResponse?.Message?? "Login failed.";
-            }
-
             var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+            if (!response.IsSuccessStatusCode)
+            { 
+             
+                TempData["Error"] = result?.Message?? "Login failed.";
+                return View(viewmodel);
+            }
 
             if (result == null)
             {
-                TempData["Error"] = result?.Message ?? "Login failed.";
+                TempData["Error"] ="Login failed.";
 
                 return View(viewmodel);
             }
@@ -152,6 +152,77 @@ namespace QuickServePOS.WebApp.Controllers
 
             TempData["Success"] =
                 "Logout Successful.";
+
+            return RedirectToAction(
+                "Login",
+                "Authentication");
+        }
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword( ForgotPasswordViewModel viewmodel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewmodel);
+            }
+
+            var client =_httpClientFactory.CreateClient("ApiClient");
+
+            var response = await client.PostAsJsonAsync("AuthenticationAPI/forgot-password", viewmodel);
+
+            var apiResponse =await response.Content  .ReadFromJsonAsync<ApiResponse>();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                TempData["Error"] = apiResponse?.Message ?? "Something went wrong.";
+
+                return View(viewmodel);
+            }
+
+            TempData["Success"] = apiResponse?.Message ?? "Reset link sent.";
+
+            return RedirectToAction("Login","Authentication");
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string email,string token)
+        {
+            var model = new ResetPasswordViewModel
+            {
+                Email = email,
+                Token = token
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel viewmodel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewmodel);
+            }
+
+            var client = _httpClientFactory.CreateClient("ApiClient");
+
+            var response = await client.PostAsJsonAsync("AuthenticationAPI/reset-password",viewmodel);
+
+            var apiResponse =await response.Content.ReadFromJsonAsync<ApiResponse>();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                TempData["Error"] = apiResponse?.Message ?? "Password reset failed.";
+
+                return View(viewmodel);
+            }
+
+            TempData["Success"] =apiResponse?.Message
+                ?? "Password reset successful.";
 
             return RedirectToAction(
                 "Login",
