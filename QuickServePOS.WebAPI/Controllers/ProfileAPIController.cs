@@ -61,8 +61,35 @@ namespace QuickServePOS.WebAPI.Controllers
                 return Unauthorized();
             }
 
+            var result = await _profileService.UpdateProfileAsync(userId, model);
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("UploadProfileImage")]
+        public async Task<IActionResult> UploadProfileImage([FromForm] UploadProfileImageDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
             var result = await _profileService
-                .UpdateProfileAsync(userId, model);
+                .UploadProfileImageAsync(
+                    userId,
+                    model.Image);
 
             if (!result.Success)
             {

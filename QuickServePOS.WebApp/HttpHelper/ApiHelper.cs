@@ -1,4 +1,5 @@
-﻿using NuGet.Common;
+﻿using Newtonsoft.Json;
+using NuGet.Common;
 using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.WebApp.Services;
 using System.Net.Http.Headers;
@@ -140,6 +141,70 @@ namespace QuickServePOS.WebApp.HttpHelper
 
             return await response.Content
                 .ReadFromJsonAsync<TResponse>();
+        }
+
+        public async Task<TResponse?> PostFormDataAsync<TRequest, TResponse>(string url,TRequest model)
+        {
+            try
+            {
+                await AddTokenAsync();
+
+                using var content =
+                    new MultipartFormDataContent();
+
+                var properties =
+                    typeof(TRequest).GetProperties();
+
+                foreach (var property in properties)
+                {
+                    var value = property.GetValue(model);
+
+                    if (value == null)
+                        continue;
+
+                    // Handle file upload
+                    if (value is IFormFile file)
+                    {
+                        var streamContent =
+                            new StreamContent(
+                                file.OpenReadStream());
+
+                        streamContent.Headers.ContentType =
+                            new MediaTypeHeaderValue(
+                                file.ContentType);
+
+                        content.Add(
+                            streamContent,
+                            property.Name,
+                            file.FileName);
+                    }
+                    else
+                    {
+                        content.Add(
+                            new StringContent(value.ToString()),
+                            property.Name);
+                    }
+                }
+
+                var response =
+                    await _httpClient.PostAsync(
+                        url,
+                        content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return default;
+                }
+
+                var json =
+                    await response.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<TResponse>(json);
+            }
+            catch
+            {
+                return default;
+            }
         }
     }
 }

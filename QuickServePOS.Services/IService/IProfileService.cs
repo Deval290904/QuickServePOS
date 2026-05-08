@@ -1,4 +1,5 @@
-﻿using QuickServePOS.Models.DTO.Common;
+﻿using Microsoft.AspNetCore.Http;
+using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.DTO.Profile;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace QuickServePOS.Services.IService
         Task<ProfileDto?> GetProfileAsync(string userId);
 
         Task<ApiResponse> UpdateProfileAsync(string userId,UpdateProfileDto model);
+
+        Task<ApiResponse> UploadProfileImageAsync(string userId,IFormFile image);
 
     }
 }

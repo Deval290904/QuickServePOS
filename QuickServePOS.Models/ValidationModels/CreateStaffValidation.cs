@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+﻿ using FluentValidation;
 using QuickServePOS.Models.DTO.Admin;
 
 namespace QuickServePOS.Models.ValidationModels

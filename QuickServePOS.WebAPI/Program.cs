@@ -189,6 +189,8 @@ namespace QuickServePOS.WebAPI
 
             builder.Services.AddScoped<IEmailService, EmailService>();
 
+            builder.Services.AddScoped<IImageService, ImageService>();
+
             // =========================================================
             // SWAGGER
             // =========================================================
@@ -252,6 +254,7 @@ namespace QuickServePOS.WebAPI
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseAuthentication();
 

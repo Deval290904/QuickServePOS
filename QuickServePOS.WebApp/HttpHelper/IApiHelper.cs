@@ -1,5 +1,6 @@
 ﻿
 using QuickServePOS.Models.DTO.Common;
+using System.Threading.Tasks;
 
 namespace QuickServePOS.WebApp.HttpHelper
 {
@@ -9,6 +10,8 @@ namespace QuickServePOS.WebApp.HttpHelper
         Task<ApiResponse> PostAsync<T>(string url, T data);
 
         Task<TResponse?> PostDataAsync<TRequest, TResponse>(string url,TRequest data);
+
+        Task<TResponse?> PostFormDataAsync<TRequest, TResponse>(string url, TRequest model);
 
         Task<ApiResponse> DeleteAsync(string url);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,5 +26,6 @@ namespace QuickServePOS.Models.ViewModel
         public DateTime? JoiningDate { get; set; }
 
         public string? ProfileImagePath { get; set; }
+        public IFormFile? Image { get; set; }
     }
 }

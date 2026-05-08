@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using QuickServePOS.DbContextData.Data;
-using QuickServePOS.DbContextData.Migrations;
 using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.DTO.Profile;
 using QuickServePOS.Models.Entities;
 using QuickServePOS.Services.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
+
 
 namespace QuickServePOS.Services.Service
 {
@@ -19,11 +18,15 @@ namespace QuickServePOS.Services.Service
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppDbContext _AppDbContext;
+        private readonly IImageService _imageService;
+        private readonly IWebHostEnvironment _env;
 
-        public ProfileService(UserManager<ApplicationUser> userManager, AppDbContext appDbContext)
+        public ProfileService(UserManager<ApplicationUser> userManager, AppDbContext appDbContext, IImageService imageService, IWebHostEnvironment env)
         {
             _userManager = userManager;
             _AppDbContext = appDbContext;
+            _imageService = imageService;
+            _env = env;
         }
 
         public async Task<ProfileDto?> GetProfileAsync(string userId)
@@ -80,6 +83,63 @@ namespace QuickServePOS.Services.Service
             {
                 Success = true,
                 Message = "Profile updated successfully"
+            };
+        }
+
+        public async Task<ApiResponse> UploadProfileImageAsync(string userId,IFormFile image)
+        {
+            var user = await _AppDbContext.Users
+                .Include(x => x.UserProfile)
+                .FirstOrDefaultAsync(x => x.Id == userId);
+
+            if (user == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "User not found"
+                };
+            }
+
+            // Create profile if null
+            if (user.UserProfile == null)
+            {
+                user.UserProfile = new UserProfile
+                {
+                    UserId = user.Id
+                };
+            }
+
+            // Delete old image if exists
+            if (!string.IsNullOrEmpty(
+                user.UserProfile.ProfileImagePath))
+            {
+                var oldPath = Path.Combine(
+                    _env.WebRootPath,
+                    user.UserProfile.ProfileImagePath
+                        .TrimStart('/'));
+
+                if (File.Exists(oldPath))
+                {
+                    File.Delete(oldPath);
+                }
+            }
+
+            // Upload new image
+            var imagePath = await _imageService
+                .UploadProfileImageAsync(
+                    image,
+                    "profile");
+
+            user.UserProfile.ProfileImagePath =
+                imagePath;
+
+            await _AppDbContext.SaveChangesAsync();
+
+            return new ApiResponse
+            {
+                Success = true,
+                Message = "Profile image uploaded successfully"
             };
         }
     }
