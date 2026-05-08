@@ -47,7 +47,7 @@ namespace QuickServePOS.WebAPI.Controllers
             });
         }
 
-        [HttpPost("UpdateProfile")]
+        [HttpPut("UpdateProfile")]
         public async Task<IActionResult> UpdateProfile(UpdateProfileDto model)
         {
             if (!ModelState.IsValid)

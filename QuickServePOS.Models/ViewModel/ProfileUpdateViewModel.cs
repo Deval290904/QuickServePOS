@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QuickServePOS.Models.ViewModel
 {
-    public class ProfileViewModel
+    public class ProfileUpdateViewModel
     {
         // From ApplicationUser
         public string Name { get; set; }

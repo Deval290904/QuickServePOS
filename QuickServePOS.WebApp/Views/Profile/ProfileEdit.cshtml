@@ -1,0 +1,83 @@
+﻿@using QuickServePOS.Models.ViewModel
+@model ProfileUpdateViewModel
+@{
+    ViewData["Title"] = "ProfileEdit";
+}
+
+<div class="card">
+
+    <div class="card-header">
+        <h4>My Profile</h4>
+    </div>
+
+    <div class="card-body">
+
+        <form asp-action="ProfileEdit" method="post">
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label>Name</label>
+
+                    <input asp-for="Name"class="form-control" />
+                    <span asp-validation-for="Name"class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Email</label>
+
+                    <input asp-for="Email"class="form-control" readonly />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Phone Number</label>
+
+                    <input asp-for="PhoneNumber"class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>DOB</label>
+
+                    <input asp-for="DOB" type="date" class="form-control" />
+                    <span asp-validation-for="DOB" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Gender</label>
+
+                    <select asp-for="Gender" class="form-control">
+
+                        <option value="">Select</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                     
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Joining Date</label>
+
+                    <input asp-for="JoiningDate" type="date"class="form-control" readonly/>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label>Address</label>
+                    <textarea asp-for="Address" class="form-control"></textarea>
+                </div>
+
+            </div>
+
+            <button class="btn btn-primary">
+                Update Profile
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+

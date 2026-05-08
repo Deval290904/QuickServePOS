@@ -127,5 +127,19 @@ namespace QuickServePOS.WebApp.HttpHelper
             var result = await response.Content.ReadFromJsonAsync<ApiResponse>();
             return new ApiResponse { Success = result?.Success ?? false, Message = result?.Message ?? "Updated" };
         }
+
+        public async Task<TResponse?> PutDataAsync<TRequest, TResponse>(string url,TRequest data)
+        {
+            await AddTokenAsync();
+            var response = await _httpClient.PutAsJsonAsync(url, data);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return default;
+            }
+
+            return await response.Content
+                .ReadFromJsonAsync<TResponse>();
+        }
     }
 }
