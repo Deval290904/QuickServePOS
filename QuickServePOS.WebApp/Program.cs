@@ -39,6 +39,8 @@ namespace QuickServePOS.WebApp
                 {
                     options.LoginPath = "/Authentication/Login";
                     options.AccessDeniedPath = "/Authentication/Login";
+                    options.ExpireTimeSpan =TimeSpan.FromDays(7);
+                    options.SlidingExpiration = true;
                 });
 
             builder.Services.AddScoped<RefreshTokenFilter>();

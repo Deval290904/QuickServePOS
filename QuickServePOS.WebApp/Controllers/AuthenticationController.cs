@@ -27,6 +27,11 @@ namespace QuickServePOS.WebApp.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "DashBoard");
+            }
+
             return View();
         }
 

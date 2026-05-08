@@ -161,7 +161,9 @@ namespace QuickServePOS.Services.Service
             {
                 RefreshToken = refreshToken,
                 UserId = user.Id,
-                ExpiryDate = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpiryInMinutes),
+                ExpiryDate = dto.RememberMe
+                                ? DateTime.UtcNow.AddDays(7)
+                                : DateTime.UtcNow.AddHours(1),
                 CreatedAt = DateTime.UtcNow,
                 IsRevoked = false
             };
