@@ -73,6 +73,19 @@ namespace QuickServePOS.WebApp.HttpHelper
             return new ApiResponse { Success = true, Message = "Success" };
         }
 
+        public async Task<TResponse?> PostDataAsync<TRequest, TResponse>(string url, TRequest data)
+        {
+            await AddTokenAsync();
+
+            var response =
+                await _httpClient.PostAsJsonAsync(
+                    url,
+                    data);
+
+            return await response.Content
+                .ReadFromJsonAsync<TResponse>();
+        }
+
         public async Task<ApiResponse> DeleteAsync(string url)
         {
             await AddTokenAsync();

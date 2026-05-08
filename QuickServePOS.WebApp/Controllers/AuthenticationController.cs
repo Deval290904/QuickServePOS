@@ -14,11 +14,11 @@ namespace QuickServePOS.WebApp.Controllers
     public class AuthenticationController : Controller
     {
 
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IApiHelper _apiHelper;
 
-        public AuthenticationController(IHttpClientFactory httpClientFactory)
+        public AuthenticationController(IApiHelper apiHelper)
         {
-            _httpClientFactory = httpClientFactory;
+            _apiHelper = apiHelper;
         }
         public IActionResult Index()
         {
@@ -42,23 +42,24 @@ namespace QuickServePOS.WebApp.Controllers
             {
                 return View(viewmodel);
             }
-            var client = _httpClientFactory.CreateClient("ApiClient");
 
-            var response = await client.PostAsJsonAsync("AuthenticationAPI/Login", viewmodel);
-            var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-            if (!response.IsSuccessStatusCode)
+            var result = await _apiHelper.PostDataAsync<LoginViewModel, LoginResponse>("AuthenticationAPI/Login", viewmodel);
+
+            if (result == null)
+            {
+                TempData["Error"] = "Login failed.";
+
+                return View(viewmodel);
+            }
+
+            if (string.IsNullOrEmpty(result.AccessToken))
             { 
              
                 TempData["Error"] = result?.Message?? "Login failed.";
                 return View(viewmodel);
             }
 
-            if (result == null)
-            {
-                TempData["Error"] ="Login failed.";
-
-                return View(viewmodel);
-            }
+           
 
             // STORE ACCESS TOKEN COOKIE
 
@@ -127,18 +128,24 @@ namespace QuickServePOS.WebApp.Controllers
                 TempData["Error"] = "Please correct the errors in the form.";
                 return View(viewmodel);
             }
-            var client = _httpClientFactory.CreateClient("ApiClient");
-            var response = await client.PostAsJsonAsync("AuthenticationAPI/Register", viewmodel);
 
-            var apiResponse =await response.Content.ReadFromJsonAsync<ApiResponse>();
+            var result =await _apiHelper.PostDataAsync<RegisterViewModel,ApiResponse>("AuthenticationAPI/Register",viewmodel);
 
-            if (!response.IsSuccessStatusCode)
+            if (result == null)
             {
-                TempData["Error"] = apiResponse?.Message ?? "Registration failed.";
+                TempData["Error"] = "Registration failed.";
+
                 return View(viewmodel);
             }
 
-            TempData["Success"] = apiResponse?.Message ?? "Registration successful. Please confirm your email.";
+            if (!result.Success)
+            {
+                TempData["Error"] = result.Message;
+
+                return View(viewmodel);
+            }
+
+            TempData["Success"] = result?.Message ?? "Registration successful. Please confirm your email.";
             return RedirectToAction("Login", "Authentication");
 
         }
@@ -155,12 +162,9 @@ namespace QuickServePOS.WebApp.Controllers
 
             Response.Cookies.Delete("RefreshToken");
 
-            TempData["Success"] =
-                "Logout Successful.";
+            TempData["Success"] ="Logout Successful.";
 
-            return RedirectToAction(
-                "Login",
-                "Authentication");
+            return RedirectToAction("Login","Authentication");
         }
         [HttpGet]
         public IActionResult ForgotPassword()
@@ -169,27 +173,28 @@ namespace QuickServePOS.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ForgotPassword( ForgotPasswordViewModel viewmodel)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel viewmodel)
         {
             if (!ModelState.IsValid)
             {
                 return View(viewmodel);
             }
 
-            var client =_httpClientFactory.CreateClient("ApiClient");
+            var result =await _apiHelper.PostDataAsync<ForgotPasswordViewModel,ApiResponse>("AuthenticationAPI/forgot-password",viewmodel);
 
-            var response = await client.PostAsJsonAsync("AuthenticationAPI/forgot-password", viewmodel);
-
-            var apiResponse =await response.Content  .ReadFromJsonAsync<ApiResponse>();
-
-            if (!response.IsSuccessStatusCode)
+            if(result==null)
             {
-                TempData["Error"] = apiResponse?.Message ?? "Something went wrong.";
+                TempData["Error"] = "ForgotPassword failed.";
+                return View(viewmodel);
+            }
+            if (!result.Success)
+            {
+                TempData["Error"] = result.Message;
 
                 return View(viewmodel);
             }
 
-            TempData["Success"] = apiResponse?.Message ?? "Reset link sent.";
+            TempData["Success"] = result?.Message ?? "Reset link sent.";
 
             return RedirectToAction("Login","Authentication");
         }
@@ -213,20 +218,21 @@ namespace QuickServePOS.WebApp.Controllers
                 return View(viewmodel);
             }
 
-            var client = _httpClientFactory.CreateClient("ApiClient");
+            var result =await _apiHelper.PostDataAsync<ResetPasswordViewModel,ApiResponse>("AuthenticationAPI/reset-password",viewmodel);
 
-            var response = await client.PostAsJsonAsync("AuthenticationAPI/reset-password",viewmodel);
-
-            var apiResponse =await response.Content.ReadFromJsonAsync<ApiResponse>();
-
-            if (!response.IsSuccessStatusCode)
+            if (result == null)
             {
-                TempData["Error"] = apiResponse?.Message ?? "Password reset failed.";
+                TempData["Error"] = "Password reset failed.";
+                return View(viewmodel);
+            }
+            if (!result.Success)
+            {
+                TempData["Error"] = result?.Message;
 
                 return View(viewmodel);
             }
 
-            TempData["Success"] =apiResponse?.Message
+            TempData["Success"] =result?.Message
                 ?? "Password reset successful.";
 
             return RedirectToAction(
