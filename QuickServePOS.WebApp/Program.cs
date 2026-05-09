@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
 using QuickServePOS.Models.ValidationModels.MVCSideValidation;
 using QuickServePOS.Services.AutoMapper;
+using QuickServePOS.WebApp.AutoMapper.Menu;
 using QuickServePOS.WebApp.Filter;
 using QuickServePOS.WebApp.HttpHelper;
 using QuickServePOS.WebApp.Services;
@@ -46,7 +47,8 @@ namespace QuickServePOS.WebApp
             builder.Services.AddScoped<RefreshTokenFilter>();
             builder.Services.AddScoped<IApiHelper, ApiHelper>();
             builder.Services.AddScoped<ITokenWebService, TokenWebService>();
-            builder.Services.AddAutoMapper(typeof(AdminMappingProfile));
+
+            builder.Services.AddAutoMapper(typeof(CategoryProfile));
 
 
             builder.Services.AddDistributedMemoryCache();

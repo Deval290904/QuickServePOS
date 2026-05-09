@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="MailKit" Version="4.16.0" />
@@ -27,6 +29,7 @@
     <ProjectReference Include="..\QuickServePOS.Models\QuickServePOS.Models.csproj" />
     <ProjectReference Include="..\QuickServePOS.Repositories\QuickServePOS.Repositories.csproj" />
     <ProjectReference Include="..\QuickServePOS.Services\QuickServePOS.Services.csproj" />
+    <ProjectReference Include="..\QuickServePOS.WebApp\QuickServePOS.WebApp.csproj" />
   </ItemGroup>
 
 </Project>

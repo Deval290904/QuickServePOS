@@ -10,11 +10,15 @@ using QuickServePOS.DbContextData.Data;
 using QuickServePOS.Models.Configurations;
 using QuickServePOS.Models.Entities;
 using QuickServePOS.Models.ValidationModels;
+using QuickServePOS.Repositories.IUnitofWork;
+using QuickServePOS.Repositories.UnitofWork;
 using QuickServePOS.Services.IService;
 using QuickServePOS.Services.Service;
 using QuickServePOS.WebAPI.Filter;
 using QuickServePOS.WebAPI.Seed;
+using QuickServePOS.WebApp.AutoMapper.Menu;
 using System.Text;
+
 
 namespace QuickServePOS.WebAPI
 {
@@ -190,6 +194,10 @@ namespace QuickServePOS.WebAPI
             builder.Services.AddScoped<IEmailService, EmailService>();
 
             builder.Services.AddScoped<IImageService, ImageService>();
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            builder.Services.AddAutoMapper(typeof(CategoryProfile));
 
             // =========================================================
             // SWAGGER
