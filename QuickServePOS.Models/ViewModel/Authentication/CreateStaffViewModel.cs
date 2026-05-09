@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace QuickServePOS.Models.ViewModel
+namespace QuickServePOS.Models.ViewModel.Authentication
 {
     public class CreateStaffViewModel
     {

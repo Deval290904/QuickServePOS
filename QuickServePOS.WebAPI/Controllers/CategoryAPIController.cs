@@ -33,7 +33,7 @@ namespace QuickServePOS.WebAPI.Controllers
         }
 
         // GET: api/category/5
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var category = await _unitOfWork.Categories.GetByIdAsync(id);
@@ -51,7 +51,7 @@ namespace QuickServePOS.WebAPI.Controllers
             return Ok(data);
         }
 
-        [HttpPost]
+        [HttpPost("Create-Category")]
         public async Task<IActionResult> Create(CreateCategoryDto dto)
         {
             var exists = await _unitOfWork.Categories
@@ -78,7 +78,7 @@ namespace QuickServePOS.WebAPI.Controllers
         }
 
         // PUT: api/category
-        [HttpPut]
+        [HttpPut("Update-Category")]
         public async Task<IActionResult> Update(UpdateCategoryDto dto)
         {
             var category = await _unitOfWork.Categories

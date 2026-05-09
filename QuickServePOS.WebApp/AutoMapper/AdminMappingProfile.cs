@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using QuickServePOS.Models.DTO.Admin;
-using QuickServePOS.Models.ViewModel;
+using QuickServePOS.Models.ViewModel.Authentication;
+using QuickServePOS.Models.ViewModel.Profile;
 using System;
 using System.Collections.Generic;
 using System.Linq;

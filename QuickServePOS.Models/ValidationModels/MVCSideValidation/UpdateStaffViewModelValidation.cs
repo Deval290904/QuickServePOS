@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using QuickServePOS.Models.ViewModel;
+using QuickServePOS.Models.ViewModel.Profile;
 
 namespace QuickServePOS.Models.ValidationModels.MVCSideValidation
 {

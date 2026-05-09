@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using QuickServePOS.Models.ViewModel;
+using QuickServePOS.Models.ViewModel.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;

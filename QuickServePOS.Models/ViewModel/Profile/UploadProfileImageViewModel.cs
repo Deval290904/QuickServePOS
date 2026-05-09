@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace QuickServePOS.Models.ViewModel
+namespace QuickServePOS.Models.ViewModel.Profile
 {
     public class UploadProfileImageViewModel
     {

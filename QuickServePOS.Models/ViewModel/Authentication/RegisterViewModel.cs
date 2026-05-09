@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Models.ViewModel
+namespace QuickServePOS.Models.ViewModel.Authentication
 {
     using System.ComponentModel.DataAnnotations;
 

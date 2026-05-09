@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.DTO.Profile;
-using QuickServePOS.Models.ViewModel;
+using QuickServePOS.Models.ViewModel.Profile;
 using QuickServePOS.WebApp.HttpHelper;
 
 namespace QuickServePOS.WebApp.Controllers

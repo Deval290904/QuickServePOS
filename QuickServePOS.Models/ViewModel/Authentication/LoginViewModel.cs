@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace QuickServePOS.Models.ViewModel
+namespace QuickServePOS.Models.ViewModel.Authentication
 {
     public class LoginViewModel
     {

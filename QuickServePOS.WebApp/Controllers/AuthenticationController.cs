@@ -5,7 +5,7 @@ using NuGet.Common;
 using NuGet.Protocol.Plugins;
 using QuickServePOS.Models.DTO.Auth;
 using QuickServePOS.Models.DTO.Common;
-using QuickServePOS.Models.ViewModel;
+using QuickServePOS.Models.ViewModel.Authentication;
 using QuickServePOS.WebApp.HttpHelper;
 using System.Security.Claims;
 

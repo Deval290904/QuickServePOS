@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using QuickServePOS.Models.DTO.Admin;
 using QuickServePOS.Models.DTO.Common;
-using QuickServePOS.Models.ViewModel;
+using QuickServePOS.Models.ViewModel.Authentication;
+using QuickServePOS.Models.ViewModel.Profile;
 using QuickServePOS.WebApp.HttpHelper;
 using System.Net.Http.Json;
 
