@@ -28,6 +28,18 @@ namespace QuickServePOS.WebApp.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetCategoryList()
+        {
+            var response =
+                await _apiHelper.GetAsync<List<CategoryDto>>("CategoryAPI");
+
+            var model =
+                _mapper.Map<List<CategoryViewModel>>(response);
+
+            return PartialView("_CategoryTablePartialView", model);
+        }
+
+        [HttpGet]
         public IActionResult Create()
         {
             return PartialView("_CreateCategoryPartialView");
@@ -47,8 +59,14 @@ namespace QuickServePOS.WebApp.Controllers
 
             if (response == null)
             {
-                return Json(new { success = false, message = response?.Message ?? "Category creation failed." });
+                return Json(new { success = false, message ="Category creation failed." });
                
+            }
+
+            if (!response.Success )
+            {
+                return Json(new { success = false, message = response?.Message ?? "Category creation failed." });
+
             }
 
             return Json(new

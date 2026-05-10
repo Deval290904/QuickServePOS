@@ -3,7 +3,9 @@
         .then(res => res.text())
         .then(html => {
             document.getElementById("staffTableContainer").innerHTML = html;
+            initializeDataTable("#staffTable");
         });
+  
 }
 
 function loadTrash() {
@@ -11,7 +13,9 @@ function loadTrash() {
         .then(res => res.text())
         .then(html => {
             document.getElementById("staffTableContainer").innerHTML = html;
+            initializeDataTable("#staffTable");
         });
+    
 }
 
 function reloadStats() {
@@ -24,6 +28,11 @@ function reloadStats() {
 
         });
 }
+$(document).ready(function () {
+
+    initializeDataTable("#staffTable");
+
+});
 
 function refreshDashboard() {
     loadActive();

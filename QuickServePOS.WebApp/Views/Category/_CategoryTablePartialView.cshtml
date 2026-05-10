@@ -1,0 +1,85 @@
+﻿@using QuickServePOS.Models.ViewModel.Menu
+@model List<CategoryViewModel>
+
+
+<table id="categoryTable" class="table table-hover align-middle">
+
+    <thead class="table-light">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Display Order</th>
+            <th>Status</th>
+            <th width="150">Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@item.Name</td>
+
+                    <td>@item.Description</td>
+
+                    <td>@item.DisplayOrder</td>
+
+                    <td>
+
+                        @if (item.IsActive)
+                        {
+                            <span class="badge bg-success">
+                                Active
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">
+                                Inactive
+                            </span>
+                        }
+
+                    </td>
+
+                    <td>
+
+                        <button class="btn btn-sm btn-light border me-1 shadow-sm"
+                                onclick="OpenModal('/Category/Edit/@item.Id','Edit Category')">
+
+                            <i class="fa fa-pen text-warning"></i>
+                        </button>
+
+                        <button class="btn btn-sm btn-light border shadow-sm"
+                                onclick="DeletehandleAction(
+                                                            '/Category/Delete',
+                                                            @item.Id,
+                                                            this,
+                                                            'delete')">
+
+                            <i class="fa fa-trash text-danger"></i>
+                        </button>
+
+                    </td>
+
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5"
+                    class="text-center">
+
+                    No categories found.
+
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>
