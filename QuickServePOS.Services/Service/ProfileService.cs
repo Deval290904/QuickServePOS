@@ -127,7 +127,7 @@ namespace QuickServePOS.Services.Service
 
             // Upload new image
             var imagePath = await _imageService
-                .UploadProfileImageAsync(
+                .UploadImageAsync(
                     image,
                     "profile");
 

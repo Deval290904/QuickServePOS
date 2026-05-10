@@ -11,6 +11,8 @@ namespace QuickServePOS.Repositories.IUnitofWork
     {
         ICategoryRepository Categories { get; }
 
+        IMenuItemRepository MenuItems { get; }
+
         Task<int> SaveChangesAsync();
     }
 }

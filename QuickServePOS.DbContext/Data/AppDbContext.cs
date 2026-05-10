@@ -52,18 +52,24 @@ namespace QuickServePOS.DbContextData.Data
                       .HasMaxLength(150)
                       .IsRequired();
 
-                // INDEXES
-                entity.HasIndex(x => x.CategoryId);
-
-                entity.HasIndex(x => x.IsAvailable);
-
-                entity.HasIndex(x => x.Is86d);
+                entity.Property(x => x.Description)
+                      .HasMaxLength(500);
 
                 entity.Property(x => x.HalfPrice)
                       .HasColumnType("decimal(18,2)");
 
                 entity.Property(x => x.FullPrice)
                       .HasColumnType("decimal(18,2)");
+
+                entity.Property(x => x.FoodType)
+                      .HasConversion<int>();
+
+                // INDEXES
+                entity.HasIndex(x => x.CategoryId);
+
+                entity.HasIndex(x => x.IsAvailable);
+
+                entity.HasIndex(x => x.Is86d);
 
                 entity.HasQueryFilter(x => !x.IsDeleted);
 

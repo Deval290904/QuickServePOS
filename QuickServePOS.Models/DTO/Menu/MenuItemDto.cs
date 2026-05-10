@@ -5,13 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Models.Entities.Menu
+namespace QuickServePOS.Models.DTO.Menu
 {
-    public class MenuItemEntity
+    public class MenuItemDto
     {
         public int Id { get; set; }
 
         public int CategoryId { get; set; }
+
+        public string CategoryName { get; set; } = null!;
 
         public string Name { get; set; } = null!;
 
@@ -23,22 +25,14 @@ namespace QuickServePOS.Models.Entities.Menu
 
         public FoodType FoodType { get; set; }
 
-        public bool IsAvailable { get; set; } = true;
+        public bool IsAvailable { get; set; }
 
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; }
 
-        public bool Is86d { get; set; } = false;
+        public bool Is86d { get; set; }
 
         public string? ImageUrl { get; set; }
 
         public int PreparationTimeMinutes { get; set; }
-
-        public bool IsDeleted { get; set; } = false;
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public CategoryEntity Category { get; set; } = null!;
-        public DateTime? UpdatedAt { get; set; } 
-
     }
 }

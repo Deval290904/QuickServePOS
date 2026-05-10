@@ -17,9 +17,15 @@ namespace QuickServePOS.Services.Service
             _environment = environment;
         }
 
-        public async Task<string> UploadProfileImageAsync(IFormFile file,string folderName)
+        public async Task<string> UploadImageAsync(
+            IFormFile file,
+            string folderName)
         {
-            var uploadsFolder = Path.Combine(_environment.WebRootPath,"uploads",folderName);
+            var uploadsFolder =
+                Path.Combine(
+                    _environment.WebRootPath,
+                    "uploads",
+                    folderName);
 
             if (!Directory.Exists(uploadsFolder))
             {
@@ -27,16 +33,24 @@ namespace QuickServePOS.Services.Service
             }
 
             var fileName =
-                Guid.NewGuid().ToString() + ".jpg";
+                Guid.NewGuid() + ".jpg";
 
-            var fullPath = Path.Combine(
-                uploadsFolder,
-                fileName);
+            var fullPath =
+                Path.Combine(
+                    uploadsFolder,
+                    fileName);
 
             using var image =
-                await Image.LoadAsync(file.OpenReadStream());
+                await Image.LoadAsync(
+                    file.OpenReadStream());
 
-            image.Mutate(x => x.Resize(256, 256));
+            // Resize
+            image.Mutate(x =>
+                x.Resize(new ResizeOptions
+                {
+                    Size = new Size(500, 500),
+                    Mode = ResizeMode.Max
+                }));
 
             await image.SaveAsJpegAsync(
                 fullPath,
@@ -48,6 +62,20 @@ namespace QuickServePOS.Services.Service
             return $"/uploads/{folderName}/{fileName}";
         }
 
+        public void DeleteImage(string imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl))
+                return;
 
+            var fullPath =
+                Path.Combine(
+                    _environment.WebRootPath,
+                    imageUrl.TrimStart('/'));
+
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+            }
+        }
     }
 }

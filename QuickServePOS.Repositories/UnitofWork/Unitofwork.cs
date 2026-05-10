@@ -15,12 +15,13 @@ namespace QuickServePOS.Repositories.UnitofWork
         private readonly AppDbContext _context;
 
         public ICategoryRepository Categories { get; }
+        public IMenuItemRepository MenuItems { get; }
 
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
-
             Categories = new CategoryRepository(_context);
+            MenuItems = new MenuItemRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()

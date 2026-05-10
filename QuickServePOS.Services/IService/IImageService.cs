@@ -9,7 +9,9 @@ namespace QuickServePOS.Services.IService
 {
     public interface IImageService
     {
-        Task<string> UploadProfileImageAsync(IFormFile file,string folderName);
+        Task<string> UploadImageAsync(IFormFile file,string folderName);
+
+        void DeleteImage(string imageUrl);
 
     }
 }

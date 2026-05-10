@@ -1,16 +1,15 @@
-﻿using QuickServePOS.Models.Entities.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using QuickServePOS.Models.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Models.Entities.Menu
+namespace QuickServePOS.Models.DTO.Menu
 {
-    public class MenuItemEntity
+    public class CreateMenuItemDto
     {
-        public int Id { get; set; }
-
         public int CategoryId { get; set; }
 
         public string Name { get; set; } = null!;
@@ -29,16 +28,9 @@ namespace QuickServePOS.Models.Entities.Menu
 
         public bool Is86d { get; set; } = false;
 
-        public string? ImageUrl { get; set; }
-
         public int PreparationTimeMinutes { get; set; }
 
-        public bool IsDeleted { get; set; } = false;
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public CategoryEntity Category { get; set; } = null!;
-        public DateTime? UpdatedAt { get; set; } 
-
+        // Image Upload
+        public IFormFile? ImageFile { get; set; }
     }
 }
