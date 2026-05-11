@@ -4,17 +4,33 @@
 
 });
 
-function reloadPageData() {
+function reloadMenuItemData() {
+
+    loadActiveMenuItems();
+}
+function loadActiveMenuItems() {
 
     fetch('/MenuItem/GetMenuItemList')
         .then(res => res.text())
         .then(html => {
 
-            document.getElementById("menuItemTableContainer")
-                .innerHTML = html;
+            document.getElementById("menuItemTableContainer").innerHTML = html;
+
             initializeDataTable("#menuItemTable");
 
-            
+        });
+}
+
+function loadTrashMenuItems() {
+
+    fetch('/MenuItem/GetDeletedMenuItems')
+        .then(res => res.text())
+        .then(html => {
+
+            document.getElementById("menuItemTableContainer").innerHTML = html;
+
+            initializeDataTable("#menuItemTable");
+
         });
 }
 

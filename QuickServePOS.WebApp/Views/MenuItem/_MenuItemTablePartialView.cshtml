@@ -1,6 +1,8 @@
 ﻿@using QuickServePOS.Models.ViewModel.Menu
 @model List<MenuItemViewModel>
-
+@{
+    bool isTrash = ViewBag.IsTrash ?? false;
+}
 @if (!Model.Any())
 {
     <div class="text-center py-5">
@@ -99,9 +101,7 @@ else
                                                           : item.FoodType.ToString() == "Egg"
                                                               ? "bg-warning text-dark"
                                                               : "bg-danger")">
-
                         @item.FoodType
-
                     </span>
 
                 </td>
@@ -109,9 +109,7 @@ else
                 <!-- HALF PRICE -->
                 <td>
 
-                    @(item.HalfPrice.HasValue
-                                    ? $"₹{item.HalfPrice}"
-                                    : "-")
+                    @(item.HalfPrice.HasValue? $"₹{item.HalfPrice}": "-")
 
             </td>
 
@@ -147,27 +145,40 @@ else
                     <!-- ACTIONS -->
                     <td class="text-center">
 
-                        <button class="btn btn-sm btn-light
-                                               border shadow-sm me-1"
-                                onclick="OpenModal(
-                                        '/MenuItem/Edit/@item.Id',
-                                        'Edit Menu Item')">
+                        @if (!isTrash)
+                        {
+                            <!-- ACTIVE MODE -->
 
-                            <i class="fa fa-pen text-warning"></i>
+                            <button class="btn btn-sm btn-light
+                                   border shadow-sm me-1"
+                                    onclick="OpenModal('/MenuItem/Edit/@item.Id','Edit Menu Item')">
 
-                        </button>
+                                <i class="fa fa-pen text-warning"></i>
 
-                        <button class="btn btn-sm btn-light
-                                               border shadow-sm"
-                                onclick="DeletehandleAction(
-                                        '/MenuItem/Delete',
-                                        '@item.Id',
-                                        this,
-                                        'delete')">
+                            </button>
 
-                            <i class="fa fa-trash text-danger"></i>
+                            <button class="btn btn-sm btn-light
+                                   border shadow-sm"
+                                    onclick="DeletehandleAction('/MenuItem/Delete','@item.Id',this,'delete')">
 
-                        </button>
+                                <i class="fa fa-trash text-danger"></i>
+
+                            </button>
+                        }
+                        else
+                        {
+                            <!-- TRASH MODE -->
+
+                            <button class="btn btn-sm btn-success
+                                   shadow-sm"
+                                    onclick="DeletehandleAction('/MenuItem/Restore','@item.Id',this,'restore')">
+
+                                <i class="fa fa-rotate-left me-1"></i>
+                                Restore
+
+                            </button>
+                        }
+
 
                     </td>
 

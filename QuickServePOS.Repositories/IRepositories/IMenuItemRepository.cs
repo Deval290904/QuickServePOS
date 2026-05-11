@@ -20,6 +20,10 @@ namespace QuickServePOS.Repositories.IRepositories
         void Delete(MenuItemEntity entity);
 
         Task<bool> ExistsAsync( string name,int categoryId,int? excludeId = null);
+
+        Task<MenuItemEntity?>GetByIdIgnoreQueryFilterAsync(int id);
+
+        Task<List<MenuItemEntity>> GetDeletedMenuItemsAsync();
     }
 }
 

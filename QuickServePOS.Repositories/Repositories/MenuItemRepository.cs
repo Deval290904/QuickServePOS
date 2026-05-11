@@ -54,5 +54,19 @@ namespace QuickServePOS.Repositories.Repositories
                 &&
                 (!excludeId.HasValue || x.Id != excludeId));
         }
+
+        public async Task<MenuItemEntity?>GetByIdIgnoreQueryFilterAsync(int id)
+        {
+            return await _AppDbContext.MenuItems.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<List<MenuItemEntity>>GetDeletedMenuItemsAsync()
+        {
+            return await _AppDbContext.MenuItems
+                .IgnoreQueryFilters()
+                .Include(x => x.Category)
+                .Where(x => x.IsDeleted)
+                .ToListAsync();
+        }
     }
 }

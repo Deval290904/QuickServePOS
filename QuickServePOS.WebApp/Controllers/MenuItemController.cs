@@ -65,6 +65,7 @@ namespace QuickServePOS.WebApp.Controllers
             }
 
             var model = _mapper.Map<List<MenuItemViewModel>>(response);
+            ViewBag.IsTrash = false;
             return PartialView("_MenuItemTablePartialView", model);
         }
 
@@ -89,6 +90,7 @@ namespace QuickServePOS.WebApp.Controllers
                 return PartialView("_CreateMenuItemPartialView", model);
             }
             var dto = _mapper.Map<CreateMenuItemDto>(model);
+
             var response = await _apiHelper.PostFormDataAsync<CreateMenuItemDto,ApiResponse>("MenuItemAPI/Create-MenuItem",dto); 
 
             if (response == null)
@@ -149,7 +151,7 @@ namespace QuickServePOS.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var response =await _apiHelper.DeleteAsync($"MenuItemAPI/{id}");
+            var response =await _apiHelper.DeleteAsync($"MenuItemAPI/SoftDelete/{id}");
 
             if (response == null)
             {
@@ -162,6 +164,64 @@ namespace QuickServePOS.WebApp.Controllers
             }
 
             return Json(new{success = true,message = response?.Message ?? "Delete successful."});
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDeletedMenuItems()
+        {
+            var response =
+                await _apiHelper
+                .GetAsync<List<MenuItemDto>>(
+                    "MenuItemAPI/TrashList");
+
+            var apiBaseUrl =
+                _configuration["ApiSettings:BaseUrl"];
+
+            if (response != null)
+            {
+                foreach (var item in response)
+                {
+                    if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        item.ImageUrl =
+                            apiBaseUrl!.TrimEnd('/')
+                            + item.ImageUrl;
+                    }
+                }
+            }
+
+            var model =
+                _mapper.Map<List<MenuItemViewModel>>(
+                    response);
+
+            ViewBag.IsTrash = true;
+
+            return PartialView(
+                "_MenuItemTablePartialView",
+                model);
+        }
+       
+
+        [HttpPost]
+        public async Task<IActionResult> Restore(int id)
+        {
+            var response =await _apiHelper.PutDataAsync<object, ApiResponse>($"MenuItemAPI/Restore/{id}", new { });
+
+            if (response == null || !response.Success)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = response?.Message
+                              ?? "Restore failed."
+                });
+            }
+
+            return Json(new
+            {
+                success = true,
+                message = response.Message
+            });
         }
 
 

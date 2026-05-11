@@ -21,12 +21,30 @@
                 Manage restaurant menu items
             </small>
         </div>
+        <div class="d-flex gap-2">
 
-        <button class="btn btn-primary"onclick="OpenModal('/MenuItem/Create','Add Menu Item')">
+            <button class="btn btn-primary" onclick="OpenModal('/MenuItem/Create','Add Menu Item')">
 
-            <i class="fa fa-plus me-1"></i>
-            Add Menu Item
-        </button>
+                <i class="fa fa-plus me-1"></i>
+                Add Menu Item
+            </button>
+
+            <button class="btn btn-outline-dark"
+                    onclick="loadTrashMenuItems()">
+
+                <i class="fa fa-trash me-1"></i>
+                Trash
+
+            </button>
+
+            <button class="btn btn-outline-secondary"
+                    onclick="loadActiveMenuItems()">
+
+                <i class="fa fa-rotate-left me-1"></i>
+                Active
+
+            </button>
+        </div>
     </div>
 
     <!-- BODY -->

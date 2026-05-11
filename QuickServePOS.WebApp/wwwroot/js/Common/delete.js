@@ -49,6 +49,9 @@
 
                         refreshDashboard();
                     }
+                    else if (typeof reloadMenuItemData === "function") {
+                        reloadMenuItemData();
+                    }
                     else {
 
                         location.reload();

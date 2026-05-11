@@ -164,7 +164,7 @@ namespace QuickServePOS.WebAPI.Controllers
                 Message = "Menu item updated successfully."
             });
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("SoftDelete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var menuItem = await _unitOfWork.MenuItems.GetByIdAsync(id);
@@ -186,6 +186,47 @@ namespace QuickServePOS.WebAPI.Controllers
             {
                 Success = true,
                 Message = "Menu item deleted successfully."
+            });
+        }
+
+        [HttpGet("TrashList")]
+        public async Task<IActionResult> Trash()
+        {
+            var items =
+                await _unitOfWork.MenuItems
+                    .GetDeletedMenuItemsAsync();
+
+            var data =
+                _mapper.Map<List<MenuItemDto>>(items);
+
+            return Ok(data);
+        }
+
+        [HttpPut("Restore/{id}")]
+        public async Task<IActionResult> Restore(int id)
+        {
+            var item =await _unitOfWork.MenuItems.GetByIdIgnoreQueryFilterAsync(id);
+
+            if (item == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Menu item not found."
+                });
+            }
+
+            item.IsDeleted = false;
+            item.UpdatedAt = DateTime.UtcNow;
+
+            _unitOfWork.MenuItems.Update(item);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Menu item restored successfully."
             });
         }
 
