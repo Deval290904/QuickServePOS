@@ -62,7 +62,7 @@ namespace QuickServePOS.WebAPI.Controllers
             return Ok(data);
         }
 
-        [HttpPost]
+        [HttpPost("Create-MenuItem")]
         public async Task<IActionResult> Create([FromForm] CreateMenuItemDto dto)
         {
             var exists =
@@ -102,8 +102,7 @@ namespace QuickServePOS.WebAPI.Controllers
         }
 
         [HttpPut("Update-MenuItem")]
-        public async Task<IActionResult> Update(
-    [FromForm] UpdateMenuItemDto dto)
+        public async Task<IActionResult> Update([FromForm] UpdateMenuItemDto dto)
         {
             var menuItem =
                 await _unitOfWork.MenuItems
@@ -168,9 +167,7 @@ namespace QuickServePOS.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var menuItem =
-                await _unitOfWork.MenuItems
-                .GetByIdAsync(id);
+            var menuItem = await _unitOfWork.MenuItems.GetByIdAsync(id);
 
             if (menuItem == null)
             {

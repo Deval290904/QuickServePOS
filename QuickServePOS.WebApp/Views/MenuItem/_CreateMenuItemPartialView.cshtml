@@ -1,0 +1,234 @@
+﻿@using QuickServePOS.Models.Entities.Enums
+@using QuickServePOS.Models.ViewModel.Menu
+@model CreateMenuItemViewModel
+
+<form asp-action="Create"
+      method="post"
+      enctype="multipart/form-data">
+
+    <div class="row g-3">
+
+        <!-- CATEGORY -->
+        <div class="col-md-6">
+
+            <label asp-for="CategoryId"
+                   class="form-label fw-semibold">
+                Category
+            </label>
+
+            <select asp-for="CategoryId"
+                    asp-items="Model.Categories"
+                    class="form-select">
+
+                <option value="">
+                    -- Select Category --
+                </option>
+
+            </select>
+
+            <span asp-validation-for="CategoryId"
+                  class="text-danger"></span>
+
+        </div>
+
+        <!-- FOOD TYPE -->
+        <div class="col-md-6">
+
+            <label asp-for="FoodType"
+                   class="form-label fw-semibold">
+                Food Type
+            </label>
+
+            <select asp-for="FoodType"
+                    class="form-select"
+                    asp-items="Html.GetEnumSelectList<FoodType>()">
+            </select>
+
+            <span asp-validation-for="FoodType"
+                  class="text-danger"></span>
+
+        </div>
+
+        <!-- NAME -->
+        <div class="col-md-12">
+
+            <label asp-for="Name"
+                   class="form-label fw-semibold">
+                Menu Item Name
+            </label>
+
+            <input asp-for="Name"
+                   class="form-control"
+                   placeholder="Enter menu item name" />
+
+            <span asp-validation-for="Name"
+                  class="text-danger"></span>
+
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="col-md-12">
+
+            <label asp-for="Description"
+                   class="form-label fw-semibold">
+                Description
+            </label>
+
+            <textarea asp-for="Description"
+                      rows="3"
+                      class="form-control"
+                      placeholder="Enter description"></textarea>
+
+            <span asp-validation-for="Description"
+                  class="text-danger"></span>
+
+        </div>
+
+        <!-- HALF PRICE -->
+        <div class="col-md-6">
+
+            <label asp-for="HalfPrice"
+                   class="form-label fw-semibold">
+                Half Price
+            </label>
+
+            <input asp-for="HalfPrice"
+                   type="number"
+                   step="0.01"
+                   class="form-control"
+                   placeholder="Optional" />
+
+            <span asp-validation-for="HalfPrice"
+                  class="text-danger"></span>
+
+        </div>
+
+        <!-- FULL PRICE -->
+        <div class="col-md-6">
+
+            <label asp-for="FullPrice"
+                   class="form-label fw-semibold">
+                Full Price
+            </label>
+
+            <input asp-for="FullPrice"
+                   type="number"
+                   step="0.01"
+                   class="form-control" />
+
+            <span asp-validation-for="FullPrice"
+                  class="text-danger"></span>
+
+        </div>
+
+        <!-- PREP TIME -->
+        <div class="col-md-6">
+
+            <label asp-for="PreparationTimeMinutes"
+                   class="form-label fw-semibold">
+                Preparation Time (mins)
+            </label>
+
+            <input asp-for="PreparationTimeMinutes"
+                   type="number"
+                   class="form-control" />
+
+            <span asp-validation-for="PreparationTimeMinutes"
+                  class="text-danger"></span>
+
+        </div>
+
+        <!-- IMAGE -->
+        <div class="col-md-6">
+
+            <label asp-for="ImageFile"
+                   class="form-label fw-semibold">
+                Image
+            </label>
+
+            <input asp-for="ImageFile"
+                   type="file"
+                   class="form-control"
+                   accept=".jpg,.jpeg,.png,.webp"
+                   onchange="previewMenuImage(event)" />
+
+            <span asp-validation-for="ImageFile"
+                  class="text-danger"></span>
+
+        </div>
+
+        <!-- IMAGE PREVIEW -->
+        <div class="col-md-12 text-center">
+
+            <img id="menuImagePreview"
+                 src=""
+                 class="img-thumbnail d-none"
+                 style="width:120px;height:120px;object-fit:cover;" />
+
+        </div>
+
+        <!-- SWITCHES -->
+        <div class="col-md-12">
+
+            <div class="form-check form-switch mb-2">
+
+                <input asp-for="IsAvailable"
+                       class="form-check-input" />
+
+                <label asp-for="IsAvailable"
+                       class="form-check-label">
+                    Available
+                </label>
+
+            </div>
+
+            <div class="form-check form-switch mb-2">
+
+                <input asp-for="IsActive"
+                       class="form-check-input" />
+
+                <label asp-for="IsActive"
+                       class="form-check-label">
+                    Active
+                </label>
+
+            </div>
+
+            <div class="form-check form-switch">
+
+                <input asp-for="Is86d"
+                       class="form-check-input" />
+
+                <label asp-for="Is86d"
+                       class="form-check-label">
+                    Mark as 86'd
+                </label>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="mt-4 text-end">
+
+        <button type="button"
+                class="btn btn-light border"
+                data-bs-dismiss="modal">
+
+            Cancel
+
+        </button>
+
+        <button type="submit"
+                class="btn btn-primary">
+
+            <i class="fa fa-save me-1"></i>
+            Save
+
+        </button>
+
+    </div>
+
+</form>

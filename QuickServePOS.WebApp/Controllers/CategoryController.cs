@@ -20,7 +20,7 @@ namespace QuickServePOS.WebApp.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var response = await _apiHelper.GetAsync<List<CategoryDto>>("CategoryAPI");
+            var response = await _apiHelper.GetAsync<List<CategoryDto>>("CategoryAPI/GetAll");
 
             var model = _mapper.Map<List<CategoryViewModel>>(response);
 
@@ -31,7 +31,7 @@ namespace QuickServePOS.WebApp.Controllers
         public async Task<IActionResult> GetCategoryList()
         {
             var response =
-                await _apiHelper.GetAsync<List<CategoryDto>>("CategoryAPI");
+                await _apiHelper.GetAsync<List<CategoryDto>>("CategoryAPI/GetAll");
 
             var model =
                 _mapper.Map<List<CategoryViewModel>>(response);

@@ -3,7 +3,7 @@
     let title = "";
     let text = "";
     let successTitle = "";
-    let method = "POST"
+    let method = "post"
 
     if (actionType === "delete") {
         title = "Are you sure?";
@@ -45,7 +45,14 @@
                         title: successTitle,
                         text: result.message || "Success"
                     });
-                    refreshDashboard();
+                    if (typeof refreshDashboard === "function") {
+
+                        refreshDashboard();
+                    }
+                    else {
+
+                        location.reload();
+                    }
 
                     // ✅ Remove row animation
                     let row = btn.closest("tr");

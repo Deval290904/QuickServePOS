@@ -186,18 +186,72 @@ namespace QuickServePOS.WebApp.HttpHelper
                     }
                 }
 
-                var response =
-                    await _httpClient.PostAsync(
-                        url,
-                        content);
+                var response =await _httpClient.PostAsync(url,content);
 
-                if (!response.IsSuccessStatusCode)
+                var json =await response.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<TResponse>(json);
+            }
+            catch
+            {
+                return default;
+            }
+        }
+
+        public async Task<TResponse?> PutFormDataAsync<TRequest, TResponse>(string url,TRequest model)
+        {
+            try
+            {
+                await AddTokenAsync();
+
+                using var content =
+                    new MultipartFormDataContent();
+
+                var properties =
+                    typeof(TRequest).GetProperties();
+
+                foreach (var property in properties)
                 {
-                    return default;
+                    var value = property.GetValue(model);
+
+                    if (value == null)
+                        continue;
+
+                    // FILE
+                    if (value is IFormFile file)
+                    {
+                        var streamContent =
+                            new StreamContent(
+                                file.OpenReadStream());
+
+                        streamContent.Headers.ContentType =
+                            new MediaTypeHeaderValue(
+                                file.ContentType);
+
+                        content.Add(
+                            streamContent,
+                            property.Name,
+                            file.FileName);
+                    }
+                    else
+                    {
+                        content.Add(
+                            new StringContent(value.ToString()!),
+                            property.Name);
+                    }
                 }
 
-                var json =
-                    await response.Content.ReadAsStringAsync();
+                var request =
+                    new HttpRequestMessage(
+                        HttpMethod.Put,
+                        url)
+                    {
+                        Content = content
+                    };
+
+                var response =await _httpClient.SendAsync(request);
+
+                var json =await response.Content.ReadAsStringAsync();
 
                 return JsonConvert.DeserializeObject<TResponse>(json);
             }

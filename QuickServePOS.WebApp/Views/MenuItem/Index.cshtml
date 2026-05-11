@@ -1,0 +1,49 @@
+﻿@using QuickServePOS.Models.ViewModel.Menu
+@model List<MenuItemViewModel>
+
+@{
+    ViewData["Title"] = "Menu Items";
+}
+
+<div class="card border-0 shadow-sm">
+
+    <!-- HEADER -->
+    <div class="card-header bg-white d-flex
+                justify-content-between
+                align-items-center">
+
+        <div>
+            <h4 class="mb-0 fw-bold">
+                Menu Items
+            </h4>
+
+            <small class="text-muted">
+                Manage restaurant menu items
+            </small>
+        </div>
+
+        <button class="btn btn-primary"onclick="OpenModal('/MenuItem/Create','Add Menu Item')">
+
+            <i class="fa fa-plus me-1"></i>
+            Add Menu Item
+        </button>
+    </div>
+
+    <!-- BODY -->
+    <div class="card-body">
+
+        <div id="menuItemTableContainer">
+
+            <partial name="_MenuItemTablePartialView"
+                     model="Model" />
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+
+    <script src="~/js/modules/menuitem.js"></script>
+
+}

@@ -18,6 +18,7 @@ namespace QuickServePOS.WebApp.HttpHelper
         Task<ApiResponse> PutAsync(string url);
         Task<ApiResponse> PutAsync<T>(string url, T data);
         Task<TResponse?> PutDataAsync<TRequest, TResponse>(string url, TRequest data);
+        Task<TResponse?> PutFormDataAsync<TRequest, TResponse>(string url, TRequest model);
 
     }
 }

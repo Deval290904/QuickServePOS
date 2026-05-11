@@ -22,7 +22,7 @@ namespace QuickServePOS.WebAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             var categories = await _unitOfWork.Categories.GetAllAsync();

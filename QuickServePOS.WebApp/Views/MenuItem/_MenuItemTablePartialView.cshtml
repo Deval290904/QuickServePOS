@@ -1,0 +1,179 @@
+﻿@using QuickServePOS.Models.ViewModel.Menu
+@model List<MenuItemViewModel>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+
+        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486740.png"
+             width="120"
+             class="mb-3" />
+
+        <h5 class="fw-bold">
+            No Menu Items Found
+        </h5>
+
+        <p class="text-muted mb-0">
+            Menu items will appear here.
+        </p>
+
+    </div>
+}
+else
+{
+    <table id="menuItemTable"
+           class="table table-hover align-middle">
+
+        <thead class="table-light">
+
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Food Type</th>
+                <th>Half Price</th>
+                <th>Full Price</th>
+                <th>Status</th>
+                <th class="text-center">
+                    Actions
+                </th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <!-- IMAGE -->
+                    <td>
+
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl"
+                                 width="55"
+                                 height="55"
+                                 class="rounded shadow-sm"
+                                 style="object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <div class="bg-light border rounded
+                                                    d-flex align-items-center
+                                                    justify-content-center"
+                                 style="width:55px;height:55px;">
+
+                                <i class="fa fa-image text-muted"></i>
+
+                            </div>
+                        }
+
+                </td>
+
+                <!-- NAME -->
+                <td>
+
+                    <div class="fw-semibold">
+                        @item.Name
+                    </div>
+
+                    <small class="text-muted">
+                        @item.PreparationTimeMinutes mins
+                    </small>
+
+                </td>
+
+                <!-- CATEGORY -->
+                <td>
+                    @item.CategoryName
+                </td>
+
+                <!-- FOOD TYPE -->
+                <td>
+
+                    <span class="badge
+                                @(item.FoodType.ToString() == "Veg"
+                                                          ? "bg-success"
+                                                          : item.FoodType.ToString() == "Egg"
+                                                              ? "bg-warning text-dark"
+                                                              : "bg-danger")">
+
+                        @item.FoodType
+
+                    </span>
+
+                </td>
+
+                <!-- HALF PRICE -->
+                <td>
+
+                    @(item.HalfPrice.HasValue
+                                    ? $"₹{item.HalfPrice}"
+                                    : "-")
+
+            </td>
+
+                    <!-- FULL PRICE -->
+                    <td>
+                        ₹@item.FullPrice
+                    </td>
+
+                    <!-- STATUS -->
+                    <td>
+
+                @if (item.Is86d)
+                        {
+                            <span class="badge bg-danger">
+                                86'D
+                            </span>
+                        }
+                        else if (item.IsAvailable)
+                        {
+                            <span class="badge bg-success">
+                                Available
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                Unavailable
+                            </span>
+                        }
+
+                    </td>
+
+                    <!-- ACTIONS -->
+                    <td class="text-center">
+
+                        <button class="btn btn-sm btn-light
+                                               border shadow-sm me-1"
+                                onclick="OpenModal(
+                                        '/MenuItem/Edit/@item.Id',
+                                        'Edit Menu Item')">
+
+                            <i class="fa fa-pen text-warning"></i>
+
+                        </button>
+
+                        <button class="btn btn-sm btn-light
+                                               border shadow-sm"
+                                onclick="DeletehandleAction(
+                                        '/MenuItem/Delete',
+                                        '@item.Id',
+                                        this,
+                                        'delete')">
+
+                            <i class="fa fa-trash text-danger"></i>
+
+                        </button>
+
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
