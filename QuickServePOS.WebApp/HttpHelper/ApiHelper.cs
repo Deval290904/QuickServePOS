@@ -3,6 +3,7 @@ using NuGet.Common;
 using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.WebApp.Services;
 using System.Net.Http.Headers;
+using System.Web.Helpers;
 
 namespace QuickServePOS.WebApp.HttpHelper
 {
@@ -92,13 +93,9 @@ namespace QuickServePOS.WebApp.HttpHelper
             await AddTokenAsync();
             var response = await _httpClient.DeleteAsync(url);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                return new ApiResponse { Success = false, Message = error };
-            }
+            var json =await response.Content.ReadAsStringAsync();
 
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse>();
+            var result =JsonConvert.DeserializeObject<ApiResponse>(json);
 
             return new ApiResponse { Success = result?.Success ?? false, Message = result?.Message ?? "Deleted" };
         }

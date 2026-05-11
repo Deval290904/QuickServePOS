@@ -26,7 +26,7 @@ namespace QuickServePOS.Repositories.Repositories
 
         public async Task<CategoryEntity?> GetByIdAsync(int id)
         {
-            return await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Categories.Include(x => x.MenuItems).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task AddAsync(CategoryEntity categoryEntity)
@@ -51,6 +51,22 @@ namespace QuickServePOS.Repositories.Repositories
             return await _context.Categories.AnyAsync(x =>
                     x.Name.ToLower() == name.ToLower()
                     && (!excludeId.HasValue || x.Id != excludeId));
+        }
+
+        public async Task<CategoryEntity?>GetByIdIgnoreQueryFilterAsync(int id)
+        {
+            return await _context.Categories
+                .IgnoreQueryFilters()
+                .Include(x => x.MenuItems)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<List<CategoryEntity>>GetDeletedCategoriesAsync()
+        {
+            return await _context.Categories
+                .IgnoreQueryFilters()
+                .Where(x => x.IsDeleted)
+                .ToListAsync();
         }
     }
 }

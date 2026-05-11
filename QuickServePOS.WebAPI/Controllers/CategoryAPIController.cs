@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.DTO.Menu;
 using QuickServePOS.Models.Entities.Menu;
 using QuickServePOS.Repositories.IUnitofWork;
@@ -117,17 +118,27 @@ namespace QuickServePOS.WebAPI.Controllers
             });
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("SoftDelete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var category = await _unitOfWork.Categories
-                .GetByIdAsync(id);
+          
+            var category = await _unitOfWork.Categories.GetByIdAsync(id);
 
             if (category == null)
             {
-                return NotFound(new
+                return NotFound(new ApiResponse
                 {
+                    Success = false,
                     Message = "Category not found."
+                });
+            }
+            
+            if (category.MenuItems.Any(x => !x.IsDeleted))
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Cannot delete category with active menu items."
                 });
             }
 
@@ -135,9 +146,48 @@ namespace QuickServePOS.WebAPI.Controllers
 
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(new
+            return Ok(new ApiResponse
             {
+                Success = true,
                 Message = "Category deleted successfully."
+            });
+        }
+
+        [HttpGet("TrashList")]
+        public async Task<IActionResult> GetDeletedCategories()
+        {
+            var categories =await _unitOfWork.Categories.GetDeletedCategoriesAsync();
+
+            var data =_mapper.Map<List<CategoryDto>>(categories);
+
+            return Ok(data);
+        }
+
+        [HttpPut("Restore/{id}")]
+        public async Task<IActionResult> Restore(int id)
+        {
+            var category =
+                await _unitOfWork.Categories.GetByIdIgnoreQueryFilterAsync(id);
+
+            if (category == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Category not found."
+                });
+            }
+
+            category.IsDeleted = false;
+
+            _unitOfWork.Categories.Update(category);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Category restored successfully."
             });
         }
     }

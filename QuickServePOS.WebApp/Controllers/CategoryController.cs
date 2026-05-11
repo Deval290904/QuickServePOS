@@ -30,11 +30,11 @@ namespace QuickServePOS.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCategoryList()
         {
-            var response =
-                await _apiHelper.GetAsync<List<CategoryDto>>("CategoryAPI/GetAll");
+            var response =await _apiHelper.GetAsync<List<CategoryDto>>("CategoryAPI/GetAll");
 
-            var model =
-                _mapper.Map<List<CategoryViewModel>>(response);
+            var model = _mapper.Map<List<CategoryViewModel>>(response);
+
+            ViewBag.IsTrash = false;
 
             return PartialView("_CategoryTablePartialView", model);
         }
@@ -60,20 +60,12 @@ namespace QuickServePOS.WebApp.Controllers
             if (response == null)
             {
                 return Json(new { success = false, message ="Category creation failed." });
-               
             }
-
-            if (!response.Success )
+            if (!response.Success)
             {
                 return Json(new { success = false, message = response?.Message ?? "Category creation failed." });
-
             }
-
-            return Json(new
-            {
-                success = true,
-                message = response.Message
-            });
+            return Json(new{success = true,message = response.Message});
         }
 
         [HttpGet]
@@ -117,23 +109,49 @@ namespace QuickServePOS.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var response = await _apiHelper.DeleteAsync( $"CategoryAPI/{id}");
+            var response = await _apiHelper.DeleteAsync($"CategoryAPI/SoftDelete/{id}");
 
             if (response == null)
             {
-                return Json(new
-                {
-                    success = false,
-                    message = response?.Message
-                              ?? "Delete failed."
-                });
+                return Json(new { success = false, message ="Delete failed." });
             }
 
-            return Json(new
+            if(!response.Success)
             {
-                success = true,
-                message = response.Message
-            });
+                return Json(new { success = false, message = response?.Message });
+            }
+
+            return Json(new{success = true,message = response.Message});
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDeletedCategories()
+        {
+            var response =await _apiHelper.GetAsync<List<CategoryDto>>("CategoryAPI/TrashList");
+
+            var model = _mapper.Map<List<CategoryViewModel>>(response);
+
+            ViewBag.IsTrash = true;
+
+            return PartialView( "_CategoryTablePartialView",model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Restore(int id)
+        {
+            var response =await _apiHelper.PutDataAsync<object, ApiResponse>( $"CategoryAPI/Restore/{id}",new { });
+
+            if (response == null)
+            {
+                return Json(new{success = false,message = response?.Message?? "Restore failed."});
+            }
+            if(!response.Success)
+            {
+                return Json(new { success = false, message = response?.Message ?? "Restore failed." });
+            }
+
+            return Json(new{success = true,message = response.Message});
+        }
+
     }
 }

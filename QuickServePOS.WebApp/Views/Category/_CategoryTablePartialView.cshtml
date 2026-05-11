@@ -1,24 +1,48 @@
 ﻿@using QuickServePOS.Models.ViewModel.Menu
 @model List<CategoryViewModel>
 
+@{
+    bool isTrash = ViewBag.IsTrash ?? false;
+}
 
-<table id="categoryTable" class="table table-hover align-middle">
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
 
-    <thead class="table-light">
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Display Order</th>
-            <th>Status</th>
-            <th width="150">Actions</th>
-        </tr>
-    </thead>
+        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486740.png"
+             width="120"
+             class="mb-3" />
 
-    <tbody>
+        <h5 class="fw-bold">
+            No Categories Found
+        </h5>
 
-        @if (Model != null && Model.Any())
-        {
-            foreach (var item in Model)
+        <p class="text-muted mb-0">
+            Categories will appear here.
+        </p>
+
+    </div>
+}
+else
+{
+    <table id="categoryTable"
+           class="table table-hover align-middle">
+
+        <thead class="table-light">
+
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Display Order</th>
+                <th>Status</th>
+                <th width="150">Actions</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
             {
                 <tr>
 
@@ -45,41 +69,55 @@
 
                     </td>
 
-                    <td>
+                    <td class="text-center">
 
-                        <button class="btn btn-sm btn-light border me-1 shadow-sm"
-                                onclick="OpenModal('/Category/Edit/@item.Id','Edit Category')">
+                        @if (!isTrash)
+                        {
+                            <!-- ACTIVE -->
 
-                            <i class="fa fa-pen text-warning"></i>
-                        </button>
+                            <button class="btn btn-sm btn-light border shadow-sm me-1"
+                                    onclick="OpenModal(
+                                                '/Category/Edit/@item.Id',
+                                                'Edit Category')">
 
-                        <button class="btn btn-sm btn-light border shadow-sm"
-                                onclick="DeletehandleAction(
-                                                            '/Category/Delete',
-                                                            @item.Id,
-                                                            this,
-                                                            'delete')">
+                                <i class="fa fa-pen text-warning"></i>
 
-                            <i class="fa fa-trash text-danger"></i>
-                        </button>
+                            </button>
+
+                            <button class="btn btn-sm btn-light border shadow-sm"
+                                    onclick="DeletehandleAction(
+                                                '/Category/Delete',
+                                                '@item.Id',
+                                                this,
+                                                'delete')">
+
+                                <i class="fa fa-trash text-danger"></i>
+
+                            </button>
+                        }
+                        else
+                        {
+                            <!-- TRASH -->
+
+                            <button class="btn btn-sm btn-success shadow-sm"
+                                    onclick="DeletehandleAction(
+                                                '/Category/Restore',
+                                                '@item.Id',
+                                                this,
+                                                'restore')">
+
+                                <i class="fa fa-rotate-left me-1"></i>
+                                Restore
+
+                            </button>
+                        }
 
                     </td>
 
                 </tr>
             }
-        }
-        else
-        {
-            <tr>
-                <td colspan="5"
-                    class="text-center">
 
-                    No categories found.
+        </tbody>
 
-                </td>
-            </tr>
-        }
-
-    </tbody>
-
-</table>
+    </table>
+}

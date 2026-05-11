@@ -52,6 +52,9 @@
                     else if (typeof reloadMenuItemData === "function") {
                         reloadMenuItemData();
                     }
+                    else if (typeof reloadCategoryData === "function") {
+                        reloadCategoryData();
+                    }
                     else {
 
                         location.reload();
