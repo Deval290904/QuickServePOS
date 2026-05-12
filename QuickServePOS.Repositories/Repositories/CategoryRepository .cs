@@ -36,13 +36,14 @@ namespace QuickServePOS.Repositories.Repositories
 
         public void Update(CategoryEntity categoryEntity)
         {
+            categoryEntity.UpdatedAt = DateTime.UtcNow;
             _context.Categories.Update(categoryEntity);
         }
 
         public void Delete(CategoryEntity categoryEntity)
         {
             categoryEntity.IsDeleted = true;
-
+            categoryEntity.DeletedAt = DateTime.UtcNow;
             _context.Categories.Update(categoryEntity);
         }
 
@@ -66,6 +67,7 @@ namespace QuickServePOS.Repositories.Repositories
             return await _context.Categories
                 .IgnoreQueryFilters()
                 .Where(x => x.IsDeleted)
+                .OrderByDescending(x => x.DeletedAt)
                 .ToListAsync();
         }
     }

@@ -7,9 +7,6 @@ using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.DTO.Profile;
 using QuickServePOS.Models.Entities;
 using QuickServePOS.Services.IService;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Processing;
 
 
 namespace QuickServePOS.Services.Service
@@ -74,6 +71,7 @@ namespace QuickServePOS.Services.Service
             user.UserProfile.DOB = model.DOB;
             user.UserProfile.Gender = model.Gender;
             user.UserProfile.Address = model.Address;
+            user.UserProfile.UpdatedAt = DateTime.UtcNow;
 
             await _userManager.UpdateAsync(user);
 
@@ -104,9 +102,10 @@ namespace QuickServePOS.Services.Service
             // Create profile if null
             if (user.UserProfile == null)
             {
-                user.UserProfile = new UserProfile
+                user.UserProfile = new UserProfileEntity
                 {
-                    UserId = user.Id
+                    UserId = user.Id,
+                    CreatedAt = DateTime.UtcNow
                 };
             }
 
@@ -133,6 +132,8 @@ namespace QuickServePOS.Services.Service
 
             user.UserProfile.ProfileImagePath =
                 imagePath;
+
+            user.UserProfile.UpdatedAt = DateTime.UtcNow;
 
             await _AppDbContext.SaveChangesAsync();
 

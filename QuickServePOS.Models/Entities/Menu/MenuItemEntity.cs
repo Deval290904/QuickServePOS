@@ -1,4 +1,5 @@
-﻿using QuickServePOS.Models.Entities.Enums;
+﻿using QuickServePOS.Models.Entities.Common;
+using QuickServePOS.Models.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace QuickServePOS.Models.Entities.Menu
 {
-    public class MenuItemEntity
+    public class MenuItemEntity : BaseEntity
     {
-        public int Id { get; set; }
 
         public int CategoryId { get; set; }
 
@@ -33,12 +33,8 @@ namespace QuickServePOS.Models.Entities.Menu
 
         public int PreparationTimeMinutes { get; set; }
 
-        public bool IsDeleted { get; set; } = false;
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
         public CategoryEntity Category { get; set; } = null!;
-        public DateTime? UpdatedAt { get; set; } 
+
 
     }
 }

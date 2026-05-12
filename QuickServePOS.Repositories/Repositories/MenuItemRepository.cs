@@ -33,15 +33,14 @@ namespace QuickServePOS.Repositories.Repositories
         }
         public void Update(MenuItemEntity entity)
         {
+            entity.UpdatedAt = DateTime.UtcNow;
             _AppDbContext.MenuItems.Update(entity);
         }
 
         public void Delete(MenuItemEntity entity)
         {
             entity.IsDeleted = true;
-
-            entity.UpdatedAt = DateTime.UtcNow;
-
+            entity.DeletedAt = DateTime.UtcNow;
             _AppDbContext.MenuItems.Update(entity);
         }
 
@@ -57,7 +56,7 @@ namespace QuickServePOS.Repositories.Repositories
 
         public async Task<MenuItemEntity?>GetByIdIgnoreQueryFilterAsync(int id)
         {
-            return await _AppDbContext.MenuItems.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == id);
+            return await _AppDbContext.MenuItems.IgnoreQueryFilters().Include(x => x.Category).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<List<MenuItemEntity>>GetDeletedMenuItemsAsync()
@@ -66,6 +65,7 @@ namespace QuickServePOS.Repositories.Repositories
                 .IgnoreQueryFilters()
                 .Include(x => x.Category)
                 .Where(x => x.IsDeleted)
+                .OrderByDescending(x => x.DeletedAt)
                 .ToListAsync();
         }
     }

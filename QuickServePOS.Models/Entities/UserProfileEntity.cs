@@ -1,8 +1,9 @@
-﻿namespace QuickServePOS.Models.Entities
+﻿using QuickServePOS.Models.Entities.Common;
+
+namespace QuickServePOS.Models.Entities
 {
-    public class UserProfileEntity
+    public class UserProfileEntity : BaseEntity
     {
-        public int Id { get; set; }
 
         public string UserId { get; set; }
 
@@ -17,7 +18,5 @@
         public DateTime? JoiningDate { get; set; }
 
         public string? Address { get; set; }
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

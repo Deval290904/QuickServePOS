@@ -57,7 +57,8 @@ public class AdminService : IAdminService
             UserName = emaillower,
             Email = emaillower,
             Name = model.Name,
-            PhoneNumber = model.PhoneNumber
+            PhoneNumber = model.PhoneNumber,
+            CreatedAt = DateTime.UtcNow,
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
@@ -164,6 +165,7 @@ public class AdminService : IAdminService
         user.UserName = model.Email.ToLower();
         user.PhoneNumber = model.PhoneNumber;
 
+
         var result = await _userManager.UpdateAsync(user);
 
         if (!result.Succeeded)
@@ -190,6 +192,7 @@ public class AdminService : IAdminService
             return Fail("User already deleted");
 
         user.IsDeleted = true;
+        
 
         var result = await _userManager.UpdateAsync(user);
 
@@ -210,6 +213,7 @@ public class AdminService : IAdminService
             return Fail("User is not deleted");
 
         user.IsDeleted = false;
+       
 
         var result = await _userManager.UpdateAsync(user);
 
