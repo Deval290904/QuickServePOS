@@ -24,7 +24,7 @@ using QuickServePOS.Services.Service.Menu;
 using QuickServePOS.Services.Service.Table;
 using QuickServePOS.WebAPI.Filter;
 using QuickServePOS.WebAPI.Seed;
-using QuickServePOS.WebApp.AutoMapper.Menu;
+using QuickServePOS.WebApp.AutoMapper.APISideMapper.MenuAPIMapper;
 using System.Text;
 
 

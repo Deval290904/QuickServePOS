@@ -1,0 +1,97 @@
+﻿@using QuickServePOS.Models.ViewModel.Table
+@model List<FloorViewModel>
+
+@{
+    bool isTrash = ViewBag.IsTrash ?? false;
+}
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+
+        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486740.png"
+             width="120"
+             class="mb-3" />
+
+        <h5 class="fw-bold">
+            No Floor Found
+        </h5>
+
+        <p class="text-muted mb-0">
+            Floors will appear here.
+        </p>
+
+    </div>
+}
+else
+{
+    <table class="table table-hover align-middle" id="floorTable">
+
+        <thead class="table-light">
+
+        <tr>
+            <th>Floor Name</th>
+
+            <th>Description</th>
+
+            <th>Total Tables</th>
+
+            <th width="150">Actions</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <strong>@item.Name</strong>
+                    </td>
+
+                    <td>
+                        @(string.IsNullOrWhiteSpace(item.Description)
+                                        ? "-"
+                                        : item.Description)
+                    </td>
+
+                    <td>
+                        <span class="badge bg-info">
+                            @item.TotalTables
+                        </span>
+                    </td>
+
+                    <td>
+
+                     @if (!isTrash)
+                        {
+                            <button class="btn btn-sm btn-light border shadow-sm me-1"
+                                    onclick="OpenModal('/Floor/Edit/@item.Id','Edit Floor')">
+                                <i class="fa fa-pen text-warning"></i>
+             
+                            </button>
+
+                            <button class="btn btn-sm btn-light border shadow-sm"
+                                    onclick="DeletehandleAction('/Floor/Delete','@item.Id',this,'delete')">
+                                <i class="fa fa-trash text-danger"></i>
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-success btn-sm"
+                                    onclick="DeletehandleAction('/Floor/Restore','@item.Id',this,'restore')" >
+                                <i class="fa fa-rotate-left me-1"></i>
+                                Restore
+                            </button>
+                        }
+
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+}

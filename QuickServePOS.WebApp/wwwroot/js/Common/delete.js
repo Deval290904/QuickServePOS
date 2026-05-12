@@ -12,7 +12,7 @@
     }
     else if (actionType === "restore") {
         title = "Restore this record?";
-        text = "This will restore the staff!";
+        text = "This will restore the record!";
         successTitle = "Restored!";
     }
     else if (actionType === "permanentDelete") {
@@ -54,6 +54,9 @@
                     }
                     else if (typeof reloadCategoryData === "function") {
                         reloadCategoryData();
+                    }
+                    else if (typeof reloadFloorData === "function") {
+                        reloadFloorData();
                     }
                     else {
 

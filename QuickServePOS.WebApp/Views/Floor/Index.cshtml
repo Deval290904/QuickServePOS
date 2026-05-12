@@ -1,0 +1,52 @@
+﻿@model List<QuickServePOS.Models.ViewModel.Table.FloorViewModel>
+
+<div class="card">
+
+    <div class="card-header d-flex justify-content-between">
+
+        <h4>Floor Management</h4>
+
+        <div>
+
+            <button class="btn btn-primary"
+                    onclick="OpenModal('/Floor/Create','Add Floor')">
+                <i class="fa fa-plus me-1"></i>
+                Add Floor
+            </button>
+
+            <button class="btn btn-outline-dark"
+                    onclick="loadTrashFloors()">
+
+                <i class="fa fa-trash me-1"></i>
+                Trash
+
+            </button>
+
+            <button class="btn btn-outline-secondary"
+                    onclick="loadActiveFloors()">
+
+                <i class="fa fa-rotate-left me-1"></i>
+                Active
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div id="floorTableContainer">
+
+            <partial name="_FloorTablePartialView" model="Model" />
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <script src="~/js/modules/floor.js"></script>
+
+}

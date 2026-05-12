@@ -41,7 +41,7 @@
 
         language: {
             search: "",
-            searchPlaceholder: "Search staff..."
+            searchPlaceholder: "Search..."
         }
     });
 }

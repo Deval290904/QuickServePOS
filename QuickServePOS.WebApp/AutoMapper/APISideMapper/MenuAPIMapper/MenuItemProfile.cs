@@ -2,7 +2,7 @@
 using QuickServePOS.Models.DTO.Menu;
 using QuickServePOS.Models.Entities.Menu;
 
-namespace QuickServePOS.WebApp.AutoMapper.Menu
+namespace QuickServePOS.WebApp.AutoMapper.APISideMapper.MenuAPIMapper
 {
     public class MenuItemProfile : Profile
     {

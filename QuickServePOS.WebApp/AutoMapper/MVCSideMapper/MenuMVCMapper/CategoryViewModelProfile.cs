@@ -2,7 +2,7 @@
 using QuickServePOS.Models.DTO.Menu;
 using QuickServePOS.Models.ViewModel.Menu;
 
-namespace QuickServePOS.WebApp.AutoMapper.Menu
+namespace QuickServePOS.WebApp.AutoMapper.MVCSideMapper.MenuMVCMapper
 {
     public class CategoryViewModelProfile : Profile
     {

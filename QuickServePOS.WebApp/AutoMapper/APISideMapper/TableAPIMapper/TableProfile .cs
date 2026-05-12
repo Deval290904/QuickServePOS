@@ -3,7 +3,7 @@ using QuickServePOS.Models.DTO.Floor;
 using QuickServePOS.Models.DTO.RestaurantTable;
 using QuickServePOS.Models.Entities.Table;
 
-namespace QuickServePOS.WebApp.AutoMapper.Menu
+namespace QuickServePOS.WebApp.AutoMapper.APISideMapper.TableAPIMapper
 {
     public class TableProfile : Profile
     {

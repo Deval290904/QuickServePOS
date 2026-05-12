@@ -1,10 +1,9 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.DependencyInjection;
 using QuickServePOS.Models.ValidationModels.MVCSideValidation.AdminVmValidation;
-using QuickServePOS.Services.AutoMapper;
-using QuickServePOS.WebApp.AutoMapper.Menu;
+using QuickServePOS.WebApp.AutoMapper;
+using QuickServePOS.WebApp.AutoMapper.MVCSideMapper.MenuMVCMapper;
 using QuickServePOS.WebApp.Filter;
 using QuickServePOS.WebApp.HttpHelper;
 using QuickServePOS.WebApp.Services;
@@ -48,7 +47,7 @@ namespace QuickServePOS.WebApp
             builder.Services.AddScoped<IApiHelper, ApiHelper>();
             builder.Services.AddScoped<ITokenWebService, TokenWebService>();
 
-            builder.Services.AddAutoMapper(typeof(CategoryProfile));
+            builder.Services.AddAutoMapper(typeof(CategoryViewModelProfile));
 
 
             builder.Services.AddDistributedMemoryCache();

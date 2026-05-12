@@ -1,0 +1,40 @@
+﻿@using QuickServePOS.Models.ViewModel.Table
+@model UpdateFloorViewModel
+
+<form asp-action="Edit"
+      method="post">
+
+    <input type="hidden" asp-for="Id" />
+    <div class="row">
+
+        <div class="col-md-12 mb-3">
+            <label asp-for="Name" class="form-label"> </label>
+
+            <input asp-for="Name" class="form-control" placeholder="Enter floor name" />
+
+            <span asp-validation-for="Name" class="text-danger"></span>
+
+        </div>
+
+        <div class="col-md-12 mb-3">
+
+            <label asp-for="Description"
+                   class="form-label">
+            </label>
+
+            <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter description"></textarea>
+
+            <span asp-validation-for="Description"class="text-danger"></span>
+
+        </div>
+
+    </div>
+
+    <div>
+
+        <button type="submit"class="btn btn-primary">Update</button>
+
+    </div>
+
+</form>
+

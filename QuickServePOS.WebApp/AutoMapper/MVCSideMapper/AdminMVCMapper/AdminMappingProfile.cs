@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Services.AutoMapper
+namespace QuickServePOS.WebApp.AutoMapper.MVCSideMapper.AdminMVCMapper
 {
     public class AdminMappingProfile : Profile
     {
