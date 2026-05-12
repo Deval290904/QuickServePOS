@@ -194,7 +194,7 @@ namespace QuickServePOS.WebApp.Controllers
                 return View(viewmodel);
             }
 
-            TempData["Success"] = result?.Message ?? "Reset link sent.";
+            TempData["Success"] = result.Message ?? "Reset link sent.";
 
             return RedirectToAction("Login","Authentication");
         }

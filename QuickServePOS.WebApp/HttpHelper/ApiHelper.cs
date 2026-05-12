@@ -65,14 +65,13 @@ namespace QuickServePOS.WebApp.HttpHelper
             await AddTokenAsync();
             var response = await _httpClient.PostAsJsonAsync(url, data);
 
-            if (!response.IsSuccessStatusCode)
+            var result =await response.Content.ReadFromJsonAsync<ApiResponse>();
+
+            return result ?? new ApiResponse
             {
-                var error = await response.Content.ReadAsStringAsync();
-
-                return new ApiResponse { Success = false, Message = error };
-            }
-
-            return new ApiResponse { Success = true, Message = "Success" };
+                Success = false,
+                Message = "Request failed."
+            };
         }
 
         public async Task<TResponse?> PostDataAsync<TRequest, TResponse>(string url, TRequest data)
@@ -86,6 +85,7 @@ namespace QuickServePOS.WebApp.HttpHelper
 
             return await response.Content
                 .ReadFromJsonAsync<TResponse>();
+
         }
 
         public async Task<ApiResponse> DeleteAsync(string url)
@@ -93,9 +93,7 @@ namespace QuickServePOS.WebApp.HttpHelper
             await AddTokenAsync();
             var response = await _httpClient.DeleteAsync(url);
 
-            var json =await response.Content.ReadAsStringAsync();
-
-            var result =JsonConvert.DeserializeObject<ApiResponse>(json);
+            var result =await response.Content.ReadFromJsonAsync<ApiResponse>();
 
             return new ApiResponse { Success = result?.Success ?? false, Message = result?.Message ?? "Deleted" };
         }
@@ -104,12 +102,10 @@ namespace QuickServePOS.WebApp.HttpHelper
         {
             await AddTokenAsync();
             var response = await _httpClient.PutAsJsonAsync(url, data);
-            if (!response.IsSuccessStatusCode)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                return new ApiResponse { Success = false, Message = error };
-            }
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse>();
+
+            var result =await response.Content.ReadFromJsonAsync<ApiResponse>();
+
+
             return new ApiResponse { Success = result?.Success ?? false, Message = result?.Message ?? "Updated" };
         }
 
@@ -117,12 +113,9 @@ namespace QuickServePOS.WebApp.HttpHelper
         {
             await AddTokenAsync();
             var response = await _httpClient.PutAsync(url, null);
-            if (!response.IsSuccessStatusCode)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                return new ApiResponse { Success = false, Message = error };
-            }
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse>();
+
+            var result =await response.Content.ReadFromJsonAsync<ApiResponse>();
+
             return new ApiResponse { Success = result?.Success ?? false, Message = result?.Message ?? "Updated" };
         }
 
