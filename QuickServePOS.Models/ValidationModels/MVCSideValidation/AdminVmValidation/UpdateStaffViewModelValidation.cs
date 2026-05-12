@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using QuickServePOS.Models.ViewModel.Profile;
 
-namespace QuickServePOS.Models.ValidationModels.MVCSideValidation
+namespace QuickServePOS.Models.ValidationModels.MVCSideValidation.AdminVmValidation
 {
     public class UpdateStaffViewModelValidation : AbstractValidator<UpdateStaffViewModel>
     {

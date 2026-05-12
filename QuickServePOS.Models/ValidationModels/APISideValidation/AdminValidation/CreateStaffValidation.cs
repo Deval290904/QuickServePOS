@@ -1,7 +1,7 @@
-﻿ using FluentValidation;
+﻿using FluentValidation;
 using QuickServePOS.Models.DTO.Admin;
 
-namespace QuickServePOS.Models.ValidationModels
+namespace QuickServePOS.Models.ValidationModels.APISideValidation.AdminValidation
 {
     public class CreateStaffValidation : AbstractValidator<CreateStaffAccountDto>
     {

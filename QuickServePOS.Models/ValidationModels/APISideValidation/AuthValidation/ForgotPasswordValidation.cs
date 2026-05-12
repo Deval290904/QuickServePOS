@@ -1,16 +1,16 @@
 ﻿using FluentValidation;
-using QuickServePOS.Models.ViewModel.Authentication;
+using QuickServePOS.Models.DTO.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Models.ValidationModels.MVCSideValidation
+namespace QuickServePOS.Models.ValidationModels.APISideValidation.AuthValidation
 {
-    public class ForgotPasswordViewModelValidation :AbstractValidator<ForgotPasswordViewModel>
+    public class ForgotPasswordValidation :AbstractValidator<ForgotPasswordDto>
     {
-        public ForgotPasswordViewModelValidation()
+        public ForgotPasswordValidation()
         {
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required.")

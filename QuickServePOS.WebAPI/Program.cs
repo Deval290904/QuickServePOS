@@ -9,7 +9,7 @@ using Microsoft.OpenApi.Models;
 using QuickServePOS.DbContextData.Data;
 using QuickServePOS.Models.Configurations;
 using QuickServePOS.Models.Entities;
-using QuickServePOS.Models.ValidationModels;
+using QuickServePOS.Models.ValidationModels.APISideValidation.AuthValidation;
 using QuickServePOS.Repositories.IUnitofWork;
 using QuickServePOS.Repositories.UnitofWork;
 using QuickServePOS.Services.IService.Admin;

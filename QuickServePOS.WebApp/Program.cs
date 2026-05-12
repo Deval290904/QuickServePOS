@@ -2,7 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
-using QuickServePOS.Models.ValidationModels.MVCSideValidation;
+using QuickServePOS.Models.ValidationModels.MVCSideValidation.AdminVmValidation;
 using QuickServePOS.Services.AutoMapper;
 using QuickServePOS.WebApp.AutoMapper.Menu;
 using QuickServePOS.WebApp.Filter;

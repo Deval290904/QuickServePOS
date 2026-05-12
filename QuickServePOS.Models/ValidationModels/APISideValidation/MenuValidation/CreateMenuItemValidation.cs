@@ -6,16 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Models.ValidationModels.MenuValidation
+namespace QuickServePOS.Models.ValidationModels.APISideValidation.MenuValidation
 {
-    public class UpdateMenuItemValidation : AbstractValidator<UpdateMenuItemDto>
+    public class CreateMenuItemValidation : AbstractValidator<CreateMenuItemDto>
     {
-        public  UpdateMenuItemValidation()
+        public CreateMenuItemValidation()
         {
-            RuleFor(x => x.Id)
-               .GreaterThan(0)
-               .WithMessage("Invalid menu item ID.");
-
             RuleFor(x => x.CategoryId)
                 .GreaterThan(0)
                 .WithMessage("Please select a category.");
@@ -84,6 +80,6 @@ namespace QuickServePOS.Models.ValidationModels.MenuValidation
                     file.Length <= 2 * 1024 * 1024)
                 .WithMessage("Image size cannot exceed 2 MB.");
         }
+
     }
-    
 }

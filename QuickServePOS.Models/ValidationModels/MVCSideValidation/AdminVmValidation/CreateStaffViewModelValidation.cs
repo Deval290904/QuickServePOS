@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Models.ValidationModels.MVCSideValidation
+namespace QuickServePOS.Models.ValidationModels.MVCSideValidation.AdminVmValidation
 {
     public class CreateStaffViewModelValidation : AbstractValidator<CreateStaffViewModel>
     {

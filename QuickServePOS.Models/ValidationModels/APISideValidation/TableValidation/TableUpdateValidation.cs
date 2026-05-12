@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Models.ValidationModels.TableValidation
+namespace QuickServePOS.Models.ValidationModels.APISideValidation.TableValidation
 {
     public class TableUpdateValidation : AbstractValidator<TableUpdateDto>
     {

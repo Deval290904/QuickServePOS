@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Models.ValidationModels.MenuValidation
+namespace QuickServePOS.Models.ValidationModels.APISideValidation.MenuValidation
 {
     public class UpdateCategoryValidation : AbstractValidator<UpdateCategoryDto>
     {

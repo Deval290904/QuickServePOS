@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Models.ValidationModels
+namespace QuickServePOS.Models.ValidationModels.APISideValidation.AuthValidation
 {
     public class ResetPasswordValidation : AbstractValidator<ResetPasswordDto>
     {

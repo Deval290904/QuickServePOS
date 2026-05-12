@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using QuickServePOS.Models.ViewModel.Authentication;
 
-namespace QuickServePOS.Models.ValidationModels.MVCSideValidation
+namespace QuickServePOS.Models.ValidationModels.MVCSideValidation.AuthVmValidation
 {
     public class LoginViewModelValidation : AbstractValidator<LoginViewModel>
     {

@@ -6,12 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Models.ValidationModels.TableValidation
+namespace QuickServePOS.Models.ValidationModels.APISideValidation.TableValidation
 {
-    public class FloorCreateValidation : AbstractValidator<FloorCreateDto>
+    public class FloorUpdateValidation : AbstractValidator<FloorUpdateDto>
     {
-        public FloorCreateValidation()
+        public FloorUpdateValidation()
         {
+            RuleFor(x => x.Id)
+                .GreaterThan(0).WithMessage("Id must be greater than 0.");
+
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required.")
                 .NotEqual("string").WithMessage("Not valid default value.")
