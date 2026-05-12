@@ -1,7 +1,7 @@
 ﻿using QuickServePOS.Models.DTO.Auth;
 using QuickServePOS.Models.DTO.Common;
 
-namespace QuickServePOS.Services.IService
+namespace QuickServePOS.Services.IService.Auth
 {
     public interface IAuthService
     {

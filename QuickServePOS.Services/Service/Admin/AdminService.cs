@@ -5,7 +5,7 @@ using QuickServePOS.Models.DTO.Admin;
 using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.Entities;
 using QuickServePOS.Models.ViewModel;
-using QuickServePOS.Services.IService;
+using QuickServePOS.Services.IService.Admin;
 
 public class AdminService : IAdminService
 {

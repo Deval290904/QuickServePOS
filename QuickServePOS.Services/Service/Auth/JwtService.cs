@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using QuickServePOS.Models.Configurations;
-using QuickServePOS.Services.IService;
+using QuickServePOS.Services.IService.Auth;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace QuickServePOS.Services.Service
+namespace QuickServePOS.Services.Service.Auth
 {
     public class JwtService : IJwtService
     {

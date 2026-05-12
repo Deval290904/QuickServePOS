@@ -13,6 +13,12 @@ namespace QuickServePOS.Repositories.IUnitofWork
 
         IMenuItemRepository MenuItems { get; }
 
+        IFloorRepository Floors { get; }
+
+        ITableRepository Tables { get; }
+
+        ITableMergeRepository TableMerges { get; }
+
         Task<int> SaveChangesAsync();
     }
 }

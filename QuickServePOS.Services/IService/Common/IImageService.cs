@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Services.IService
+namespace QuickServePOS.Services.IService.Common
 {
     public interface IImageService
     {

@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using QuickServePOS.Services.IService;
+using QuickServePOS.Services.IService.Common;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
 
-namespace QuickServePOS.Services.Service
+namespace QuickServePOS.Services.Service.Common
 {
     public class ImageService : IImageService
     {

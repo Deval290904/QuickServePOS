@@ -3,7 +3,7 @@ using QuickServePOS.Models.DTO.Menu;
 using QuickServePOS.Models.DTO.Profile;
 using QuickServePOS.Models.ViewModel.Menu;
 
-namespace QuickServePOS.WebApp.AutoMapper
+namespace QuickServePOS.WebApp.AutoMapper.Menu
 {
     public class MenuItemViewModelProfile : Profile
     {

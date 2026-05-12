@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuickServePOS.Models.DTO.Auth;
-using QuickServePOS.Services.IService;
+using QuickServePOS.Services.IService.Auth;
 using QuickServePOS.Services.Service;
 
 namespace QuickServePOS.WebAPI.Controllers

@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\QuickServePOS.Models\QuickServePOS.Models.csproj" />
     <ProjectReference Include="..\QuickServePOS.Repositories\QuickServePOS.Repositories.csproj" />
+    <ProjectReference Include="..\QuickServePOS.WebApp\QuickServePOS.WebApp.csproj" />
   </ItemGroup>
 
 </Project>

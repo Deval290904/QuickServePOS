@@ -2,7 +2,7 @@
 using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.ViewModel;
 
-namespace QuickServePOS.Services.IService
+namespace QuickServePOS.Services.IService.Admin
 {
     public interface IAdminService
     {

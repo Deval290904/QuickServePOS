@@ -1,32 +1,28 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuickServePOS.Models.DTO.Common;
-using QuickServePOS.Models.DTO.Menu;
-using QuickServePOS.Models.Entities.Menu;
-using QuickServePOS.Repositories.IUnitofWork;
-using QuickServePOS.Services.IService.Common;
-using QuickServePOS.Services.IService.Menu;
+using QuickServePOS.Models.DTO.RestaurantTable;
+using QuickServePOS.Services.IService.Table;
 
 namespace QuickServePOS.WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin,Owner")]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
-    public class MenuItemAPIController : ControllerBase
+    public class TableAPIController : ControllerBase
     {
-        private readonly IMenuItemService _menuItemService;
+        private readonly ITableService _tableService;
 
-        public MenuItemAPIController(IMenuItemService menuItemService)
+        public TableAPIController(ITableService tableService)
         {
-            _menuItemService = menuItemService;
+            _tableService = tableService;
         }
 
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            var data = await _menuItemService.GetAllAsync();
+            var data = await _tableService.GetAllAsync();
 
             return Ok(data);
         }
@@ -34,25 +30,24 @@ namespace QuickServePOS.WebAPI.Controllers
         [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var data = await _menuItemService.GetByIdAsync(id);
+            var data = await _tableService.GetByIdAsync(id);
 
             if (data == null)
             {
                 return NotFound(new ApiResponse
                 {
                     Success = false,
-                    Message = "Menu item not found."
+                    Message = "Table not found."
                 });
             }
 
             return Ok(data);
         }
 
-        [HttpPost("Create-MenuItem")]
-        public async Task<IActionResult> Create([FromForm] CreateMenuItemDto dto)
+        [HttpPost("Create-Table")]
+        public async Task<IActionResult> Create(TableCreateDto dto)
         {
-            var result = await _menuItemService
-                .CreateAsync(dto);
+            var result = await _tableService.CreateAsync(dto);
 
             if (!result.Success)
             {
@@ -62,11 +57,10 @@ namespace QuickServePOS.WebAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("Update-MenuItem")]
-        public async Task<IActionResult> Update([FromForm] UpdateMenuItemDto dto)
+        [HttpPut("Update-Table")]
+        public async Task<IActionResult> Update(TableUpdateDto dto)
         {
-            var result = await _menuItemService
-                .UpdateAsync(dto);
+            var result = await _tableService.UpdateAsync(dto);
 
             if (!result.Success)
             {
@@ -79,7 +73,7 @@ namespace QuickServePOS.WebAPI.Controllers
         [HttpDelete("SoftDelete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _menuItemService.DeleteAsync(id);
+            var result = await _tableService.DeleteAsync(id);
 
             if (!result.Success)
             {
@@ -92,7 +86,8 @@ namespace QuickServePOS.WebAPI.Controllers
         [HttpGet("TrashList")]
         public async Task<IActionResult> Trash()
         {
-            var data = await _menuItemService.GetDeletedAsync();
+            var data = await _tableService
+                .GetDeletedAsync();
 
             return Ok(data);
         }
@@ -100,7 +95,7 @@ namespace QuickServePOS.WebAPI.Controllers
         [HttpPut("Restore/{id}")]
         public async Task<IActionResult> Restore(int id)
         {
-            var result = await _menuItemService.RestoreAsync(id);
+            var result = await _tableService.RestoreAsync(id);
 
             if (!result.Success)
             {

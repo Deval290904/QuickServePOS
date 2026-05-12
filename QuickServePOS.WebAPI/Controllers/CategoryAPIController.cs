@@ -6,6 +6,7 @@ using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.DTO.Menu;
 using QuickServePOS.Models.Entities.Menu;
 using QuickServePOS.Repositories.IUnitofWork;
+using QuickServePOS.Services.IService.Menu;
 
 namespace QuickServePOS.WebAPI.Controllers
 {
@@ -14,21 +15,18 @@ namespace QuickServePOS.WebAPI.Controllers
     [Authorize(Roles = "Admin,Owner")]
     public class CategoryAPIController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly ICategoryService _categoryService;
 
-        public CategoryAPIController(IUnitOfWork unitOfWork, IMapper mapper)
+        public CategoryAPIController(ICategoryService categoryService)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _categoryService = categoryService;
+          
         }
 
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            var categories = await _unitOfWork.Categories.GetAllAsync();
-
-            var data = _mapper.Map<IEnumerable<CategoryDto>>(categories);
+            var data = await _categoryService.GetAllAsync();
 
             return Ok(data);
         }
@@ -37,17 +35,15 @@ namespace QuickServePOS.WebAPI.Controllers
         [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var category = await _unitOfWork.Categories.GetByIdAsync(id);
+            var data = await _categoryService.GetByIdAsync(id);
 
-            if (category == null)
+            if (data == null)
             {
                 return NotFound(new
                 {
                     Message = "Category not found."
                 });
             }
-
-            var data = _mapper.Map<CategoryDto>(category);
 
             return Ok(data);
         }
@@ -55,110 +51,47 @@ namespace QuickServePOS.WebAPI.Controllers
         [HttpPost("Create-Category")]
         public async Task<IActionResult> Create(CreateCategoryDto dto)
         {
-            var exists = await _unitOfWork.Categories
-                .ExistsAsync(dto.Name);
+            var result = await _categoryService.CreateAsync(dto);
 
-            if (exists)
+            if (!result.Success)
             {
-                return BadRequest(new
-                {
-                    Message = "Category name already exists."
-                });
+                return BadRequest(result);
             }
 
-            var category = _mapper.Map<CategoryEntity>(dto);
-
-            await _unitOfWork.Categories.AddAsync(category);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            return Ok(new
-            {
-                Message = "Category created successfully."
-            });
+            return Ok(result);
         }
 
         // PUT: api/category
         [HttpPut("Update-Category")]
         public async Task<IActionResult> Update(UpdateCategoryDto dto)
         {
-            var category = await _unitOfWork.Categories
-                .GetByIdAsync(dto.Id);
+            var result = await _categoryService.UpdateAsync(dto);
 
-            if (category == null)
+            if (!result.Success)
             {
-                return NotFound(new
-                {
-                    Message = "Category not found."
-                });
+                return BadRequest(result);
             }
 
-            var exists = await _unitOfWork.Categories
-                .ExistsAsync(dto.Name, dto.Id);
-
-            if (exists)
-            {
-                return BadRequest(new
-                {
-                    Message = "Category name already exists."
-                });
-            }
-
-            _mapper.Map(dto, category);
-
-            category.UpdatedAt = DateTime.UtcNow;
-
-            _unitOfWork.Categories.Update(category);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            return Ok(new
-            {
-                Message = "Category updated successfully."
-            });
+            return Ok(result);
         }
 
         [HttpDelete("SoftDelete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-          
-            var category = await _unitOfWork.Categories.GetByIdAsync(id);
+            var result = await _categoryService.DeleteAsync(id);
 
-            if (category == null)
+            if (!result.Success)
             {
-                return NotFound(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Category not found."
-                });
-            }
-            
-            if (category.MenuItems.Any(x => !x.IsDeleted))
-            {
-                return BadRequest(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Cannot delete category with active menu items."
-                });
+                return BadRequest(result);
             }
 
-            _unitOfWork.Categories.Delete(category);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Message = "Category deleted successfully."
-            });
+            return Ok(result);
         }
 
         [HttpGet("TrashList")]
         public async Task<IActionResult> GetDeletedCategories()
         {
-            var categories =await _unitOfWork.Categories.GetDeletedCategoriesAsync();
-
-            var data =_mapper.Map<List<CategoryDto>>(categories);
+            var data = await _categoryService.GetDeletedAsync();
 
             return Ok(data);
         }
@@ -166,29 +99,14 @@ namespace QuickServePOS.WebAPI.Controllers
         [HttpPut("Restore/{id}")]
         public async Task<IActionResult> Restore(int id)
         {
-            var category =
-                await _unitOfWork.Categories.GetByIdIgnoreQueryFilterAsync(id);
+            var result = await _categoryService.RestoreAsync(id);
 
-            if (category == null)
+            if (!result.Success)
             {
-                return NotFound(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Category not found."
-                });
+                return BadRequest(result);
             }
 
-            category.IsDeleted = false;
-
-            _unitOfWork.Categories.Update(category);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Message = "Category restored successfully."
-            });
+            return Ok(result);
         }
     }
 }

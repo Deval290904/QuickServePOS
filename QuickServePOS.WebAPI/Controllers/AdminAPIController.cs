@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using QuickServePOS.Models.DTO.Admin;
-using QuickServePOS.Services.IService;
+using QuickServePOS.Services.IService.Admin;
 
 namespace QuickServePOS.WebAPI.Controllers
 {

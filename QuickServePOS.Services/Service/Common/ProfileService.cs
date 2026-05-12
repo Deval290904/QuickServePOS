@@ -6,10 +6,10 @@ using QuickServePOS.DbContextData.Data;
 using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.DTO.Profile;
 using QuickServePOS.Models.Entities;
-using QuickServePOS.Services.IService;
+using QuickServePOS.Services.IService.Common;
 
 
-namespace QuickServePOS.Services.Service
+namespace QuickServePOS.Services.Service.Common
 {
     public class ProfileService : IProfileService
     {

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuickServePOS.Models.DTO.Profile;
-using QuickServePOS.Services.IService;
+using QuickServePOS.Services.IService.Common;
 using System.Security.Claims;
 
 namespace QuickServePOS.WebAPI.Controllers

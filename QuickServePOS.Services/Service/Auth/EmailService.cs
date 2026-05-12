@@ -3,10 +3,10 @@ using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using QuickServePOS.Models.Configurations;
-using QuickServePOS.Services.IService;
+using QuickServePOS.Services.IService.Auth;
 
 
-namespace QuickServePOS.Services.Service
+namespace QuickServePOS.Services.Service.Auth
 {
     public class EmailService : IEmailService
     {

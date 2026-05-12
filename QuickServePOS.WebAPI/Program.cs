@@ -12,8 +12,16 @@ using QuickServePOS.Models.Entities;
 using QuickServePOS.Models.ValidationModels;
 using QuickServePOS.Repositories.IUnitofWork;
 using QuickServePOS.Repositories.UnitofWork;
-using QuickServePOS.Services.IService;
+using QuickServePOS.Services.IService.Admin;
+using QuickServePOS.Services.IService.Auth;
+using QuickServePOS.Services.IService.Common;
+using QuickServePOS.Services.IService.Menu;
+using QuickServePOS.Services.IService.Table;
 using QuickServePOS.Services.Service;
+using QuickServePOS.Services.Service.Auth;
+using QuickServePOS.Services.Service.Common;
+using QuickServePOS.Services.Service.Menu;
+using QuickServePOS.Services.Service.Table;
 using QuickServePOS.WebAPI.Filter;
 using QuickServePOS.WebAPI.Seed;
 using QuickServePOS.WebApp.AutoMapper.Menu;
@@ -194,6 +202,16 @@ namespace QuickServePOS.WebAPI
             builder.Services.AddScoped<IEmailService, EmailService>();
 
             builder.Services.AddScoped<IImageService, ImageService>();
+
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+            builder.Services.AddScoped<IMenuItemService, MenuItemService>();
+
+            builder.Services.AddScoped<IFloorService, FloorService>();
+
+            builder.Services.AddScoped<ITableService, TableService>();
+
+            builder.Services.AddScoped<TableStateMachineService>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

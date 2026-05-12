@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QuickServePOS.Models.Entities;
 using QuickServePOS.Models.Entities.Common;
 using QuickServePOS.Models.Entities.Menu;
+using QuickServePOS.Models.Entities.Table;
 
 namespace QuickServePOS.DbContextData.Data
 {
@@ -20,6 +21,12 @@ namespace QuickServePOS.DbContextData.Data
         public DbSet<CategoryEntity> Categories { get; set; }
 
         public DbSet<MenuItemEntity> MenuItems { get; set; }
+
+        public DbSet<FloorEntity> Floors { get; set; }
+
+        public DbSet<RestaurantTableEntity> RestaurantTables { get; set; }
+
+        public DbSet<TableMergeEntity> TableMerges { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -137,6 +144,68 @@ namespace QuickServePOS.DbContextData.Data
                     .HasForeignKey(x => x.CategoryId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
+
+            // =========================
+            // Floor
+            // =========================
+            modelBuilder.Entity<FloorEntity>(entity =>
+            {
+                entity.Property(x => x.Name)
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                entity.HasIndex(x => x.Name);
+
+                entity.HasQueryFilter(x => !x.IsDeleted);
+            });
+
+            // =========================
+            // RestaurantTable
+            // =========================
+
+            modelBuilder.Entity<RestaurantTableEntity>(entity =>
+            {
+                entity.Property(x => x.TableNumber)
+                    .HasMaxLength(20)
+                    .IsRequired();
+
+                entity.Property(x => x.Status)
+                    .HasConversion<int>();
+
+                entity.HasIndex(x => x.FloorId);
+
+                entity.HasIndex(x => x.Status);
+
+                entity.HasIndex(x => new
+                {
+                    x.FloorId,
+                    x.TableNumber
+                }).IsUnique();
+
+                entity.HasQueryFilter(x => !x.IsDeleted);
+
+                entity.HasOne(x => x.Floor)
+                    .WithMany(x => x.Tables)
+                    .HasForeignKey(x => x.FloorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // =========================
+            // TableMerge
+            // =========================
+
+            modelBuilder.Entity<TableMergeEntity>(entity =>
+            {
+                entity.HasIndex(x => x.PrimaryTableId);
+
+                entity.HasIndex(x => x.ChildTableId);
+
+                entity.HasIndex(x => x.IsActive);
+
+                entity.HasQueryFilter(x => !x.IsDeleted);
+            });
+
+
         }
 
         public override async Task<int> SaveChangesAsync(
