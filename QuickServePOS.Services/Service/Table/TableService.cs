@@ -102,9 +102,13 @@ namespace QuickServePOS.Services.Service
 
             // Status validation
 
-            if (!_stateMachine.CanMoveTo(entity.Status,dto.Status))
+            if (entity.Status != dto.Status)
             {
-                return Fail($"Cannot move from {entity.Status} to {dto.Status}");
+                if (!_stateMachine.CanMoveTo(entity.Status, dto.Status))
+                {
+                    return Fail(
+                        $"Cannot move from {entity.Status} to {dto.Status}");
+                }
             }
 
             _mapper.Map(dto, entity);

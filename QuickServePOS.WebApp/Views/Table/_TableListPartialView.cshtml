@@ -1,0 +1,200 @@
+﻿@using QuickServePOS.Models.Entities.Enums
+@using QuickServePOS.Models.ViewModel.Table
+
+@model List<TableViewModel>
+
+@{
+    bool isTrash = ViewBag.IsTrash ?? false;
+}
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+
+        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486740.png"
+             width="120"
+             class="mb-3" />
+
+        <h5 class="fw-bold">
+            No Tables Found
+        </h5>
+
+        <p class="text-muted mb-0">
+            Tables will appear here.
+        </p>
+
+    </div>
+}
+else
+{
+    <table id="tableTable"
+           class="table table-hover align-middle">
+
+        <thead class="table-light">
+
+            <tr>
+
+                <th>Floor</th>
+
+                <th>Table No</th>
+
+                <th>Capacity</th>
+
+                <th>Status</th>
+
+                <th>Merged</th>
+
+                <th>Active</th>
+
+                <th width="180">Action</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@item.FloorName</td>
+
+                    <td>
+                        <strong>
+                            @item.TableNumber
+                        </strong>
+                    </td>
+
+                    <td>@item.Capacity</td>
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        @switch (item.Status)
+                        {
+                            case TableStatus.Available:
+
+                                <span class="badge bg-success">
+                                    Available
+                                </span>
+                                break;
+
+                            case TableStatus.Occupied:
+
+                                <span class="badge bg-danger">
+                                    Occupied
+                                </span>
+                                break;
+
+                            case TableStatus.Reserved:
+
+                                <span class="badge bg-warning text-dark">
+                                    Reserved
+                                </span>
+                                break;
+
+                            case TableStatus.Cleaning:
+
+                                <span class="badge bg-info text-dark">
+                                    Cleaning
+                                </span>
+                                break;
+                        }
+
+                    </td>
+
+                    <!-- MERGED -->
+
+                    <td>
+
+                        @if (item.IsMerged)
+                        {
+                            <span class="badge bg-dark">
+                                Yes
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                No
+                            </span>
+                        }
+
+                    </td>
+
+                    <!-- ACTIVE -->
+
+                    <td>
+
+                        @if (item.IsActive)
+                        {
+                            <span class="badge bg-success">
+                                Active
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">
+                                Inactive
+                            </span>
+                        }
+
+                    </td>
+
+                    <!-- ACTION -->
+
+                    <td class="text-center">
+
+                        @if (!isTrash)
+                        {
+                            <!-- ACTIVE -->
+
+                            <button class="btn btn-sm btn-light border shadow-sm me-1"
+                                    onclick="OpenModal(
+                                                    '/Table/Edit/@item.Id',
+                                                    'Edit Table')">
+
+                                <i class="fa fa-pen text-warning"></i>
+
+                            </button>
+
+                            <button class="btn btn-sm btn-light border shadow-sm"
+                                    onclick="DeletehandleAction(
+                                                    '/Table/Delete',
+                                                    '@item.Id',
+                                                    this,
+                                                    'delete')">
+
+                                <i class="fa fa-trash text-danger"></i>
+
+                            </button>
+                        }
+                        else
+                        {
+                            <!-- TRASH -->
+
+                            <button class="btn btn-sm btn-success shadow-sm"
+                                    onclick="DeletehandleAction(
+                                                    '/Table/Restore',
+                                                    '@item.Id',
+                                                    this,
+                                                    'restore')">
+
+                                <i class="fa fa-rotate-left me-1"></i>
+
+                                Restore
+
+                            </button>
+                        }
+
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+}

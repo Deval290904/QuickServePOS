@@ -124,13 +124,10 @@ namespace QuickServePOS.WebApp.HttpHelper
             await AddTokenAsync();
             var response = await _httpClient.PutAsJsonAsync(url, data);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                return default;
-            }
+            var json = await response.Content.ReadAsStringAsync();
 
-            return await response.Content
-                .ReadFromJsonAsync<TResponse>();
+            return JsonConvert.DeserializeObject<TResponse>(json);
+
         }
 
         public async Task<TResponse?> PostFormDataAsync<TRequest, TResponse>(string url,TRequest model)

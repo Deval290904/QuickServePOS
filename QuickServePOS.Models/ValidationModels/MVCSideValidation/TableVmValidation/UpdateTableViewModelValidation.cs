@@ -13,18 +13,21 @@ namespace QuickServePOS.Models.ValidationModels.MVCSideValidation.TableVmValidat
         public UpdateTableViewModelValidation() 
         {
             RuleFor(x => x.Id)
-                .GreaterThan(0).WithMessage("Invalid table ID.");
+                 .GreaterThan(0).WithMessage("Invalid table ID.");
 
             RuleFor(x => x.FloorId)
                 .GreaterThan(0).WithMessage("Please select floor.");
 
             RuleFor(x => x.TableNumber)
                 .NotEmpty().WithMessage("Table number is required.")
-                .MaximumLength(20).WithMessage("Table number cannot exceed 20 characters.");
+                .MaximumLength(20).WithMessage("Table number maximum 20 characters.");
 
             RuleFor(x => x.Capacity)
                 .GreaterThan(0).WithMessage("Capacity must be greater than 0.")
-                .LessThanOrEqualTo(50).WithMessage("Capacity cannot exceed 50.");
+                .LessThanOrEqualTo(20).WithMessage("Capacity cannot exceed 20.");
+
+            RuleFor(x => x.Status)
+                .IsInEnum().WithMessage("Invalid table status.");
         }
     }
 }

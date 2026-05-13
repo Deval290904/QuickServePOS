@@ -58,6 +58,9 @@
                     else if (typeof reloadFloorData === "function") {
                         reloadFloorData();
                     }
+                    else if ((typeof reloadTableData === "function")) {
+                        reloadTableData();
+                    }
                     else {
 
                         location.reload();

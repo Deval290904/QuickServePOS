@@ -16,7 +16,7 @@ namespace QuickServePOS.Models.ViewModel.Table
 
         public int Capacity { get; set; }
 
-        public TableStatus Status { get; set; } = TableStatus.Available;
+        public TableStatus? Status { get; set; } = TableStatus.Available;
 
         public List<SelectListItem> Floors { get; set; }= new();
     }

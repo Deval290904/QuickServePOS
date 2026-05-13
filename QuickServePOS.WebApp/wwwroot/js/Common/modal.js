@@ -127,9 +127,24 @@ function bindModalForm() {
 
                                 reloadPageData();
                             }
+                            else if (typeof reloadCategoryData === "function") {
+
+                                reloadCategoryData();
+                            }
+                            else if (typeof reloadMenuItemData === "function") {
+
+                                reloadMenuItemData();
+                            }
+                            else if (typeof reloadFloorData === "function") {
+
+                                reloadFloorData();
+                            }
+                            else if (typeof reloadTableData === "function"){
+                                reloadTableData();
+                            }
                             else {
 
-                                location.reload();
+                                location.reload(); 
                             }
                         });
 
