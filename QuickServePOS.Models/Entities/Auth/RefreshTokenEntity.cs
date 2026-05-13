@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Models.Entities
+namespace QuickServePOS.Models.Entities.Auth
 {
     public class RefreshTokenEntity : BaseEntity
     {

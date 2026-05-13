@@ -1,6 +1,6 @@
 ﻿using QuickServePOS.Models.Entities.Common;
 
-namespace QuickServePOS.Models.Entities
+namespace QuickServePOS.Models.Entities.Auth
 {
     public class UserProfileEntity : BaseEntity
     {

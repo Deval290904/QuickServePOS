@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-namespace QuickServePOS.Models.Entities
+namespace QuickServePOS.Models.Entities.Auth
 {
     public class ApplicationUser: IdentityUser
     {

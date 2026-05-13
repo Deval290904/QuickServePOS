@@ -19,6 +19,8 @@ namespace QuickServePOS.Repositories.IUnitofWork
 
         ITableMergeRepository TableMerges { get; }
 
+        IOrderRepository Orders { get; }
+
         Task<int> SaveChangesAsync();
     }
 }

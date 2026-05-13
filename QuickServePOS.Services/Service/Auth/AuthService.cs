@@ -7,6 +7,7 @@ using QuickServePOS.Models.Configurations;
 using QuickServePOS.Models.DTO.Auth;
 using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.Entities;
+using QuickServePOS.Models.Entities.Auth;
 using QuickServePOS.Services.IService.Auth;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

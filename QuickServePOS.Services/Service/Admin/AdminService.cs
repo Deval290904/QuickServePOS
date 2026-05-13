@@ -4,6 +4,7 @@ using QuickServePOS.DbContextData.Data;
 using QuickServePOS.Models.DTO.Admin;
 using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.Entities;
+using QuickServePOS.Models.Entities.Auth;
 using QuickServePOS.Models.ViewModel;
 using QuickServePOS.Services.IService.Admin;
 

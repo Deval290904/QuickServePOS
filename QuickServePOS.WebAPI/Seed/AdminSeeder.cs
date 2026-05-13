@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using QuickServePOS.Models.Entities;
+using QuickServePOS.Models.Entities.Auth;
 
 namespace QuickServePOS.WebAPI.Seed
 {

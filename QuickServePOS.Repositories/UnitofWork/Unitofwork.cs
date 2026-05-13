@@ -20,6 +20,8 @@ namespace QuickServePOS.Repositories.UnitofWork
         public ITableRepository Tables { get; }
         public ITableMergeRepository TableMerges { get; }
 
+        public IOrderRepository Orders { get; }
+
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
@@ -28,6 +30,7 @@ namespace QuickServePOS.Repositories.UnitofWork
             Floors = new FloorRepository(_context);
             Tables = new TableRepository(_context);
             TableMerges = new TableMergeRepository(_context);
+            Orders = new OrderRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()
