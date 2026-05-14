@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickServePOS.Models.DTO.Order
+namespace QuickServePOS.Models.ViewModel.Order
 {
-    public class OrderItemDetailsDto
+    public class CartItemViewModel
     {
         public int Id { get; set; }
 
@@ -20,6 +20,6 @@ namespace QuickServePOS.Models.DTO.Order
 
         public decimal TotalPrice { get; set; }
 
-        public string? SpecialInstruction{ get; set;}
+        public string? SpecialInstruction { get; set; }
     }
 }

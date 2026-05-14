@@ -1,0 +1,68 @@
+﻿@using QuickServePOS.Models.ViewModel.Order
+@model OrderDetailsViewModel
+
+<div class="offcanvas offcanvas-end"
+     tabindex="-1"
+     id="cartCanvas">
+
+    <!-- HEADER -->
+
+    <div class="offcanvas-header border-bottom">
+
+        <h5 class="fw-bold mb-0">
+
+            Running Order
+
+        </h5>
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas">
+        </button>
+
+    </div>
+
+    <!-- BODY -->
+
+    <div class="offcanvas-body d-flex flex-column">
+
+        <!-- CART ITEMS -->
+
+        <div id="cartItemsContainer">
+
+            <partial name="_CartItemsPartialView"
+                     model="Model.Items" />
+
+        </div>
+
+        <!-- FOOTER -->
+
+        <div class="cart-footer border-top pt-3 mt-auto">
+
+            <div class="d-flex justify-content-between mb-2">
+
+                <span class="fw-semibold">
+                    Subtotal
+                </span>
+
+                <span class="fw-bold"
+                      id="cartSubtotal">
+
+                    ₹ @Model.Subtotal
+
+                </span>
+
+            </div>
+
+            <button class="btn btn-success w-100"
+                    id="confirmOrderBtn">
+
+                Confirm Order
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>

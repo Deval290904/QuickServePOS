@@ -1,0 +1,19 @@
+﻿@using QuickServePOS.Models.ViewModel.Order
+@model List<OrderItemViewModel>
+
+@if (!Model.Any())
+{
+    <div class="text-center text-muted mt-5">
+
+        Cart Empty
+
+    </div>
+}
+else
+{
+    @foreach (var item in Model)
+    {
+        <partial name="_CartItemPartial"
+                 model="item" />
+    }
+}

@@ -70,5 +70,13 @@ namespace QuickServePOS.Repositories.Repositories
                 .OrderByDescending(x => x.DeletedAt)
                 .ToListAsync();
         }
+
+        public async Task<List<CategoryEntity>>GetAllWithMenuItemsAsync()
+        {
+            return await _context.Categories
+                .Include(x => x.MenuItems)
+
+                .ToListAsync();
+        }
     }
 }

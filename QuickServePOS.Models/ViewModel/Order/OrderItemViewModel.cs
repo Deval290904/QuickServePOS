@@ -11,7 +11,6 @@ namespace QuickServePOS.Models.ViewModel.Order
         public int Id { get; set; }
 
         public int MenuItemId { get; set; }
-
         public string MenuItemName { get; set; } = null!;
 
         public int Quantity { get; set; }

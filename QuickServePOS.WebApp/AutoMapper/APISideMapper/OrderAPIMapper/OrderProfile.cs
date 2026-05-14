@@ -12,40 +12,43 @@ namespace QuickServePOS.WebApp.AutoMapper.APISideMapper.OrderAPIMapper
             // Order
             // =========================
 
+            CreateMap<OrderCreateDto, OrderEntity>();
+
+            CreateMap<OrderUpdateDto, OrderEntity>();
+
             CreateMap<OrderEntity, OrderListDto>()
-                .ForMember(dest => dest.TableName,
+                .ForMember(
+                    dest => dest.TableNumber,
                     opt => opt.MapFrom(src =>
                         src.Table != null
                             ? src.Table.TableNumber
                             : null));
 
             CreateMap<OrderEntity, OrderDetailsDto>()
-                .ForMember(dest => dest.TableName,
+                .ForMember(
+                    dest => dest.TableNumber,
                     opt => opt.MapFrom(src =>
                         src.Table != null
                             ? src.Table.TableNumber
                             : null))
 
-                .ForMember(dest => dest.Items,
-                    opt => opt.MapFrom(src =>
-                        src.OrderItems));
-
-            CreateMap<OrderCreateDto, OrderEntity>();
-
-            CreateMap<OrderUpdateDto, OrderEntity>();
+                .ForMember(
+                    dest => dest.Items,
+                    opt => opt.MapFrom(src => src.OrderItems));
 
             // =========================
-            // Order Item
+            // OrderItem
             // =========================
-
-            CreateMap<OrderItemEntity, OrderItemDetailsDto>()
-                .ForMember(dest => dest.MenuItemName,
-                    opt => opt.MapFrom(src =>
-                        src.MenuItem.Name));
 
             CreateMap<OrderItemCreateDto, OrderItemEntity>();
 
             CreateMap<OrderItemUpdateDto, OrderItemEntity>();
+
+            CreateMap<OrderItemEntity, OrderItemListDto>()
+                .ForMember(
+                    dest => dest.MenuItemName,
+                    opt => opt.MapFrom(src =>
+                        src.MenuItem.Name));
         }
     }
     

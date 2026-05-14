@@ -1,21 +1,169 @@
-﻿
-body {
-    background-color: #ffffff;
-}
-.menu-item-card {
-    transition: all 0.3s ease;
+﻿/* =========================
+   CATEGORY
+========================= */
+
+.category-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    scrollbar-width: none;
 }
 
-    .menu-item-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    .category-scroll::-webkit-scrollbar {
+        display: none;
     }
 
-.category-tab-btn {
+.category-btn {
+    border: none;
+    background: #bebeb8;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 999px;
     white-space: nowrap;
-    transition: all 0.3s ease;
+    transition: 0.25s ease;
+    font-weight: 500;
+    font-size: 14px;
 }
 
-    .category-tab-btn:hover {
-        transform: scale(1.05);
+    .category-btn:hover {
+        background: #0026ff;
     }
+
+.active-category {
+    background: #0026ff;
+}
+
+/* =========================
+   MENU CARD
+========================= */
+
+.menu-card {
+    border-radius: 16px;
+    overflow: hidden;
+    transition: 0.25s ease;
+}
+
+    .menu-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    }
+
+/* IMAGE */
+
+.menu-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+/* BODY */
+
+.menu-card .card-body {
+    padding: 14px;
+}
+
+/* TITLE */
+
+.menu-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+/* PRICE */
+
+.menu-price {
+    font-size: 15px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+/* =========================
+   QUANTITY
+========================= */
+
+.qty-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f3f4f6;
+    border-radius: 999px;
+    padding: 6px 10px;
+}
+
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    font-size: 18px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+    .qty-btn:hover {
+        background: #198754;
+        color: white;
+    }
+
+.qty-input {
+    width: 30px;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   ADD BUTTON
+========================= */
+
+.add-cart-btn {
+    height: 42px;
+    border-radius: 12px;
+    border: none;
+    background: #198754;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    transition: 0.25s ease;
+}
+
+    .add-cart-btn:hover {
+        background: #157347;
+        transform: translateY(-2px);
+    }
+
+/* =========================
+   FLOAT CART
+========================= */
+
+.cart-btn {
+    position: relative;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    border: none;
+    background: #808080;
+    color: white;
+    font-size: 22px;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

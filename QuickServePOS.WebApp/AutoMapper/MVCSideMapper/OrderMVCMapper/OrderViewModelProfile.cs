@@ -11,17 +11,21 @@ namespace QuickServePOS.WebApp.AutoMapper.MVCSideMapper.OrderMVCMapper
            
             // Order
 
-            CreateMap<OrderListDto,OrderListViewModel>();
+            //CreateMap<OrderListDto,OrderListViewModel>();
 
-            CreateMap<OrderDetailsDto,OrderDetailsViewModel>();
+            //CreateMap<OrderDetailsDto,OrderDetailsViewModel>();
 
-            // Order Item
+            //// Order Item
          
-            CreateMap<OrderItemDetailsDto,OrderItemViewModel>();
+            //CreateMap<OrderItemDetailsDto,OrderItemViewModel>();
 
-            CreateMap<AddItemViewModel,OrderItemCreateDto>();
+            //CreateMap<AddItemViewModel,OrderItemCreateDto>();
 
-            CreateMap<OrderItemCreateDto,AddItemViewModel>();
+            //CreateMap<OrderItemCreateDto,AddItemViewModel>();
+
+            //CreateMap<OrderItemDetailsDto,EditOrderItemViewModel>();
+
+            //CreateMap<EditOrderItemViewModel, OrderItemUpdateDto>();
         }
     }
 }

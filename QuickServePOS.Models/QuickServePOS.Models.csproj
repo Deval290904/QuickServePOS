@@ -14,4 +14,8 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.23" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ValidationModels\MVCSideValidation\OrderVmValidation\" />
+  </ItemGroup>
+
 </Project>

@@ -15,7 +15,7 @@ namespace QuickServePOS.Models.DTO.Order
 
         public int? TableId { get; set; }
 
-        public string? TableName { get; set; }
+        public string? TableNumber { get; set; }
 
         public OrderType OrderType { get; set; }
 
@@ -31,7 +31,7 @@ namespace QuickServePOS.Models.DTO.Order
 
         public string? Notes { get; set; }
 
-        public List<OrderItemDetailsDto> Items { get; set; }
+        public List<OrderItemListDto> Items { get; set; }
             = new();
     }
 }

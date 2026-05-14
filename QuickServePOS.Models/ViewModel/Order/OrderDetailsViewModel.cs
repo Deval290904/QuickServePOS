@@ -17,6 +17,8 @@ namespace QuickServePOS.Models.ViewModel.Order
 
         public string? TableName { get; set; }
 
+        public string? TableNumber { get; set; }
+
         public OrderType OrderType { get; set; }
 
         public OrderStatus Status { get; set; }

@@ -12,7 +12,7 @@ namespace QuickServePOS.Models.ValidationModels.APISideValidation.OrderValidatio
     {
         public OrderItemUpdateDtoValidation()
         {
-            RuleFor(x => x.Id)
+            RuleFor(x => x.OrderItemId)
                 .GreaterThan(0).WithMessage("Invalid order item ID.");
 
             RuleFor(x => x.Quantity)

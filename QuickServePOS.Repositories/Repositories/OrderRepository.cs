@@ -20,44 +20,6 @@ namespace QuickServePOS.Repositories.Repositories
             _AppDbcontext = appDbContext;
         }
 
-        public async Task<List<OrderEntity>> GetAllAsync()
-        {
-            return await _AppDbcontext.Orders.Include(x => x.Table).ToListAsync();
-        }
-
-        public async Task<OrderEntity?> GetByIdAsync(int id)
-        {
-            return await _AppDbcontext.Orders.FirstOrDefaultAsync(x => x.Id == id);
-        }
-
-        public async Task<OrderEntity?> GetOrderDetailsAsync(int orderId)
-        {
-            return await _AppDbcontext.Orders
-                .Include(x => x.Table)
-                .Include(x => x.OrderItems)
-                    .ThenInclude(x => x.MenuItem)
-                .FirstOrDefaultAsync(x => x.Id == orderId);
-        }
-
-        public async Task<OrderEntity?> GetRunningOrderByTableAsync(int tableId)
-        {
-            return await _AppDbcontext.Orders
-                   .Include(x => x.Table)
-
-                   .Include(x => x.OrderItems)
-                        .ThenInclude(x => x.MenuItem)
-
-                   .FirstOrDefaultAsync(x =>
-                        x.TableId == tableId &&
-                        x.Status == OrderStatus.Running);
-        }
-
-        public async Task<bool> OrderNoExistsAsync(string orderNo)
-        {
-            return await _AppDbcontext.Orders
-                .AnyAsync(x => x.OrderNo == orderNo);
-        }
-
         public async Task AddAsync(OrderEntity entity)
         {
             await _AppDbcontext.Orders.AddAsync(entity);
@@ -68,9 +30,50 @@ namespace QuickServePOS.Repositories.Repositories
             _AppDbcontext.Orders.Update(entity);
         }
 
-        public void Delete(OrderEntity entity)
+        public async Task<OrderEntity?> GetByIdAsync(int id)
         {
-            _AppDbcontext.Orders.Remove(entity);
+            return await _AppDbcontext.Orders
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<int> CountAsync()
+        {
+            return await _AppDbcontext.Orders.CountAsync();
+        }
+
+        public async Task<OrderEntity?> GetRunningOrderByTableIdAsync(int tableId)
+        {
+            return await _AppDbcontext.Orders
+                .Include(x => x.OrderItems)
+                .ThenInclude(x => x.MenuItem)
+
+                .Include(x => x.Table)
+
+                .FirstOrDefaultAsync(x =>
+                    x.TableId == tableId &&
+                    x.Status == OrderStatus.Running);
+        }
+
+        public async Task<OrderEntity?> GetOrderWithItemsAsync(
+            int orderId)
+        {
+            return await _AppDbcontext.Orders
+                .Include(x => x.OrderItems)
+                    .ThenInclude(x => x.MenuItem)
+
+                .Include(x => x.Table)
+
+                .FirstOrDefaultAsync(x =>
+                    x.Id == orderId);
+        }
+
+        public async Task<bool> ExistsRunningOrderAsync(
+            int tableId)
+        {
+            return await _AppDbcontext.Orders
+                .AnyAsync(x =>
+                    x.TableId == tableId &&
+                    x.Status == OrderStatus.Running);
         }
     }
 }

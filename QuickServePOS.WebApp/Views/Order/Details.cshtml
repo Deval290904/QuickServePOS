@@ -1,138 +1,85 @@
 ﻿@using QuickServePOS.Models.ViewModel.Order
-@model OrderDetailsViewModel
+@model POSOrderViewModel
 
-<div class="container-fluid">
-
-    <input type="hidden"
-           id="OrderId"
-           value="@Model.Id" />
+<div class="container-fluid py-3">
 
     <!-- HEADER -->
 
-    <div class="d-flex
-                justify-content-between
-                align-items-center
-                mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
 
-            <h2 class="fw-bold mb-1">
-                @Model.OrderNo
-            </h2>
+            <h3 class="fw-bold mb-0">
 
-            <span class="text-muted">
                 Table :
-                @Model.TableName
-            </span>
+                @Model.Order.TableNumber
+
+            </h3>
+
+            <small class="text-muted">
+
+                Order :
+                @Model.Order.OrderNo
+
+            </small>
 
         </div>
 
-        <!-- RIGHT -->
+        <!-- FLOATING CART BUTTON -->
 
-        <div class="d-flex align-items-center gap-3">
+        <button class="cart-btn"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#cartCanvas">
 
-            <span class="badge bg-danger
-                         px-4
-                         py-2
-                         rounded-pill">
+            <i class="fi fi-shopping-cart"></i>
+            
+            <span class="cart-count"
+                  id="cartCount">
 
-                @Model.Status
+                @Model.Order.Items.Count
 
             </span>
 
-            <!-- CART BUTTON -->
-
-            <button class="btn btn-dark
-                           rounded-pill
-                           position-relative"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#cartOffcanvas">
-
-                <i class="bi bi-cart3"></i>
-
-                Cart
-
-                <span id="cartBadgeCount"
-                      class="position-absolute
-                             top-0
-                             start-100
-                             translate-middle
-                             badge
-                             rounded-pill
-                             bg-danger">
-
-                    @Model.Items.Count
-
-                </span>
-
-            </button>
-
-        </div>
+        </button>
 
     </div>
 
-    <!-- CATEGORY -->
+    <!-- CATEGORY BAR -->
 
-    <div class="mb-4">
+    <div class="category-scroll mb-4">
 
-        <partial name="_CategoryTabsPartialView"
-                 model="ViewBag.Categories" />
+        @foreach (var category in Model.Categories)
+        {
+            <button class="category-btn"
+                    data-category="@category.Id">
+
+                @category.Name
+
+            </button>
+        }
 
     </div>
 
     <!-- MENU ITEMS -->
 
-    <div id="menuItemsContainer">
+    <div class="row g-4" id="menuItemsContainer">
 
-        <div class="text-center mt-5">
-
-            <h5 class="text-muted">
-
-                Select Category
-
-            </h5>
-
-        </div>
+        @foreach (var item in Model.MenuItems)
+        {
+            <partial name="_MenuItemCardPartial"
+                     model="item" />
+        }
 
     </div>
 
 </div>
 
-<!-- CART OFFCANVAS -->
+<!-- CART -->
 
-<div class="offcanvas offcanvas-end"
-     tabindex="-1"
-     id="cartOffcanvas">
+<partial name="_CartCanvasPartial"
+         model="Model.Order" />
 
-    <div class="offcanvas-header">
+@section Scripts {
 
-        <h5 class="offcanvas-title">
-
-            Order Cart
-
-        </h5>
-
-        <button type="button"
-                class="btn-close"
-                data-bs-dismiss="offcanvas">
-        </button>
-
-    </div>
-
-    <div class="offcanvas-body">
-
-        <div id="cartDrawerContainer">
-
-            <partial name="_CartPartialView"
-                     model="Model" />
-
-        </div>
-
-    </div>
-
-</div>
-
-@section Scripts
-{
-    <script src="~/js/modules/order_category.js"></script>
+    <script src="~/js/Modules/order_details.js"></script>
 }

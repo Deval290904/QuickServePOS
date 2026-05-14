@@ -24,166 +24,73 @@ namespace QuickServePOS.Services.Service.Order
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<ApiResponse> CreateAsync(OrderCreateDto dto)
+        public async Task<ApiResponse> CreateAsync(
+             OrderCreateDto dto)
         {
-            // Check table required
+            // Check existing running order
 
-            if (dto.OrderType == OrderType.DineIn && dto.TableId == null)
-            {
-                return new ApiResponse { Success = false, Message = "Table is required." };
-            }
-            // Running Order Check
             if (dto.TableId.HasValue)
             {
-                var existingOrder = await _unitOfWork.Orders.GetRunningOrderByTableAsync(dto.TableId.Value);
+                var exists = await _unitOfWork.Orders.ExistsRunningOrderAsync(dto.TableId.Value);
 
-                if (existingOrder != null)
+                if (exists)
                 {
                     return new ApiResponse
                     {
                         Success = false,
-                        Message = $"Table already has running order: {existingOrder.OrderNo}"
+                        Message = "Running order already exists for this table."
                     };
                 }
             }
-            // Generate order number
-
-            var orderNo = await GenerateOrderNoAsync();
-
-            // Create entity
 
             var entity = _mapper.Map<OrderEntity>(dto);
 
-            entity.OrderNo = orderNo;
+            entity.OrderNo =await GenerateOrderNoAsync();
 
             entity.Status = OrderStatus.Running;
 
             entity.Subtotal = 0;
-
             entity.TaxAmount = 0;
-
             entity.DiscountAmount = 0;
-
             entity.TotalAmount = 0;
-
-            // Save
 
             await _unitOfWork.Orders.AddAsync(entity);
 
-            await _unitOfWork.SaveChangesAsync();
-
             // Update table status
 
-            if (entity.TableId.HasValue)
+            if (dto.TableId.HasValue)
             {
-                var table = await _unitOfWork.Tables.GetByIdAsync(entity.TableId.Value);
+                var table = await _unitOfWork.Tables
+                    .GetByIdAsync(dto.TableId.Value);
 
                 if (table != null)
                 {
                     table.Status = TableStatus.Occupied;
 
-                    _unitOfWork.Tables.Update(table);
-
-                    await _unitOfWork.SaveChangesAsync();
+                    _unitOfWork.Tables .Update(table);
                 }
             }
 
-            return new ApiResponse { Success = true, Message = "Order created successfully." };
-        }
-
-        public async Task<ApiResponse> AddItemAsync(OrderItemCreateDto dto)
-        {
-            var order = await _unitOfWork.Orders.GetOrderDetailsAsync(dto.OrderId);
-
-            if (order == null)
-            {
-                return new ApiResponse{Success = false, Message = "Order not found."};
-            }
-
-            var menuItem = await _unitOfWork.MenuItems.GetByIdAsync(dto.MenuItemId);
-
-            if (menuItem == null)
-            {
-                return new ApiResponse{ Success = false, Message = "Menu item not found."};
-            }
-
-            var item = new OrderItemEntity
-            {
-                OrderId = dto.OrderId,
-
-                MenuItemId = dto.MenuItemId,
-
-                Quantity = dto.Quantity,
-
-                UnitPrice = menuItem.FullPrice,
-
-                TotalPrice = menuItem.FullPrice
-                    * dto.Quantity,
-
-                SpecialInstruction =
-                    dto.SpecialInstruction
-            };
-
-            order.OrderItems.Add(item);
-
-            // Recalculate totals
-
-            order.Subtotal =order.OrderItems.Sum(x => x.TotalPrice);
-
-            order.TotalAmount =
-                order.Subtotal
-                + order.TaxAmount
-                - order.DiscountAmount;
-
-            _unitOfWork.Orders.Update(order);
-
             await _unitOfWork.SaveChangesAsync();
 
-            return new ApiResponse{Success = true,Message = "Item added successfully."};
-        }
-
-        public async Task<ApiDataResponse<OrderDetailsDto>>GetByIdAsync(int id)
-        {
-            var entity = await _unitOfWork.Orders.GetOrderDetailsAsync(id);
-
-            if (entity == null)
-            {
-                return new ApiDataResponse<OrderDetailsDto>
-                {
-                    Success = false,
-                    Message = "Order not found."
-                };
-            }
-
-            var data = _mapper.Map<OrderDetailsDto>(
-                entity);
-
-            return new ApiDataResponse<OrderDetailsDto>
+            return new ApiResponse
             {
                 Success = true,
-                Data = data
+                Message = "Order created successfully."
             };
         }
 
-        public async Task<ApiDataResponse<List<OrderListDto>>>GetAllAsync()
+        public async Task<ApiResponse> AddItemAsync(
+      OrderItemCreateDto dto)
         {
-            var entities = await _unitOfWork.Orders.GetAllAsync();
+            // =========================
+            // GET ORDER WITH ITEMS
+            // =========================
 
-            var data = _mapper.Map<List<OrderListDto>>(entities);
+            var order = await _unitOfWork.Orders
+                .GetOrderWithItemsAsync(dto.OrderId);
 
-            return new ApiDataResponse<List<OrderListDto>>
-            {
-                Success = true,
-                Message="Orders retrieved successfully.",
-                Data = data
-            };
-        }
-
-        public async Task<ApiResponse> UpdateAsync(OrderUpdateDto dto)
-        {
-            var entity = await _unitOfWork.Orders.GetByIdAsync(dto.Id);
-
-            if (entity == null)
+            if (order == null)
             {
                 return new ApiResponse
                 {
@@ -192,31 +99,118 @@ namespace QuickServePOS.Services.Service.Order
                 };
             }
 
-            entity.Status = dto.Status;
+            // =========================
+            // GET MENU ITEM
+            // =========================
 
-            entity.Notes = dto.Notes;
+            var menuItem = await _unitOfWork.MenuItems
+                .GetByIdAsync(dto.MenuItemId);
 
-            _unitOfWork.Orders.Update(entity);
+            if (menuItem == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Menu item not found."
+                };
+            }
+
+            // =========================
+            // CHECK EXISTING ITEM
+            // =========================
+
+            var existingItem = order.OrderItems
+                .FirstOrDefault(x =>
+                    x.MenuItemId == dto.MenuItemId &&
+                    !x.IsDeleted);
+
+            // =========================
+            // UPDATE EXISTING ITEM
+            // =========================
+
+            if (existingItem != null)
+            {
+                existingItem.Quantity += dto.Quantity;
+
+                existingItem.TotalPrice =
+                    existingItem.Quantity *
+                    existingItem.UnitPrice;
+
+                existingItem.SpecialInstruction =
+                    dto.SpecialInstruction;
+            }
+
+            // =========================
+            // ADD NEW ITEM
+            // =========================
+
+            else
+            {
+                var item = new OrderItemEntity
+                {
+                    OrderId = dto.OrderId,
+
+                    MenuItemId = dto.MenuItemId,
+
+                    Quantity = dto.Quantity,
+
+                    UnitPrice = menuItem.FullPrice,
+
+                    TotalPrice =
+                        dto.Quantity *
+                        menuItem.FullPrice,
+
+                    SpecialInstruction =
+                        dto.SpecialInstruction
+                };
+
+                order.OrderItems.Add(item);
+            }
+
+            // =========================
+            // RECALCULATE TOTALS
+            // =========================
+
+            order.Subtotal = order.OrderItems
+                .Where(x => !x.IsDeleted)
+                .Sum(x => x.TotalPrice);
+
+            order.TotalAmount =
+                order.Subtotal +
+                order.TaxAmount -
+                order.DiscountAmount;
+
+            // =========================
+            // UPDATE ORDER
+            // =========================
+
+            _unitOfWork.Orders.Update(order);
+
+            // =========================
+            // SAVE CHANGES
+            // =========================
 
             await _unitOfWork.SaveChangesAsync();
 
             return new ApiResponse
             {
                 Success = true,
-                Message = "Order updated successfully."
+                Message = "Item added successfully."
             };
         }
 
-        public async Task<ApiDataResponse<OrderDetailsDto>>GetRunningOrderByTableAsync(int tableId)
+        public async Task<ApiDataResponse<OrderDetailsDto>>GetByIdAsync(int orderId)
         {
-            var entity = await _unitOfWork.Orders.GetRunningOrderByTableAsync(tableId);
+            var entity = await _unitOfWork
+                .Orders
+                .GetOrderWithItemsAsync(orderId);
 
             if (entity == null)
             {
                 return new ApiDataResponse<OrderDetailsDto>
                 {
                     Success = false,
-                    Message = "No running order found."
+                    Message = "Order not found."
                 };
             }
 
@@ -229,37 +223,43 @@ namespace QuickServePOS.Services.Service.Order
             };
         }
 
-        public async Task<ApiResponse> DeleteAsync(int id)
+        public async Task<ApiDataResponse<OrderDetailsDto>>GetRunningOrderByTableIdAsync(
+                int tableId)
         {
-            var entity = await _unitOfWork.Orders.GetByIdAsync(id);
+            var entity = await _unitOfWork
+                .Orders
+                .GetRunningOrderByTableIdAsync(tableId);
 
             if (entity == null)
             {
-                return new ApiResponse
+                return new ApiDataResponse<OrderDetailsDto>
                 {
                     Success = false,
-                    Message = "Order not found."
+                    Message = "Running order not found."
                 };
             }
 
-            entity.IsDeleted = true;
+            var data = _mapper.Map<OrderDetailsDto>(entity);
 
-            _unitOfWork.Orders.Update(entity);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            return new ApiResponse
+            return new ApiDataResponse<OrderDetailsDto>
             {
                 Success = true,
-                Message = "Order deleted successfully."
+                Data = data
             };
         }
-        private async Task<string> GenerateOrderNoAsync()
-        {
-            var count = (await _unitOfWork.Orders
-                .GetAllAsync()).Count + 1;
 
-            return $"ORD-{DateTime.UtcNow:yyyyMMdd}-{count:D4}";
+        // =========================
+        // PRIVATE METHODS
+        // =========================
+
+        private async Task<string>
+            GenerateOrderNoAsync()
+        {
+            var count =
+                await _unitOfWork.Orders.CountAsync();
+
+            return
+                $"ORD-{DateTime.UtcNow:yyyyMMdd}-{(count + 1):D4}";
         }
 
     }

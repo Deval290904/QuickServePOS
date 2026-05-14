@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.DTO.Menu;
+using QuickServePOS.Models.DTO.Order;
 using QuickServePOS.Models.Entities.Menu;
 using QuickServePOS.Repositories.IUnitofWork;
 using QuickServePOS.Services.IService.Common;

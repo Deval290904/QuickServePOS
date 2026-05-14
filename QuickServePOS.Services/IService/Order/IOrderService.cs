@@ -10,18 +10,12 @@ namespace QuickServePOS.Services.IService.Order
 {
     public interface IOrderService
     {
-        Task<ApiResponse> CreateAsync(OrderCreateDto dto);
+        Task<ApiResponse> CreateAsync( OrderCreateDto dto);
 
         Task<ApiResponse> AddItemAsync(OrderItemCreateDto dto);
 
-        Task<ApiDataResponse<OrderDetailsDto>>GetByIdAsync(int id);
+        Task<ApiDataResponse<OrderDetailsDto>> GetByIdAsync(int orderId);
 
-        Task<ApiDataResponse<List<OrderListDto>>>GetAllAsync();
-
-        Task<ApiResponse> UpdateAsync(OrderUpdateDto dto);
-
-        Task<ApiDataResponse<OrderDetailsDto>>GetRunningOrderByTableAsync(int tableId);
-
-        Task<ApiResponse> DeleteAsync(int id);
+        Task<ApiDataResponse<OrderDetailsDto>>GetRunningOrderByTableIdAsync(int tableId);
     }
 }

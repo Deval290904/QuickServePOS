@@ -1,0 +1,74 @@
+﻿@using QuickServePOS.Models.ViewModel.Order
+@model OrderItemViewModel
+
+<div class="cart-item border rounded p-3 mb-3">
+
+    <!-- TOP -->
+
+    <div class="d-flex justify-content-between align-items-start">
+
+        <div>
+
+            <h6 class="fw-bold mb-1">
+
+                @Model.MenuItemName
+
+            </h6>
+
+            <small class="text-muted">
+
+                ₹ @Model.UnitPrice
+
+            </small>
+
+        </div>
+
+        <div class="fw-bold">
+
+            ₹ @Model.TotalPrice
+
+        </div>
+
+    </div>
+
+    <!-- QTY -->
+
+    <div class="d-flex align-items-center gap-2 mt-3">
+
+        <button class="btn btn-sm btn-outline-secondary cart-minus-btn"
+                data-id="@Model.Id">
+
+            -
+
+        </button>
+
+        <span class="fw-semibold">
+
+            @Model.Quantity
+
+        </span>
+
+        <button class="btn btn-sm btn-outline-secondary cart-plus-btn"
+                data-id="@Model.Id">
+
+            +
+
+        </button>
+
+        <button class="btn btn-sm btn-outline-danger ms-auto cart-delete-btn"
+                data-id="@Model.Id">
+
+            Delete
+
+        </button>
+
+    </div>
+
+    <!-- NOTE -->
+
+    <textarea class="form-control mt-3 special-instruction"
+              rows="2"
+              placeholder="Special instruction"
+              data-id="@Model.Id">@Model.SpecialInstruction</textarea>
+
+</div>

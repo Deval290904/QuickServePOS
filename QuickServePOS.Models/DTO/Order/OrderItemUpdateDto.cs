@@ -8,7 +8,7 @@ namespace QuickServePOS.Models.DTO.Order
 {
     public class OrderItemUpdateDto
     {
-        public int Id { get; set; }
+        public int OrderItemId { get; set; }
 
         public int Quantity { get; set; }
 

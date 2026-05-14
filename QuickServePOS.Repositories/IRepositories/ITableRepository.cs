@@ -1,4 +1,5 @@
-﻿using QuickServePOS.Models.Entities.Table;
+﻿using QuickServePOS.Models.Entities.Order;
+using QuickServePOS.Models.Entities.Table;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace QuickServePOS.Repositories.IRepositories
         Task<bool> ExistsAsync(string tableNumber,int floorId,int? excludeId = null);
 
         Task<RestaurantTableEntity?> GetByIdIgnoreQueryFilterAsync(int id);
+
+       
 
         Task<List<RestaurantTableEntity>> GetDeletedTablesAsync();
     }

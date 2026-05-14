@@ -1,4 +1,6 @@
-﻿using QuickServePOS.Models.Entities.Menu;
+﻿using QuickServePOS.Models.DTO.Common;
+using QuickServePOS.Models.DTO.Order;
+using QuickServePOS.Models.Entities.Menu;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +25,7 @@ namespace QuickServePOS.Repositories.IRepositories
         Task<CategoryEntity?>GetByIdIgnoreQueryFilterAsync(int id);
 
         Task<List<CategoryEntity>>GetDeletedCategoriesAsync();
+
+        Task<List<CategoryEntity>>GetAllWithMenuItemsAsync();
     }
 }

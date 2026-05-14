@@ -19,16 +19,37 @@ namespace QuickServePOS.WebAPI.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll()
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] OrderCreateDto dto)
         {
-            var response = await _orderService.GetAllAsync();
+            var response =
+                await _orderService.CreateAsync(dto);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
 
             return Ok(response);
         }
+        // ADD ITEM
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpPost("AddItem")]
+        public async Task<IActionResult> AddItem([FromBody] OrderItemCreateDto dto)
+        {
+            var response =await _orderService.AddItemAsync(dto);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+        // ORDER DETAILS
+
+        [HttpGet("Details/{id}")]
+        public async Task<IActionResult> Details(int id)
         {
             var response = await _orderService.GetByIdAsync(id);
 
@@ -40,49 +61,12 @@ namespace QuickServePOS.WebAPI.Controllers
             return Ok(response);
         }
 
-        [HttpPost("Create-Order")]
-        public async Task<IActionResult> Create([FromBody] OrderCreateDto dto)
+        // RUNNING ORDER BY TABLE
+      
+        [HttpGet("RunningByTable/{tableId}")]
+        public async Task<IActionResult>RunningByTable(int tableId)
         {
-            var response = await _orderService.CreateAsync(dto);
-
-            if (!response.Success)
-            {
-                return BadRequest(response);
-            }
-
-            return Ok(response);
-        }
-
-        [HttpPost("Add-Item")]
-        public async Task<IActionResult> AddItem([FromBody] OrderItemCreateDto dto)
-        {
-            var response = await _orderService.AddItemAsync(dto);
-
-            if (!response.Success)
-            {
-                return BadRequest(response);
-            }
-
-            return Ok(response);
-        }
-
-        [HttpPut("Update-Order")]
-        public async Task<IActionResult> Update([FromBody] OrderUpdateDto dto)
-        {
-            var response = await _orderService.UpdateAsync(dto);
-
-            if (!response.Success)
-            {
-                return BadRequest(response);
-            }
-
-            return Ok(response);
-        }
-
-        [HttpGet("GetRunningByTable/{tableId}")]
-        public async Task<IActionResult> GetRunningByTable(int tableId)
-        {
-            var response = await _orderService.GetRunningOrderByTableAsync(tableId);
+            var response =await _orderService.GetRunningOrderByTableIdAsync( tableId);
 
             if (!response.Success)
             {
@@ -92,14 +76,14 @@ namespace QuickServePOS.WebAPI.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpGet("Cart/{orderId}")]
+        public async Task<IActionResult> Cart(int orderId)
         {
-            var response = await _orderService.DeleteAsync(id);
+            var response =await _orderService.GetByIdAsync(orderId);
 
             if (!response.Success)
             {
-                return BadRequest(response);
+                return NotFound(response);
             }
 
             return Ok(response);

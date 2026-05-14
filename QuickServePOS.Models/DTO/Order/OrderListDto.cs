@@ -13,7 +13,7 @@ namespace QuickServePOS.Models.DTO.Order
 
         public string OrderNo { get; set; } = null!;
 
-        public string? TableName { get; set; }
+        public string? TableNumber { get; set; }
 
         public OrderType OrderType { get; set; }
 

@@ -1,14 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using QuickServePOS.Models.DTO.Common;
-using QuickServePOS.Models.DTO.Menu;
 using QuickServePOS.Models.DTO.Order;
-using QuickServePOS.Models.DTO.RestaurantTable;
-using QuickServePOS.Models.ViewModel.Menu;
 using QuickServePOS.Models.ViewModel.Order;
-using QuickServePOS.Models.ViewModel.Table;
 using QuickServePOS.WebApp.HttpHelper;
 
 namespace QuickServePOS.WebApp.Controllers
@@ -18,188 +12,124 @@ namespace QuickServePOS.WebApp.Controllers
     {
         private readonly IApiHelper _apiHelper;
 
-        private readonly IMapper _mapper;
-
-        public OrderController(IApiHelper apiHelper, IMapper mapper)
+        public OrderController(IApiHelper apiHelper)
         {
             _apiHelper = apiHelper;
-            _mapper = mapper;
         }
 
-        // TABLE SCREEN
+        // RUNNING TABLES
         public async Task<IActionResult> Index()
         {
-            var response = await _apiHelper.GetAsync<List<TableListDto>>("TableAPI/GetAll");
+            var response = await _apiHelper.GetAsync<List<RunningTableViewModel>>("TableAPI/GetAll");
 
-            var model = _mapper.Map<List<TableListViewModel>>(response);
+            if (response == null)
+            {
+                return View(new List<RunningTableViewModel>());
+            }
 
-            return View(model);
+            return View(response);
         }
+
+        // OPEN TABLE ORDER
 
         public async Task<IActionResult> OpenTable(int tableId)
         {
-            // Check existing order
-
-            var existingOrder = await _apiHelper.GetAsync<ApiDataResponse<OrderDetailsDto>>($"OrderAPI/GetRunningByTable/{tableId}");
+            var runningOrder = await _apiHelper.GetAsync<ApiDataResponse<OrderDetailsViewModel>>($"OrderAPI/RunningByTable/{tableId}");
 
             // Existing running order
 
-            if (existingOrder != null && existingOrder.Success && existingOrder.Data!=null)
+            if (runningOrder != null && runningOrder.Success)
             {
-                return RedirectToAction(nameof(Details),
-                    new
-                    {
-                        id = existingOrder.Data.Id
-                    });
+                return RedirectToAction(nameof(Details),new { id = runningOrder.Data.Id });
             }
+
             // Create new order
 
-            var createResponse = await _apiHelper.PostDataAsync<object, ApiResponse>("OrderAPI/Create-Order",
-                    new
-                    {
-                        tableId = tableId,
-                        orderType = 1
-                    });
+            var createDto = new OrderCreateDto
+            {
+                TableId = tableId,
+                OrderType = Models.Entities.Enums.OrderType.DineIn
+            };
+
+            var createResponse = await _apiHelper.PostDataAsync<OrderCreateDto, ApiResponse>("OrderAPI/Create",createDto);
 
             if (createResponse == null ||!createResponse.Success)
             {
-                TempData["error"] =createResponse?.Message?? "Failed to create order.";
+                TempData["error"] =createResponse?.Message ?? "Unable to create order.";
 
                 return RedirectToAction(nameof(Index));
             }
 
-            // Reload order
+            // Reload running order
 
-            var order = await _apiHelper.GetAsync<ApiDataResponse<OrderDetailsDto>>($"OrderAPI/GetRunningByTable/{tableId}");
+            var newOrder = await _apiHelper.GetAsync<ApiDataResponse<OrderDetailsViewModel>>($"OrderAPI/RunningByTable/{tableId}");
 
-            if (order == null || !order.Success || order.Data == null)
+            if (newOrder == null || !newOrder.Success)
             {
-                TempData["error"] = "Order not found.";
+                TempData["error"] ="Order created but unable to load.";
 
                 return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction(nameof(Details),new { id = order.Data.Id });
+            return RedirectToAction(
+                nameof(Details),
+                new { id = newOrder.Data.Id });
         }
 
         // ORDER DETAILS
-
         public async Task<IActionResult> Details(int id)
         {
+            var orderResponse =
+                await _apiHelper.GetAsync<ApiDataResponse<OrderDetailsViewModel>>($"OrderAPI/Details/{id}");
 
-            var response = await _apiHelper.GetAsync<ApiDataResponse<OrderDetailsDto>>($"OrderAPI/{id}");
-
-            if (response == null || !response.Success || response.Data == null)
+            if (orderResponse == null ||
+                !orderResponse.Success)
             {
                 TempData["error"] = "Order not found.";
 
                 return RedirectToAction(nameof(Index));
             }
-            var categories = await _apiHelper.GetAsync<List<CategoryDto>>("CategoryAPI/GetAll");
 
-            ViewBag.Categories = categories;
+            var categoryResponse =await _apiHelper.GetAsync<List<MenuCategoryViewModel>>("CategoryAPI/GetAll");
 
-            var model = _mapper.Map<OrderDetailsViewModel>(response.Data);
+            var menuResponse =
+                await _apiHelper.GetAsync<List<MenuItemCardViewModel>>("MenuItemAPI/GetAll");
 
-            return View(model);
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> GetMenuItemsByCategory(int categoryId)
-        {
-            var response = await _apiHelper.GetAsync<ApiDataResponse<List<MenuItemDto>>>($"MenuItemAPI/GetByCategory/{categoryId}");
-
-            if (response == null ||!response.Success ||response.Data == null)
+            var vm = new POSOrderViewModel
             {
-                return PartialView("_MenuItemsPartialView",new List<MenuItemViewModel>());
-            }
-
-            var model = _mapper.Map<List<MenuItemViewModel>>(response.Data);
-
-            return PartialView("_MenuItemsPartialView",model);
-        }
-
-        //[HttpPost]
-        //public async Task<IActionResult> AddItem(AddItemViewModel model)
-        //{
-        //    var dto = _mapper.Map<OrderItemCreateDto>(model);
-
-        //    var response = await _apiHelper.PostDataAsync<OrderItemCreateDto,ApiResponse>("OrderAPI/AddItem",dto);
-
-        //    return Json(new
-        //    {
-        //        success = response?.Success,
-        //        message = response?.Message
-        //    });
-        //}
-
-        [HttpPost]
-        public async Task<IActionResult> AddItem(AddItemViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return Json(new
-                {
-                    success = false,
-                    message = "Invalid request."
-                });
-            }
-
-            // MAP DTO
-
-            var dto = new OrderItemCreateDto
-            {
-                OrderId = model.OrderId,
-                MenuItemId = model.MenuItemId,
-                Quantity = model.Quantity,
-                SpecialInstruction = model.SpecialInstruction
-
+                Order = orderResponse.Data,
+                Categories = categoryResponse ?? new(),
+                MenuItems = menuResponse ?? new()
             };
 
-            // API CALL
-
-            var response = await _apiHelper
-                .PostDataAsync<
-                    OrderItemCreateDto,
-                    ApiResponse>(
-                        "OrderAPI/Add-Item",
-                        dto);
-
-            if (response == null ||
-                !response.Success)
+            foreach (var item in vm.MenuItems)
             {
-                return Json(new
-                {
-                    success = false,
-                    message = response?.Message
-                              ?? "Failed to add item."
-                });
+                item.OrderId = vm.Order.Id;
             }
 
-            return Json(new
-            {
-                success = true,
-                message = response.Message
-            });
+            return View(vm);
         }
 
-        [HttpGet]
-        public async Task<IActionResult>LoadCart(int orderId)
+        [HttpPost]
+        public async Task<IActionResult> AddItem(OrderItemCreateDto dto)
         {
-            var response = await _apiHelper.GetAsync<ApiDataResponse<OrderDetailsDto>>($"OrderAPI/{orderId}");
+            var response = await _apiHelper.PostDataAsync<OrderItemCreateDto, ApiResponse>("OrderAPI/AddItem",dto);
 
-            if (response == null ||
-                !response.Success ||
-                response.Data == null)
+            return Json(response);
+        }
+
+        public async Task<IActionResult> GetCart(int orderId)
+        {
+            var response =
+                await _apiHelper.GetAsync<ApiDataResponse<OrderDetailsViewModel>>
+                    ($"OrderAPI/Cart/{orderId}");
+
+            if (response == null || !response.Success)
             {
-                return PartialView("_CartPartialView",new OrderDetailsViewModel());
+                return Content("");
             }
 
-            var model = _mapper.Map<OrderDetailsViewModel>(response.Data);
-
-            return PartialView("_CartPartialView",model);
+            return PartialView("_CartItemsPartialView",response.Data);
         }
     }
-
 }

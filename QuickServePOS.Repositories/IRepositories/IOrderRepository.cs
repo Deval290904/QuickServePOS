@@ -9,20 +9,18 @@ namespace QuickServePOS.Repositories.IRepositories
 {
     public interface IOrderRepository 
     {
-        Task<OrderEntity?> GetByIdAsync(int id);
-
-        Task<List<OrderEntity>> GetAllAsync();
-
-        Task<OrderEntity?> GetOrderDetailsAsync(int orderId);
-
-        Task<OrderEntity?> GetRunningOrderByTableAsync(int tableId);
-
-        Task<bool> OrderNoExistsAsync(string orderNo);
-
         Task AddAsync(OrderEntity entity);
 
         void Update(OrderEntity entity);
 
-        void Delete(OrderEntity entity);
+        Task<OrderEntity?> GetByIdAsync(int id);
+
+        Task<int> CountAsync();
+
+        Task<OrderEntity?> GetRunningOrderByTableIdAsync(int tableId);
+
+        Task<OrderEntity?> GetOrderWithItemsAsync(int orderId);
+
+        Task<bool> ExistsRunningOrderAsync(int tableId);
     }
 }
