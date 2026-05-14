@@ -18,7 +18,7 @@ namespace QuickServePOS.WebApp.AutoMapper.MVCSideMapper.TableMVCMapper
 
 
             // TABLE
-            CreateMap<TableListDto, TableViewModel>().ReverseMap();
+            CreateMap<TableListDto, TableListViewModel>().ReverseMap();
 
             CreateMap<TableCreateDto, CreateTableViewModel>().ReverseMap();
 

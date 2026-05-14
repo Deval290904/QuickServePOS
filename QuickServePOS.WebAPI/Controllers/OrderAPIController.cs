@@ -27,7 +27,7 @@ namespace QuickServePOS.WebAPI.Controllers
             return Ok(response);
         }
 
-        [HttpGet("GetById{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var response = await _orderService.GetByIdAsync(id);
@@ -74,6 +74,19 @@ namespace QuickServePOS.WebAPI.Controllers
             if (!response.Success)
             {
                 return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetRunningByTable/{tableId}")]
+        public async Task<IActionResult> GetRunningByTable(int tableId)
+        {
+            var response = await _orderService.GetRunningOrderByTableAsync(tableId);
+
+            if (!response.Success)
+            {
+                return NotFound(response);
             }
 
             return Ok(response);

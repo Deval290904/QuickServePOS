@@ -23,5 +23,7 @@ namespace QuickServePOS.Services.IService.Menu
         Task<List<MenuItemDto>> GetDeletedAsync();
 
         Task<ApiResponse> RestoreAsync(int id);
+
+        Task<ApiDataResponse<List<MenuItemDto>>> GetByCategoryAsync(int categoryId);
     }
 }

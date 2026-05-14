@@ -1,0 +1,21 @@
+﻿
+body {
+    background-color: #ffffff;
+}
+.menu-item-card {
+    transition: all 0.3s ease;
+}
+
+    .menu-item-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+.category-tab-btn {
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+    .category-tab-btn:hover {
+        transform: scale(1.05);
+    }

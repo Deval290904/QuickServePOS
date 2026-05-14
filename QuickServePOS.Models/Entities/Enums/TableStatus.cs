@@ -11,7 +11,6 @@ namespace QuickServePOS.Models.Entities.Enums
         Available = 1,
         Occupied = 2,
         Reserved = 3,
-        Cleaning = 4,
-        Merged = 5
+        Merged = 4
     }
 }

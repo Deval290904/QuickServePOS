@@ -20,6 +20,8 @@ namespace QuickServePOS.Services.IService.Order
 
         Task<ApiResponse> UpdateAsync(OrderUpdateDto dto);
 
+        Task<ApiDataResponse<OrderDetailsDto>>GetRunningOrderByTableAsync(int tableId);
+
         Task<ApiResponse> DeleteAsync(int id);
     }
 }

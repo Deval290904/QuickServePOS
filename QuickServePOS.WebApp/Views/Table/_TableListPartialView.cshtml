@@ -1,7 +1,7 @@
 ﻿@using QuickServePOS.Models.Entities.Enums
 @using QuickServePOS.Models.ViewModel.Table
 
-@model List<TableViewModel>
+@model List<TableListViewModel>
 
 @{
     bool isTrash = ViewBag.IsTrash ?? false;
@@ -42,8 +42,7 @@ else
 
                 <th>Status</th>
 
-                <th>Merged</th>
-
+                
                 <th>Active</th>
 
                 <th width="180">Action</th>
@@ -95,35 +94,15 @@ else
                                 </span>
                                 break;
 
-                            case TableStatus.Cleaning:
+                            case TableStatus.Merged:
 
-                                <span class="badge bg-info text-dark">
-                                    Cleaning
+                                <span class="badge bg-dark">
+                                    Merged
                                 </span>
                                 break;
                         }
 
                     </td>
-
-                    <!-- MERGED -->
-
-                    <td>
-
-                        @if (item.IsMerged)
-                        {
-                            <span class="badge bg-dark">
-                                Yes
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-secondary">
-                                No
-                            </span>
-                        }
-
-                    </td>
-
                     <!-- ACTIVE -->
 
                     <td>

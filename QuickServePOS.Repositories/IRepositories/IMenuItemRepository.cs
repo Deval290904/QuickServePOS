@@ -24,6 +24,8 @@ namespace QuickServePOS.Repositories.IRepositories
         Task<MenuItemEntity?>GetByIdIgnoreQueryFilterAsync(int id);
 
         Task<List<MenuItemEntity>> GetDeletedMenuItemsAsync();
+
+        Task<List<MenuItemEntity>>GetByCategoryAsync(int categoryId);
     }
 }
 

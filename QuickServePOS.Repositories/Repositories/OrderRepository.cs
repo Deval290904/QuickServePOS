@@ -42,10 +42,14 @@ namespace QuickServePOS.Repositories.Repositories
         public async Task<OrderEntity?> GetRunningOrderByTableAsync(int tableId)
         {
             return await _AppDbcontext.Orders
-                .Include(x => x.OrderItems)
-                .FirstOrDefaultAsync(x =>
-                    x.TableId == tableId &&
-                    x.Status == OrderStatus.Running);
+                   .Include(x => x.Table)
+
+                   .Include(x => x.OrderItems)
+                        .ThenInclude(x => x.MenuItem)
+
+                   .FirstOrDefaultAsync(x =>
+                        x.TableId == tableId &&
+                        x.Status == OrderStatus.Running);
         }
 
         public async Task<bool> OrderNoExistsAsync(string orderNo)

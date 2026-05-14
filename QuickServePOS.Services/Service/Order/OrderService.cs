@@ -42,8 +42,7 @@ namespace QuickServePOS.Services.Service.Order
                     return new ApiResponse
                     {
                         Success = false,
-                        Message =
-                            $"Table already has running order: {existingOrder.OrderNo}"
+                        Message = $"Table already has running order: {existingOrder.OrderNo}"
                     };
                 }
             }
@@ -205,6 +204,28 @@ namespace QuickServePOS.Services.Service.Order
             {
                 Success = true,
                 Message = "Order updated successfully."
+            };
+        }
+
+        public async Task<ApiDataResponse<OrderDetailsDto>>GetRunningOrderByTableAsync(int tableId)
+        {
+            var entity = await _unitOfWork.Orders.GetRunningOrderByTableAsync(tableId);
+
+            if (entity == null)
+            {
+                return new ApiDataResponse<OrderDetailsDto>
+                {
+                    Success = false,
+                    Message = "No running order found."
+                };
+            }
+
+            var data = _mapper.Map<OrderDetailsDto>(entity);
+
+            return new ApiDataResponse<OrderDetailsDto>
+            {
+                Success = true,
+                Data = data
             };
         }
 

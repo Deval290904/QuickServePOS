@@ -68,5 +68,15 @@ namespace QuickServePOS.Repositories.Repositories
                 .OrderByDescending(x => x.DeletedAt)
                 .ToListAsync();
         }
+
+        public async Task<List<MenuItemEntity>>GetByCategoryAsync(int categoryId)
+        {
+            return await _AppDbContext.MenuItems
+                .Where(x =>
+                    x.CategoryId == categoryId &&
+                    x.IsAvailable &&
+                    x.IsActive)
+                .ToListAsync();
+        }
     }
 }

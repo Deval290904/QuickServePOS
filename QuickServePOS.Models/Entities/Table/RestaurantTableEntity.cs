@@ -18,8 +18,6 @@ namespace QuickServePOS.Models.Entities.Table
 
         public TableStatus Status { get; set; } = TableStatus.Available;
 
-        public bool IsMerged { get; set; } = false;
-
         public bool IsActive { get; set; } = true;
 
         public FloorEntity Floor { get; set; } = null!;

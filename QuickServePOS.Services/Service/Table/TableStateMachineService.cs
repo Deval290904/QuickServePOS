@@ -15,16 +15,17 @@ namespace QuickServePOS.Services.Service.Table
             {
                 TableStatus.Available =>
                     next == TableStatus.Reserved
-                    || next == TableStatus.Occupied,
+                    || next == TableStatus.Occupied
+                    || next == TableStatus.Merged,
 
                 TableStatus.Reserved =>
                     next == TableStatus.Occupied
                     || next == TableStatus.Available,
 
                 TableStatus.Occupied =>
-                    next == TableStatus.Cleaning,
+                    next == TableStatus.Available,
 
-                TableStatus.Cleaning =>
+                TableStatus.Merged =>
                     next == TableStatus.Available,
 
                 _ => false

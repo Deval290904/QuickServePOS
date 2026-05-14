@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace QuickServePOS.Models.ViewModel.Table
 {
-    public class TableViewModel
+    public class TableListViewModel
     {
         public int Id { get; set; }
 
@@ -20,8 +20,6 @@ namespace QuickServePOS.Models.ViewModel.Table
         public int Capacity { get; set; }
 
         public TableStatus Status { get; set; }
-
-        public bool IsMerged { get; set; }
 
         public bool IsActive { get; set; }
     }

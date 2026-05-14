@@ -27,7 +27,7 @@ namespace QuickServePOS.WebApp.Controllers
         {
             var response = await _apiHelper.GetAsync<List<TableListDto>>("TableAPI/GetAll");
 
-            var model = _mapper.Map<List<TableViewModel>>(response);
+            var model = _mapper.Map<List<TableListViewModel>>(response);
 
             return View(model);
         }
@@ -37,7 +37,7 @@ namespace QuickServePOS.WebApp.Controllers
         {
             var response = await _apiHelper.GetAsync<List<TableListDto>>("TableAPI/GetAll");
 
-            var model = _mapper.Map<List<TableViewModel>>(response);
+            var model = _mapper.Map<List<TableListViewModel>>(response);
 
             ViewBag.IsTrash = false;
 
@@ -149,7 +149,7 @@ namespace QuickServePOS.WebApp.Controllers
         {
             var response = await _apiHelper.GetAsync<List<TableListDto>>("TableAPI/TrashList");
 
-            var model = _mapper.Map<List<TableViewModel>>(response);
+            var model = _mapper.Map<List<TableListViewModel>>(response);
 
             ViewBag.IsTrash = true;
 

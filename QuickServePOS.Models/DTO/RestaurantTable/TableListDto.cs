@@ -21,8 +21,6 @@ namespace QuickServePOS.Models.DTO.RestaurantTable
 
         public TableStatus Status { get; set; }
 
-        public bool IsMerged { get; set; }
-
         public bool IsActive { get; set; }
     }
 }

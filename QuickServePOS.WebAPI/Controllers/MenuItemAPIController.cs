@@ -110,5 +110,13 @@ namespace QuickServePOS.WebAPI.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetByCategory/{categoryId}")]
+        public async Task<IActionResult> GetByCategory(int categoryId)
+        {
+            var response = await _menuItemService.GetByCategoryAsync(categoryId);
+
+            return Ok(response);
+        }
+
     }
 }

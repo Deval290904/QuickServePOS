@@ -188,5 +188,18 @@ namespace QuickServePOS.Services.Service.Menu
                 Message = message
             };
         }
+
+        public async Task<ApiDataResponse<List<MenuItemDto>>>GetByCategoryAsync(int categoryId)
+        {
+            var items = await _unitOfWork.MenuItems.GetByCategoryAsync(categoryId);
+
+            var data = _mapper.Map<List<MenuItemDto>>(items);
+
+            return new ApiDataResponse<List<MenuItemDto>>
+            {
+                Success = true,
+                Data = data
+            };
+        }
     }
 }
