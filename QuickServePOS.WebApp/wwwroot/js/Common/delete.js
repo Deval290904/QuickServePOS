@@ -1,4 +1,4 @@
-﻿function DeletehandleAction(url, id, btn, actionType) {
+﻿function DeletehandleAction(url, id, btn, actionType,callback=null) {
 
     let title = "";
     let text = "";
@@ -35,7 +35,8 @@
         fetch(`${url}/${id}`, {
             method: method
         })
-            .then(res => res.json())
+            .then(res =>
+                res.json())
             .then(result => {
 
                 if (result.success) {
@@ -45,7 +46,12 @@
                         title: successTitle,
                         text: result.message || "Success"
                     });
-                    if (typeof refreshDashboard === "function") {
+                    if (callback &&
+                        typeof callback === "function") {
+
+                        callback();
+                    }
+                    else if (typeof refreshDashboard === "function") {
 
                         refreshDashboard();
                     }
@@ -58,7 +64,7 @@
                     else if (typeof reloadFloorData === "function") {
                         reloadFloorData();
                     }
-                    else if ((typeof reloadTableData === "function")) {
+                    else if (typeof reloadTableData === "function") {
                         reloadTableData();
                     }
                     else {
@@ -69,18 +75,24 @@
                     // ✅ Remove row animation
                     let row = btn.closest("tr");
 
-                    row.style.transition = "0.3s";
-                    row.style.opacity = "0";
+                    if (row) {
 
-                    setTimeout(() => {
-                        row.remove();
-                    }, 300);
+                        row.style.transition = "0.3s";
+
+                        row.style.opacity = "0";
+
+                        setTimeout(() => {
+
+                            row.remove();
+
+                        }, 300);
+                    }
 
                 } else {
                     Swal.fire("Error", result.message || "Operation failed", "error");
                 }
             })
-            .catch(() => {
+            .catch((err) => {
                 Swal.fire("Error", "Something went wrong", "error");
             });
     });

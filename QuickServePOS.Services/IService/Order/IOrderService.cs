@@ -21,5 +21,7 @@ namespace QuickServePOS.Services.IService.Order
         Task<ApiResponse> CompleteOrderAsync(int orderId);
 
         Task<bool> UpdateCartItemAsync(UpdateCartItemDto dto);
+
+        Task<bool> DeleteCartItemAsync(int orderItemId);
     }
 }

@@ -342,6 +342,38 @@ namespace QuickServePOS.Services.Service.Order
             return true;
         }
 
+        public async Task<bool> DeleteCartItemAsync(int orderItemId)
+        {
+            var orderItem = await _unitOfWork.OrderItems.GetByIdAsync(orderItemId);
+
+            if (orderItem == null)
+            {
+                return false;
+            }
+
+            var order = await _unitOfWork
+                .Orders.GetOrderWithItemsAsync(orderItem.OrderId);
+
+            if (order == null)
+            {
+                return false;
+            }
+
+            _unitOfWork.OrderItems.Remove(orderItem);
+
+            // REMOVE FROM MEMORY ALSO
+
+            order.OrderItems.Remove(orderItem);
+
+            RecalculateOrderTotals(order);
+
+            _unitOfWork.Orders.Update(order);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+
         private void RecalculateOrderTotals(OrderEntity order)
         {
             order.Subtotal =

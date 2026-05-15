@@ -140,5 +140,15 @@ namespace QuickServePOS.WebApp.Controllers
 
             return Json(response);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteCartItem(int id)
+        {
+            var response =
+                await _apiHelper.DeleteAsync(
+                    $"OrderAPI/DeleteCartItem/{id}");
+
+            return Json(response);
+        }
     }
 }

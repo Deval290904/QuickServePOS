@@ -110,15 +110,13 @@
 
                 reloadCart(orderId);
 
-                showToast(
-                    "Item added successfully");
+                showSuccess(response.message);
             },
 
             error: function () {
 
-                showToast(
-                    "Unable to add item",
-                    true);
+                showError(response.error || "Failed to add item to cart");
+                    
             }
         });
 
@@ -161,14 +159,4 @@ function updateCartCount() {
 
     $("#cartCount")
         .text(count);
-}
-
-// =========================
-// TOAST
-// =========================
-
-function showToast(
-    message,
-    isError = false) {
-    alert(message);
 }

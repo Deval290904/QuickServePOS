@@ -27,8 +27,7 @@ $(document).on("click",
 
         if (quantity <= 1) {
 
-            alert(
-                "Minimum quantity is 1");
+            showError("Minimum quantity is 1");
 
             return;
         }
@@ -51,28 +50,18 @@ $(document).on("keydown",
         e.preventDefault();
         const textarea = $(this);
 
-        clearTimeout(
-            textarea.data("timer"));
+        const orderItemId =textarea.data("id");
 
-        const wait = setTimeout(() => {
+        const quantity =textarea.data("qty");
 
-            const orderItemId =
-                textarea.data("id");
-
-            const quantity =
-                textarea.data("qty");
-
-            const instruction =
-                textarea.val();
+        const instruction = textarea.val();
 
             updateCartItem(
                 orderItemId,
                 quantity,
                 instruction);
 
-        }, 800);
-
-        textarea.data("timer", wait);
+       
     });
 
 function updateCartItem(
@@ -105,17 +94,17 @@ function updateCartItem(
 
                 reloadCart(orderId);
 
-                alert(response.message);
+                showSuccess(response.message);
             }
             else {
 
-                alert(response.message);
+                showError(response.message);
             }
         },
 
         error: function () {
 
-            alert("Something went wrong.");
+            showError("Something went wrong.");
         }
     });
 }
@@ -133,3 +122,32 @@ function reloadCart(orderId) {
            
         });
 }
+
+//Delete cart item
+
+$(document).on(
+    "click",
+    ".cart-delete-btn",
+    function () {
+
+
+        const orderItemId =
+            $(this).data("id");
+
+       
+        console.log(orderItemId);
+
+        DeletehandleAction(
+            "/Order/DeleteCartItem",
+            orderItemId,
+            this,
+            "delete",
+
+            function () {
+
+                const orderId =
+                    $("#currentOrderId").val();
+
+                reloadCart(orderId);
+            });
+    });

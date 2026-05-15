@@ -20,7 +20,7 @@ namespace QuickServePOS.Models.ValidationModels.APISideValidation.OrderValidatio
                 .LessThanOrEqualTo(100).WithMessage("Quantity must be less than or equal to 100.");
 
             RuleFor(x => x.SpecialInstruction)
-                .NotEqual("string").WithMessage("Special instruction cannot be the default string value.")
+                
                 .MaximumLength(500).WithMessage("Special instruction must be less than or equal to 500 characters.");
                 
         }

@@ -111,6 +111,27 @@ namespace QuickServePOS.WebAPI.Controllers
             });
         }
 
+        [HttpDelete("DeleteCartItem/{id}")]
+        public async Task<IActionResult> DeleteCartItem(int id)
+        {
+            var result = await _orderService.DeleteCartItemAsync(id);
+
+            if (!result)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Unable to delete cart item."
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Cart item deleted successfully."
+            });
+        }
+
 
     }
 }
