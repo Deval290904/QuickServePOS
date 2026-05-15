@@ -12,7 +12,7 @@ namespace QuickServePOS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin,Owner")]
+    [Authorize(Roles = "Admin,Owner,Waiter,Cashier")]
     public class CategoryAPIController : ControllerBase
     {
         private readonly ICategoryService _categoryService;

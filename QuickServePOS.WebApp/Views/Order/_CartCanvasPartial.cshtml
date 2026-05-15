@@ -26,40 +26,10 @@
 
     <div class="offcanvas-body d-flex flex-column">
 
-        <!-- CART ITEMS -->
+        <div id="cartCanvasContent">
 
-        <div id="cartItemsContainer">
-
-            <partial name="_CartItemsPartialView"
-                     model="Model.Items" />
-
-        </div>
-
-        <!-- FOOTER -->
-
-        <div class="cart-footer border-top pt-3 mt-auto">
-
-            <div class="d-flex justify-content-between mb-2">
-
-                <span class="fw-semibold">
-                    Subtotal
-                </span>
-
-                <span class="fw-bold"
-                      id="cartSubtotal">
-
-                    ₹ @Model.Subtotal
-
-                </span>
-
-            </div>
-
-            <button class="btn btn-success w-100"
-                    id="confirmOrderBtn">
-
-                Confirm Order
-
-            </button>
+            <partial name="_CartCanvasBodyPartialView"
+                     model="Model" />
 
         </div>
 

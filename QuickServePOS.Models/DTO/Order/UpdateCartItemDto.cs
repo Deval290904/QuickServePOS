@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QuickServePOS.Models.DTO.Order
 {
-    public class OrderItemUpdateDto
+    public class UpdateCartItemDto
     {
         public int OrderItemId { get; set; }
 

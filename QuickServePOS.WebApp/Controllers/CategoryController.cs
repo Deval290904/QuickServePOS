@@ -8,7 +8,7 @@ using QuickServePOS.WebApp.HttpHelper;
 
 namespace QuickServePOS.WebApp.Controllers
 {
-    [Authorize(Roles = "Admin,Owner")]
+    [Authorize(Roles = "Admin,Owner,Waiter,Cashier")]
     public class CategoryController : Controller
     {
         private readonly IApiHelper _apiHelper;

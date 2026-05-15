@@ -21,6 +21,8 @@ namespace QuickServePOS.Repositories.IUnitofWork
 
         IOrderRepository Orders { get; }
 
+        IOrderItemRepository OrderItems { get; }
+
         Task<int> SaveChangesAsync();
     }
 }

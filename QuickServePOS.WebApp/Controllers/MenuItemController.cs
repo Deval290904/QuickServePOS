@@ -9,7 +9,7 @@ using QuickServePOS.WebApp.HttpHelper;
 
 namespace QuickServePOS.WebApp.Controllers
 {
-    [Authorize(Roles = "Admin,Owner")]
+    [Authorize(Roles = "Admin,Owner,Waiter,Cashier")]
     public class MenuItemController : Controller
     { 
         private readonly IApiHelper _apiHelper;

@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.DTO.Order;
 using QuickServePOS.Services.IService.Order;
 
 
 namespace QuickServePOS.WebAPI.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Waiter,Cashier")]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderAPIController : ControllerBase
@@ -87,6 +88,27 @@ namespace QuickServePOS.WebAPI.Controllers
             }
 
             return Ok(response);
+        }
+
+        [HttpPost("UpdateCartItem")]
+        public async Task<IActionResult> UpdateCartItem([FromBody] UpdateCartItemDto dto)
+        {
+            var result = await _orderService.UpdateCartItemAsync(dto);
+
+            if (!result)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Cart update failed."
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Cart updated successfully."
+            });
         }
 
 

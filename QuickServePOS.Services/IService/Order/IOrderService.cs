@@ -17,5 +17,9 @@ namespace QuickServePOS.Services.IService.Order
         Task<ApiDataResponse<OrderDetailsDto>> GetByIdAsync(int orderId);
 
         Task<ApiDataResponse<OrderDetailsDto>>GetRunningOrderByTableIdAsync(int tableId);
+
+        Task<ApiResponse> CompleteOrderAsync(int orderId);
+
+        Task<bool> UpdateCartItemAsync(UpdateCartItemDto dto);
     }
 }

@@ -7,7 +7,7 @@ using QuickServePOS.WebApp.HttpHelper;
 
 namespace QuickServePOS.WebApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles="Admin,Waiter,Cashier")]
     public class OrderController : Controller
     {
         private readonly IApiHelper _apiHelper;
@@ -129,7 +129,16 @@ namespace QuickServePOS.WebApp.Controllers
                 return Content("");
             }
 
-            return PartialView("_CartItemsPartialView",response.Data);
+            return PartialView("_CartCanvasBodyPartialView", response.Data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCartItem(UpdateCartItemDto dto)
+        {
+            var response =
+                await _apiHelper.PostDataAsync<UpdateCartItemDto,ApiResponse>("OrderAPI/UpdateCartItem",dto);
+
+            return Json(response);
         }
     }
 }

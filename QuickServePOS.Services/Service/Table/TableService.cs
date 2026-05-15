@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Models.DTO.RestaurantTable;
+using QuickServePOS.Models.Entities.Enums;
 using QuickServePOS.Models.Entities.Table;
 using QuickServePOS.Repositories.IUnitofWork;
 using QuickServePOS.Services.IService;
@@ -104,7 +105,23 @@ namespace QuickServePOS.Services.Service
 
             if (entity.Status != dto.Status)
             {
-                if (!_stateMachine.CanMoveTo(entity.Status, dto.Status))
+                if (entity.Status == TableStatus.Occupied&& dto.Status == TableStatus.Available)
+                {
+                    bool hasRunningOrder =await _unitOfWork.Orders
+                            .ExistsRunningOrderAsync(entity.Id);
+
+                    if (hasRunningOrder)
+                    {
+                        return Fail(
+                            "Table has running order. Complete billing first.");
+                    }
+                }
+
+                // State transition validation
+
+                if (!_stateMachine.CanMoveTo(
+                    entity.Status,
+                    dto.Status))
                 {
                     return Fail(
                         $"Cannot move from {entity.Status} to {dto.Status}");

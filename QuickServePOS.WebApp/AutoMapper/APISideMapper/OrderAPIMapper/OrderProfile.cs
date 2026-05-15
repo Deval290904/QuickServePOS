@@ -42,7 +42,7 @@ namespace QuickServePOS.WebApp.AutoMapper.APISideMapper.OrderAPIMapper
 
             CreateMap<OrderItemCreateDto, OrderItemEntity>();
 
-            CreateMap<OrderItemUpdateDto, OrderItemEntity>();
+            CreateMap<UpdateCartItemDto, OrderItemEntity>();
 
             CreateMap<OrderItemEntity, OrderItemListDto>()
                 .ForMember(

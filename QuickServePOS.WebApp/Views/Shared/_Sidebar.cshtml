@@ -1,161 +1,283 @@
-﻿
-@{
+﻿@{
+    var controller =
+        ViewContext.RouteData.Values["controller"]?.ToString();
+
     ViewData["Title"] = "_Sidebar";
 }
 
-<div class="sidebar sidebar-dark sidebar-fixed border-end" id="sidebar">
-    
+<div class="sidebar sidebar-dark sidebar-fixed border-end"
+     id="sidebar">
+
     <!-- BRAND -->
+
     <div class="sidebar-header border-bottom">
+
         <div class="sidebar-brand">
-            <h5 class="text-white">QuickServe POS</h5>
+
+            <h5 class="text-white">
+
+                QuickServe POS
+
+            </h5>
+
         </div>
+
     </div>
 
     <!-- MENU -->
-    <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
 
-        <!-- COMMON DASHBOARD -->
+    <ul class="sidebar-nav"
+        data-coreui="navigation"
+        data-simplebar="">
+
+        <!-- DASHBOARD -->
+
         <li class="nav-item">
-            <a class="nav-link" asp-controller="Dashboard" asp-action="Index">
+
+            <a class="nav-link @(controller == "Dashboard" ? "active" : "")"
+               asp-controller="Dashboard"
+               asp-action="Index">
+
                 Dashboard
+
             </a>
+
         </li>
 
         <!-- ================= ADMIN ================= -->
         @if (User.IsInRole("Admin"))
         {
-            <li class="nav-title">Admin</li>
+            <li class="nav-title">
 
-            <li class="nav-item">
-                <a class="nav-link" asp-controller="User" asp-action="Index">
-                    User Management
-                </a>
+                Admin
+
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Admin" asp-action="StaffList">
+
+                <a class="nav-link @(controller == "Admin" ? "active" : "")"
+                   asp-controller="Admin"
+                   asp-action="StaffList">
+
                     Staff Management
+
                 </a>
+
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Category" asp-action="Index">
+
+                <a class="nav-link @(controller == "Category" ? "active" : "")"
+                   asp-controller="Category"
+                   asp-action="Index">
+
                     Category Management
+
                 </a>
+
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" asp-controller="MenuItem" asp-action="Index">
+
+                <a class="nav-link @(controller == "MenuItem" ? "active" : "")"
+                   asp-controller="MenuItem"
+                   asp-action="Index">
+
                     Menu Item Management
+
                 </a>
+
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Floor" asp-action="Index">
+
+                <a class="nav-link @(controller == "Floor" ? "active" : "")"
+                   asp-controller="Floor"
+                   asp-action="Index">
+
                     Floor Management
+
                 </a>
+
             </li>
+
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Table" asp-action="Index">
+
+                <a class="nav-link @(controller == "Table" ? "active" : "")"
+                   asp-controller="Table"
+                   asp-action="Index">
+
                     Restaurant Table Management
+
                 </a>
+
             </li>
+
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Order" asp-action="Index">
+
+                <a class="nav-link @(controller == "Order" ? "active" : "")"
+                   asp-controller="Order"
+                   asp-action="Index">
+
                     Order
+
                 </a>
-            </li>
 
-
-
-            <li class="nav-item">
-                <a class="nav-link" asp-controller="Reports" asp-action="Index">
-                    Reports
-                </a>
             </li>
         }
 
         <!-- ================= OWNER ================= -->
         @if (User.IsInRole("Owner"))
         {
-            <li class="nav-title">Owner</li>
+            <li class="nav-title">
 
-            <li class="nav-item">
-                <a class="nav-link" asp-controller="Menu" asp-action="Index">
-                    Menu
-                </a>
+                Owner
+
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Reports" asp-action="Index">
-                    Sales Report
+
+                <a class="nav-link @(controller == "Menu" ? "active" : "")"
+                   asp-controller="Menu"
+                   asp-action="Index">
+
+                    Menu
+
                 </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link @(controller == "Reports" ? "active" : "")"
+                   asp-controller="Reports"
+                   asp-action="Index">
+
+                    Sales Report
+
+                </a>
+
             </li>
         }
 
         <!-- ================= WAITER ================= -->
         @if (User.IsInRole("Waiter"))
         {
-            <li class="nav-title">Waiter</li>
+            <li class="nav-title">
 
+                Waiter
 
-            <li class="nav-item">
-                <a class="nav-link" asp-controller="Table" asp-action="Index">
-                    Tables
-                </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Order" asp-action="Index">
-                    Order
+
+                <a class="nav-link @(controller == "Table" ? "active" : "")"
+                   asp-controller="Table"
+                   asp-action="Index">
+
+                    Tables
+
                 </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link @(controller == "Order" ? "active" : "")"
+                   asp-controller="Order"
+                   asp-action="Index">
+
+                    Order
+
+                </a>
+
             </li>
         }
 
         <!-- ================= CASHIER ================= -->
         @if (User.IsInRole("Cashier"))
         {
-            <li class="nav-title">Cashier</li>
+            <li class="nav-title">
 
-            <li class="nav-item">
-                <a class="nav-link" asp-controller="Billing" asp-action="Index">
-                    Billing
-                </a>
+                Cashier
+
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Payment" asp-action="Index">
-                    Payments
+
+                <a class="nav-link @(controller == "Billing" ? "active" : "")"
+                   asp-controller="Billing"
+                   asp-action="Index">
+
+                    Billing
+
                 </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link @(controller == "Payment" ? "active" : "")"
+                   asp-controller="Payment"
+                   asp-action="Index">
+
+                    Payments
+
+                </a>
+
             </li>
         }
 
         <!-- ================= KITCHEN ================= -->
         @if (User.IsInRole("KitchenStaff"))
         {
-            <li class="nav-title">Kitchen</li>
+            <li class="nav-title">
+
+                Kitchen
+
+            </li>
 
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Kitchen" asp-action="Index">
+
+                <a class="nav-link @(controller == "Kitchen" ? "active" : "")"
+                   asp-controller="Kitchen"
+                   asp-action="Index">
+
                     KDS Screen
+
                 </a>
+
             </li>
         }
-        <!-- COMMON DASHBOARD -->
+
+        <!-- PROFILE -->
 
         <li class="nav-item">
-            <a class="nav-link" asp-controller="Profile" asp-action=ProfileEdit">
+
+            <a class="nav-link @(controller == "Profile" ? "active" : "")"
+               asp-controller="Profile"
+               asp-action="ProfileEdit">
+
                 Profile Update
+
             </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" asp-controller="Authentication" asp-action="Logout">
-                Logout
-            </a>
+
         </li>
 
+        <!-- LOGOUT -->
+
+        <li class="nav-item">
+
+            <a class="nav-link"
+               asp-controller="Authentication"
+               asp-action="Logout">
+
+                Logout
+
+            </a>
+
+        </li>
 
     </ul>
-</div>
 
+</div>

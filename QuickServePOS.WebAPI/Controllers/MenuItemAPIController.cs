@@ -12,7 +12,7 @@ using QuickServePOS.Services.IService.Menu;
 
 namespace QuickServePOS.WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin,Owner")]
+    [Authorize(Roles = "Admin,Owner,Waiter,Cashier")]
     [Route("api/[controller]")]
     [ApiController]
     public class MenuItemAPIController : ControllerBase

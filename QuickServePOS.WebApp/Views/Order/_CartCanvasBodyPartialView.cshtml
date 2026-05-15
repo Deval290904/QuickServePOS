@@ -1,0 +1,68 @@
+﻿@using QuickServePOS.Models.ViewModel.Order
+@model OrderDetailsViewModel
+
+<!-- CART ITEMS -->
+
+<div id="cartItemsContainer">
+
+    @if (!Model.Items.Any())
+    {
+        <div class="text-center text-muted mt-5">
+
+            Cart Empty
+
+        </div>
+    }
+    else
+    {
+        @foreach (var item in Model.Items)
+        {
+            <partial name="_CartItemPartial"
+                     model="item" />
+        }
+    }
+
+</div>
+
+<hr />
+
+<!-- TOTALS -->
+
+<div class="cart-footer mt-auto">
+
+    <div class="d-flex justify-content-between mb-2">
+
+        <span class="fw-semibold">
+            Subtotal
+        </span>
+
+        <span class="fw-bold">
+
+            ₹ @Model.Subtotal
+
+        </span>
+
+    </div>
+
+    <div class="d-flex justify-content-between mb-3">
+
+        <span class="fw-semibold">
+            Total
+        </span>
+
+        <span class="fw-bold text-success">
+
+            ₹ @Model.TotalAmount
+
+        </span>
+
+    </div>
+
+    <button class="btn btn-success w-100"
+            id="confirmOrderBtn">
+
+        Confirm Order
+
+    </button>
+
+</div>

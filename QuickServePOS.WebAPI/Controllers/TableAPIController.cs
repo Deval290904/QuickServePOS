@@ -7,7 +7,7 @@ using QuickServePOS.Services.IService.Table;
 
 namespace QuickServePOS.WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Owner,Waiter,Cashier")]
     [Route("api/[controller]")]
     [ApiController]
     public class TableAPIController : ControllerBase

@@ -1,22 +1,12 @@
 ﻿$(document).ready(function () {
 
     // =========================
-    // DEFAULT CATEGORY
-    // =========================
-
-    $(".category-btn:first")
-        .addClass("active-category");
-
-    const firstCategory = $(".category-btn:first")
-        .data("category");
-
-    filterCategory(firstCategory);
-
-    // =========================
     // CATEGORY CLICK
     // =========================
 
     $(".category-btn").click(function () {
+
+        // ACTIVE BUTTON
 
         $(".category-btn")
             .removeClass("active-category");
@@ -24,14 +14,32 @@
         $(this)
             .addClass("active-category");
 
-        const categoryId = $(this)
-            .data("category");
+        // CATEGORY
 
-        filterCategory(categoryId);
+        const categoryId =
+            $(this).data("category");
+
+        // SHOW ALL
+
+        if (categoryId === "all") {
+
+            $(".menu-item-card")
+                .show();
+
+            return;
+        }
+
+        // FILTER ITEMS
+
+        $(".menu-item-card")
+            .hide();
+
+        $(`.menu-item-card[data-category='${categoryId}']`)
+            .show();
     });
 
     // =========================
-    // PLUS
+    // PLUS QTY
     // =========================
 
     $(document).on("click", ".plus-btn", function () {
@@ -39,13 +47,14 @@
         const input = $(this)
             .siblings(".qty-input");
 
-        let value = parseInt(input.val());
+        let value =
+            parseInt(input.val());
 
         input.val(value + 1);
     });
 
     // =========================
-    // MINUS
+    // MINUS QTY
     // =========================
 
     $(document).on("click", ".minus-btn", function () {
@@ -53,87 +62,100 @@
         const input = $(this)
             .siblings(".qty-input");
 
-        let value = parseInt(input.val());
+        let value =
+            parseInt(input.val());
 
         if (value > 1) {
             input.val(value - 1);
         }
     });
 
-});
+    // =========================
+    // ADD TO CART
+    // =========================
 
-// =========================
-// FILTER
-// =========================
+    $(document).on("click", ".add-cart-btn", function () {
 
-function filterCategory(categoryId) {
+        const button = $(this);
 
-    $(".menu-item-card").hide();
+        const orderId =
+            button.data("order-id");
 
-    $(`.menu-item-card[data-category='${categoryId}']`)
-        .fadeIn(200);
-}
+        const menuItemId =
+            button.data("id");
 
-// =========================
-// ADD TO CART
-// =========================
+        const quantity = button
+            .closest(".card-body")
+            .find(".qty-input")
+            .val();
 
-$(document).on("click", ".add-cart-btn", function () {
+        const dto = {
 
-    const button = $(this);
+            orderId: orderId,
 
-    const orderId = button.data("order-id");
+            menuItemId: menuItemId,
 
-    const menuItemId = button.data("id");
+            quantity: parseInt(quantity)
+        };
 
-    const quantity = button
-        .closest(".card-body")
-        .find(".qty-input")
-        .val();
+        $.ajax({
 
-    const dto = {
-        orderId: orderId,
-        menuItemId: menuItemId,
-        quantity: parseInt(quantity)
-    };
+            url: "/Order/AddItem",
 
-    $.ajax({
+            type: "POST",
 
-        url: "/Order/AddItem",
-        type: "POST",
-        data: dto,
+            data: dto,
 
-        success: function (response) {
+            success: function (response) {
 
-            reloadCart(orderId);
+                reloadCart(orderId);
 
-            showToast("Item added successfully");
+                showToast(
+                    "Item added successfully");
+            },
 
-        },
+            error: function () {
 
-        error: function () {
+                showToast(
+                    "Unable to add item",
+                    true);
+            }
+        });
 
-            showToast("Unable to add item", true);
-        }
     });
+
 });
 
+// =========================
+// RELOAD CART
+// =========================
 
 function reloadCart(orderId) {
-
-    $.get(`/Order/GetCart?orderId=${orderId}`,
+    $.get(
+        `/Order/GetCart?orderId=${orderId}`,
 
         function (html) {
-
-            $("#cartItemsContainer")
+            $("#cartCanvasContent")
                 .html(html);
 
             updateCartCount();
+
+            // OPEN CART
+
+            const offcanvas =
+                new bootstrap.Offcanvas(
+                    document.getElementById(
+                        "cartCanvas"));
+
+            offcanvas.show();
         });
 }
 
-function updateCartCount() {
+// =========================
+// CART COUNT
+// =========================
 
+function updateCartCount() {
     const count =
         $(".cart-item").length;
 
@@ -141,7 +163,12 @@ function updateCartCount() {
         .text(count);
 }
 
-function showToast(message, isError = false) {
+// =========================
+// TOAST
+// =========================
 
+function showToast(
+    message,
+    isError = false) {
     alert(message);
 }

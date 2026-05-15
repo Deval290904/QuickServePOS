@@ -11,7 +11,7 @@ using QuickServePOS.WebApp.HttpHelper;
 
 namespace QuickServePOS.WebApp.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Owner,Waiter,Cashier")]
     public class TableController : Controller
     {
         private readonly IApiHelper _apiHelper;

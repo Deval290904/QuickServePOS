@@ -67,7 +67,7 @@ namespace QuickServePOS.Services.Service.Order
                 {
                     table.Status = TableStatus.Occupied;
 
-                    _unitOfWork.Tables .Update(table);
+                    _unitOfWork.Tables.Update(table);
                 }
             }
 
@@ -260,6 +260,100 @@ namespace QuickServePOS.Services.Service.Order
 
             return
                 $"ORD-{DateTime.UtcNow:yyyyMMdd}-{(count + 1):D4}";
+        }
+
+        public async Task<ApiResponse> CompleteOrderAsync(int orderId)
+        {
+            var order = await _unitOfWork.Orders.GetByIdAsync(orderId);
+
+            if (order == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Order not found."
+                };
+            }
+
+            order.Status = OrderStatus.Completed;
+
+            _unitOfWork.Orders.Update(order);
+
+            // Free table
+
+            if (order.TableId.HasValue)
+            {
+                var table = await _unitOfWork.Tables
+                    .GetByIdAsync(order.TableId.Value);
+
+                if (table != null)
+                {
+                    table.Status = TableStatus.Available;
+
+                    _unitOfWork.Tables.Update(table);
+                }
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return new ApiResponse
+            {
+                Success = true,
+                Message = "Order completed successfully."
+            };
+        }
+
+        public async Task<bool> UpdateCartItemAsync(UpdateCartItemDto dto)
+        {
+            var orderItem = await _unitOfWork.OrderItems.GetByIdAsync(dto.OrderItemId);
+
+            if (orderItem == null)
+            {
+                return false;
+            }
+
+            orderItem.Quantity = dto.Quantity;
+
+            if (dto.SpecialInstruction != null)
+            {
+                orderItem.SpecialInstruction =
+                    dto.SpecialInstruction;
+            }
+            orderItem.TotalPrice =
+                orderItem.Quantity *
+                orderItem.UnitPrice;
+            _unitOfWork.OrderItems.Update(orderItem);
+
+            // RECALCULATE ORDER
+
+            var order = await _unitOfWork.Orders.GetOrderWithItemsAsync(orderItem.OrderId);
+
+            if (order == null)
+            {
+                return false;
+            }
+
+            RecalculateOrderTotals(order);
+
+            _unitOfWork.Orders.Update(order);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+
+        private void RecalculateOrderTotals(OrderEntity order)
+        {
+            order.Subtotal =
+                order.OrderItems
+                .Sum(x => x.TotalPrice);
+
+            // GST calculation later
+
+            order.TotalAmount =
+                order.Subtotal
+                + order.TaxAmount
+                - order.DiscountAmount;
         }
 
     }

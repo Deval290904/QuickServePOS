@@ -36,7 +36,8 @@
     <div class="d-flex align-items-center gap-2 mt-3">
 
         <button class="btn btn-sm btn-outline-secondary cart-minus-btn"
-                data-id="@Model.Id">
+                data-id="@Model.Id"
+                data-qty="@Model.Quantity">
 
             -
 
@@ -49,7 +50,8 @@
         </span>
 
         <button class="btn btn-sm btn-outline-secondary cart-plus-btn"
-                data-id="@Model.Id">
+                data-id="@Model.Id"
+                data-qty="@Model.Quantity">
 
             +
 
@@ -64,11 +66,12 @@
 
     </div>
 
-    <!-- NOTE -->
+    <!-- SPECIAL INSTRUCTION -->
 
     <textarea class="form-control mt-3 special-instruction"
+              data-id="@Model.Id"
+              data-qty="@Model.Quantity"
               rows="2"
-              placeholder="Special instruction"
-              data-id="@Model.Id">@Model.SpecialInstruction</textarea>
+              placeholder="Special instruction...">@Model.SpecialInstruction</textarea>
 
 </div>

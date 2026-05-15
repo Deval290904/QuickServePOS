@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace QuickServePOS.Models.ValidationModels.APISideValidation.OrderValidation
 {
-    public class OrderItemUpdateDtoValidation : AbstractValidator<OrderItemUpdateDto>
+    public class OrderItemUpdateDtoValidation : AbstractValidator<UpdateCartItemDto>
     {
         public OrderItemUpdateDtoValidation()
         {

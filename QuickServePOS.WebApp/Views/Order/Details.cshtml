@@ -4,7 +4,9 @@
 <div class="container-fluid py-3">
 
     <!-- HEADER -->
-
+    <input type="hidden"
+           id="currentOrderId"
+           value="@Model.Order.Id" />
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
@@ -28,11 +30,12 @@
         <!-- FLOATING CART BUTTON -->
 
         <button class="cart-btn"
+                type="button"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#cartCanvas">
 
-            <i class="fi fi-shopping-cart"></i>
-            
+            <i class="fa-solid fa-cart-shopping"></i>
+
             <span class="cart-count"
                   id="cartCount">
 
@@ -44,9 +47,17 @@
 
     </div>
 
+   
+
     <!-- CATEGORY BAR -->
 
     <div class="category-scroll mb-4">
+        <button class="category-btn active-category"
+                data-category="all">
+
+            All
+
+        </button>
 
         @foreach (var category in Model.Categories)
         {
@@ -82,4 +93,5 @@
 @section Scripts {
 
     <script src="~/js/Modules/order_details.js"></script>
+    <script src="~/js/Modules/cart.js"></script>
 }
