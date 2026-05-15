@@ -151,3 +151,51 @@ $(document).on(
                 reloadCart(orderId);
             });
     });
+
+$(document).on(
+    "click",
+    "#confirmOrderBtn",
+    function () {
+
+        const orderId =
+            $("#currentOrderId").val();
+
+        confirmOrder(orderId);
+    });
+function confirmOrder(orderId) {
+
+    $.ajax({
+
+        url:
+            `/Order/ConfirmOrder?orderId=${orderId}`,
+
+        type: "POST",
+
+        success: function (response) {
+
+            if (response.success) {
+
+                showSuccess(
+                    response.message);
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        "/Order/Index";
+
+                }, 1200);
+            }
+            else {
+
+                showError(
+                    response.message);
+            }
+        },
+
+        error: function () {
+
+            showError(
+                "Something went wrong.");
+        }
+    });
+}

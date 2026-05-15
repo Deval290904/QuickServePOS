@@ -132,6 +132,25 @@ namespace QuickServePOS.WebAPI.Controllers
             });
         }
 
+        [HttpPost("ConfirmOrder/{orderId}")]
+        public async Task<IActionResult> ConfirmOrder(int orderId)
+        {
+            var result = await _orderService.ConfirmOrderAsync(orderId);
+
+            if (!result)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,Message = "Unable to confirm order."
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true, Message = "Order confirmed successfully."
+            });
+        }
+
 
     }
 }

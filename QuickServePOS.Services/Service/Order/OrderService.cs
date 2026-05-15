@@ -255,11 +255,9 @@ namespace QuickServePOS.Services.Service.Order
         private async Task<string>
             GenerateOrderNoAsync()
         {
-            var count =
-                await _unitOfWork.Orders.CountAsync();
+            var count =await _unitOfWork.Orders.CountAsync();
 
-            return
-                $"ORD-{DateTime.UtcNow:yyyyMMdd}-{(count + 1):D4}";
+            return $"ORD-{DateTime.UtcNow:yyyyMMdd}-{(count + 1):D4}";
         }
 
         public async Task<ApiResponse> CompleteOrderAsync(int orderId)
@@ -366,6 +364,44 @@ namespace QuickServePOS.Services.Service.Order
             order.OrderItems.Remove(orderItem);
 
             RecalculateOrderTotals(order);
+
+            _unitOfWork.Orders.Update(order);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> ConfirmOrderAsync(int orderId)
+        {
+            var order = await _unitOfWork.Orders.GetOrderWithItemsAsync(orderId);
+
+            if (order == null)
+            {
+                return false;
+            }
+
+            // EMPTY CART VALIDATION
+
+            if (order.OrderItems == null ||!order.OrderItems.Any())
+            {
+                return false;
+            }
+
+            RecalculateOrderTotals(order);
+
+            // FIRST TIME ONLY
+
+            if (order.Status == OrderStatus.Running)
+            {
+                order.Status =OrderStatus.Confirmed;
+            }
+            // TABLE OCCUPIED
+
+            if (order.Table != null)
+            {
+                order.Table.Status =TableStatus.Occupied;
+            }
 
             _unitOfWork.Orders.Update(order);
 

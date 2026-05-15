@@ -51,7 +51,8 @@ namespace QuickServePOS.Repositories.Repositories
 
                 .FirstOrDefaultAsync(x =>
                     x.TableId == tableId &&
-                    x.Status == OrderStatus.Running);
+                    x.Status != OrderStatus.Completed &&
+                    x.Status != OrderStatus.Cancelled);
         }
 
         public async Task<OrderEntity?> GetOrderWithItemsAsync(
@@ -73,7 +74,8 @@ namespace QuickServePOS.Repositories.Repositories
             return await _AppDbcontext.Orders
                 .AnyAsync(x =>
                     x.TableId == tableId &&
-                    x.Status == OrderStatus.Running);
+                    x.Status != OrderStatus.Completed &&
+                    x.Status != OrderStatus.Cancelled);
         }
     }
 }

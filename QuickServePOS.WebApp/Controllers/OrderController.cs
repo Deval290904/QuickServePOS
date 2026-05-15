@@ -150,5 +150,13 @@ namespace QuickServePOS.WebApp.Controllers
 
             return Json(response);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmOrder(int orderId)
+        {
+            var response =await _apiHelper.PostDataAsync<Object,ApiResponse>($"OrderAPI/ConfirmOrder/{orderId}", new { });
+
+            return Json(response);
+        }
     }
 }

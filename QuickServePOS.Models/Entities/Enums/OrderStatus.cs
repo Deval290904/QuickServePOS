@@ -9,9 +9,17 @@ namespace QuickServePOS.Models.Entities.Enums
     public enum OrderStatus
     {
         Draft = 1,
+
         Running = 2,
-        Completed = 3,
-        Cancelled = 4,
-        Paid = 5
+
+        Confirmed = 3,
+
+        Preparing = 4,
+
+        Ready = 5,
+
+        Completed = 6,
+
+        Cancelled = 7
     }
 }
