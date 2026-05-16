@@ -24,6 +24,8 @@ namespace QuickServePOS.Repositories.UnitofWork
 
         public IOrderItemRepository OrderItems { get; }
 
+        public IKOTRepository KOTs { get; }
+
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
@@ -34,6 +36,7 @@ namespace QuickServePOS.Repositories.UnitofWork
             TableMerges = new TableMergeRepository(_context);
             Orders = new OrderRepository(_context);
             OrderItems = new OrderItemRepository(_context);
+            KOTs = new KOTRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()

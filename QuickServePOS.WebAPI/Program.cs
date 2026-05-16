@@ -10,17 +10,21 @@ using QuickServePOS.DbContextData.Data;
 using QuickServePOS.Models.Configurations;
 using QuickServePOS.Models.Entities.Auth;
 using QuickServePOS.Models.ValidationModels.APISideValidation.AuthValidation;
+using QuickServePOS.Repositories.IRepositories.IDapperHelper;
 using QuickServePOS.Repositories.IUnitofWork;
+using QuickServePOS.Repositories.Repositories.DapperHelper;
 using QuickServePOS.Repositories.UnitofWork;
 using QuickServePOS.Services.IService.Admin;
 using QuickServePOS.Services.IService.Auth;
 using QuickServePOS.Services.IService.Common;
+using QuickServePOS.Services.IService.KOT;
 using QuickServePOS.Services.IService.Menu;
 using QuickServePOS.Services.IService.Order;
 using QuickServePOS.Services.IService.Table;
 using QuickServePOS.Services.Service;
 using QuickServePOS.Services.Service.Auth;
 using QuickServePOS.Services.Service.Common;
+using QuickServePOS.Services.Service.KOT;
 using QuickServePOS.Services.Service.Menu;
 using QuickServePOS.Services.Service.Order;
 using QuickServePOS.Services.Service.Table;
@@ -217,7 +221,11 @@ namespace QuickServePOS.WebAPI
 
             builder.Services.AddScoped<IOrderService, OrderService>();
 
+            builder.Services.AddScoped<IKOTService, KOTService>();
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            builder.Services.AddScoped<IDapperRepository, DapperRepository>();
 
             builder.Services.AddAutoMapper(typeof(CategoryProfile));
 

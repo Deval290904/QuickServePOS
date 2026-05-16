@@ -23,6 +23,8 @@ namespace QuickServePOS.Repositories.IUnitofWork
 
         IOrderItemRepository OrderItems { get; }
 
+        IKOTRepository KOTs { get; }
+
         Task<int> SaveChangesAsync();
     }
 }

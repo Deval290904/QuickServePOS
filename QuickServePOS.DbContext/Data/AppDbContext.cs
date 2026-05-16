@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using QuickServePOS.Models.Entities.Auth;
 using QuickServePOS.Models.Entities.Common;
+using QuickServePOS.Models.Entities.KOT;
 using QuickServePOS.Models.Entities.Menu;
 using QuickServePOS.Models.Entities.Order;
 using QuickServePOS.Models.Entities.Table;
@@ -32,6 +33,10 @@ namespace QuickServePOS.DbContextData.Data
         public DbSet<OrderEntity> Orders { get; set; }
 
         public DbSet<OrderItemEntity> OrderItems { get; set; }
+
+        public DbSet<KOTEntity> KOTs { get; set; }
+
+        public DbSet<KOTItemEntity> KOTItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

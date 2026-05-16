@@ -1,5 +1,6 @@
 ﻿using QuickServePOS.Models.Entities.Common;
 using QuickServePOS.Models.Entities.Enums;
+using QuickServePOS.Models.Entities.KOT;
 using QuickServePOS.Models.Entities.Table;
 using System;
 using System.Collections.Generic;
@@ -35,5 +36,7 @@ namespace QuickServePOS.Models.Entities.Order
 
         public virtual ICollection<OrderItemEntity> OrderItems { get; set; }
             = new List<OrderItemEntity>();
+
+        public virtual ICollection<KOTEntity> KOTs { get; set; }= new List<KOTEntity>();
     }
 }

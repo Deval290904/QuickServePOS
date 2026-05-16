@@ -1,4 +1,5 @@
 ﻿using QuickServePOS.Models.Entities.Common;
+using QuickServePOS.Models.Entities.KOT;
 using QuickServePOS.Models.Entities.Menu;
 using System;
 using System.Collections.Generic;
@@ -31,5 +32,7 @@ namespace QuickServePOS.Models.Entities.Order
         public virtual OrderEntity Order { get; set; } = null!;
 
         public virtual MenuItemEntity MenuItem { get; set; } = null!;
+
+        public virtual ICollection<KOTItemEntity> KOTItems { get; set; }= new List<KOTItemEntity>();
     }
 }

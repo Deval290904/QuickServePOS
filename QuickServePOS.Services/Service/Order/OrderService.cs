@@ -4,6 +4,7 @@ using QuickServePOS.Models.DTO.Order;
 using QuickServePOS.Models.Entities.Enums;
 using QuickServePOS.Models.Entities.Order;
 using QuickServePOS.Repositories.IUnitofWork;
+using QuickServePOS.Services.IService.KOT;
 using QuickServePOS.Services.IService.Order;
 using System;
 using System.Collections.Generic;
@@ -16,12 +17,14 @@ namespace QuickServePOS.Services.Service.Order
     public class OrderService : IOrderService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IKOTService _kotService;
 
         private readonly IMapper _mapper;
 
-        public OrderService(IUnitOfWork unitOfWork, IMapper mapper)
+        public OrderService(IUnitOfWork unitOfWork, IKOTService kotService, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _kotService = kotService;
             _mapper = mapper;
         }
         public async Task<ApiResponse> CreateAsync(
@@ -410,14 +413,7 @@ namespace QuickServePOS.Services.Service.Order
 
                 order.ConfirmedAt =DateTime.UtcNow;
             }
-            // UPDATE CONFIRMED QTY
-
-            foreach (var item in newItems)
-            {
-                item.IsKOTGenerated = true;
-
-                item.ConfirmedQuantity = item.Quantity;
-            }
+         
 
             // TABLE OCCUPIED
 
@@ -431,6 +427,8 @@ namespace QuickServePOS.Services.Service.Order
             _unitOfWork.Orders.Update(order);
 
             await _unitOfWork.SaveChangesAsync();
+
+            await _kotService.GenerateKOTAsync(orderId);
 
             return true;
         }
