@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using QuickServePOS.Models.DTO.Admin;
+using QuickServePOS.Models.DTO.Common;
 using QuickServePOS.Services.IService.Admin;
 
 namespace QuickServePOS.WebAPI.Controllers
@@ -22,14 +23,22 @@ namespace QuickServePOS.WebAPI.Controllers
         public async Task<IActionResult> CreateStaff(CreateStaffAccountDto model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Validation failed"
+                });
+            }
 
             var result = await _adminService.CreateStaffAsync(model);
 
             if (!result.Success)
-                return BadRequest(result.Message);
+            {
+                return BadRequest(result);
+            }
 
-            return Ok(result.Message);
+            return Ok(result);
         }
 
         [HttpGet("RolesList")]

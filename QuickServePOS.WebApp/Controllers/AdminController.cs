@@ -66,7 +66,11 @@ namespace QuickServePOS.WebApp.Controllers
             {
                 return Json(new { success = false, message = result?.Message ?? "Staff creation failed." });
             }
-            return Json(new { success = true, message = "Staff created successfully" });
+            if (!result.Success)
+            {
+                return Json(new{ success = false, message = result.Message});
+            }
+            return Json(new { success = true, message= result.Message });
 
         }
 
