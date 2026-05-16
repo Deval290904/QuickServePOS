@@ -29,6 +29,8 @@ namespace QuickServePOS.Models.Entities.Order
 
         public string? Notes { get; set; }
 
+        public DateTime? ConfirmedAt{ get; set; }
+
         public virtual RestaurantTableEntity? Table { get; set; }
 
         public virtual ICollection<OrderItemEntity> OrderItems { get; set; }

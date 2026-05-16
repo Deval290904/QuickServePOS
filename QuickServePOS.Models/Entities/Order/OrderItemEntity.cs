@@ -22,6 +22,12 @@ namespace QuickServePOS.Models.Entities.Order
 
         public string? SpecialInstruction { get; set; }
 
+        // New property to track if KOT has been generated for this item
+        public bool IsKOTGenerated{ get; set;} = false;
+
+        public int ConfirmedQuantity{ get; set; } = 0;
+
+        //Navigation Properties
         public virtual OrderEntity Order { get; set; } = null!;
 
         public virtual MenuItemEntity MenuItem { get; set; } = null!;

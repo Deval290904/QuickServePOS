@@ -387,21 +387,46 @@ namespace QuickServePOS.Services.Service.Order
             {
                 return false;
             }
+            // FIND NEW ITEMS   
 
-            RecalculateOrderTotals(order);
+            var newItems = order.OrderItems
+                    .Where(x =>
+                        x.Quantity >
+                        x.ConfirmedQuantity)
+                        .ToList();
 
+            // NO NEW ITEMS
+
+            if (!newItems.Any())
+            {
+                return false;
+            }
+           
             // FIRST TIME ONLY
 
             if (order.Status == OrderStatus.Running)
             {
                 order.Status =OrderStatus.Confirmed;
+
+                order.ConfirmedAt =DateTime.UtcNow;
             }
+            // UPDATE CONFIRMED QTY
+
+            foreach (var item in newItems)
+            {
+                item.IsKOTGenerated = true;
+
+                item.ConfirmedQuantity = item.Quantity;
+            }
+
             // TABLE OCCUPIED
 
             if (order.Table != null)
             {
                 order.Table.Status =TableStatus.Occupied;
             }
+
+            RecalculateOrderTotals(order);
 
             _unitOfWork.Orders.Update(order);
 
