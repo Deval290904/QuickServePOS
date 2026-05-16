@@ -126,5 +126,14 @@ namespace QuickServePOS.Services.Service.KOT
 
             await _unitOfWork.SaveChangesAsync();
         }
+
+        public async Task UpdateKOTItemStatusAsync(int kotItemId,KitchenItemStatus status)
+        {
+            await _unitOfWork.KOTs.UpdateKOTItemStatusAsync(
+                    kotItemId,
+                    status);
+
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }

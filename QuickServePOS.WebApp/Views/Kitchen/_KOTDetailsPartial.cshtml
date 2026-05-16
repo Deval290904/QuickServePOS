@@ -1,0 +1,125 @@
+﻿@using QuickServePOS.Models.Entities.Enums
+@using QuickServePOS.Models.ViewModel.KOT
+@model KOTDetailsViewModel
+
+<div class="container-fluid">
+
+    <div class="mb-3">
+
+        <h5 class="fw-bold">
+            @Model.KOTNumber
+        </h5>
+
+        <p class="mb-1">
+            <strong>Table:</strong>
+            @Model.TableName
+        </p>
+
+        <p class="mb-1">
+            <strong>Status:</strong>
+            @Model.Status
+        </p>
+
+        <p class="mb-0">
+            <strong>Created:</strong>
+
+            @(Model.GeneratedAt
+                        .ToLocalTime()
+                        .ToString("dd-MM-yyyy hh:mm tt"))
+        </p>
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-hover">
+
+            <thead class="table-light">
+
+                <tr>
+                    <th>Item</th>
+                    <th width="80">Qty</th>
+                    <th width="120">Status</th>
+                    <th>Instruction</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @if (Model.Items.Any())
+                {
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+
+                            <td>
+                                @item.MenuItemName
+                            </td>
+
+                            <td>
+                                @item.Quantity
+                            </td>
+
+                            <td>
+
+                                <select class="form-select
+                                   item-status-dropdown
+                                   status-dropdown-width"
+                                        data-kot-item-id="@item.KOTItemId">
+
+                                    @foreach (KitchenItemStatus status in Enum.GetValues(typeof(KitchenItemStatus)))
+                                    {
+                                        var isSelected =item.Status == status.ToString();
+
+                                        if (isSelected)
+                                        {
+                                            <option value="@status" selected>
+                                                @status
+                                            </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@status">
+                                                @status
+                                            </option>
+                                        }
+                                    }
+
+                            </select>
+
+                        </td>
+
+                        <td>
+
+                            @(string.IsNullOrWhiteSpace(
+                                                    item.SpecialInstruction)
+                                                    ? "-"
+                                                    : item.SpecialInstruction)
+
+                    </td>
+
+                        </tr>
+                                }
+                }
+                else
+                {
+                    <tr>
+
+                        <td colspan="4"
+                            class="text-center">
+
+                            No items found.
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

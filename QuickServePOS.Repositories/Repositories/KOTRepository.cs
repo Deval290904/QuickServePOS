@@ -28,6 +28,7 @@ namespace QuickServePOS.Repositories.Repositories
         public async Task<KOTEntity?> GetKOTByIdAsync(int kotId)
         {
             return await _AppDbContext.KOTs
+                .Include(x => x.RestaurantTable)
                 .Include(x => x.KOTItems)
                 .ThenInclude(x => x.MenuItem)
                 .Include(x => x.Order)
@@ -102,6 +103,61 @@ namespace QuickServePOS.Repositories.Repositories
             var nextNumber = todayCount + 1;
 
             return $"KOT-{today:yyyyMMdd}-{nextNumber:D4}";
+        }
+
+        public async Task UpdateKOTItemStatusAsync(int kotItemId,KitchenItemStatus status)
+        {
+            var kotItem = await _AppDbContext.KOTItems
+                .Include(x => x.KOT)
+                .FirstOrDefaultAsync(
+                    x => x.KOTItemId == kotItemId);
+
+            if (kotItem == null)
+            {
+                return;
+            }
+
+            kotItem.Status = status;
+
+            switch (status)
+            {
+                case KitchenItemStatus.Preparing:
+
+                    kotItem.PreparingAt =DateTime.UtcNow;
+
+                    kotItem.KOT.Status =KOTStatus.Preparing;
+
+                    kotItem.KOT.PreparingAt =DateTime.UtcNow;
+
+                    break;
+
+                case KitchenItemStatus.Ready:
+
+                    kotItem.ReadyAt =DateTime.UtcNow;
+
+                    kotItem.PreparedQuantity = kotItem.Quantity;
+
+                    break;
+            }
+
+            // AUTO KOT READY CHECK
+
+            var kotItems = await _AppDbContext.KOTItems
+                .Where(x =>
+                    x.KOTId == kotItem.KOTId &&
+                    !x.IsDeleted)
+                .ToListAsync();
+
+            var allItemsReady =
+                    kotItems.All(x =>
+                    x.Status == KitchenItemStatus.Ready);
+
+            if (allItemsReady)
+            {
+                kotItem.KOT.Status =KOTStatus.Ready;
+
+                kotItem.KOT.ReadyAt =DateTime.UtcNow;
+            }
         }
 
     }

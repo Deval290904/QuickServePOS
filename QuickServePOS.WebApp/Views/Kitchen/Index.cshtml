@@ -1,0 +1,46 @@
+﻿@using QuickServePOS.Models.ViewModel.KOT
+@model List<KitchenQueueViewModel>
+
+@{
+    ViewData["Title"] = "Kitchen Queue";
+}
+
+<div class="container-fluid px-2">
+
+    <div class="card ">
+
+        <div class="card-header d-flex
+                    justify-content-between
+                    align-items-center">
+
+            <h4 class="mb-0">
+                Kitchen Queue
+            </h4>
+
+            <button class="btn btn-primary"
+                    id="refreshKitchenQueueBtn">
+
+                Refresh
+            </button>
+
+        </div>
+
+        <div class="card-body p-2">
+
+            <div id="kitchenQueueContainer">
+
+                <partial name="_KitchenQueuePartial"
+                         model="Model" />
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+<script src="~/js/modules/kitchen.js"></script>
+}

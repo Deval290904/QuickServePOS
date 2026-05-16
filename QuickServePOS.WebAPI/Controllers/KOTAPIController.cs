@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuickServePOS.Models.DTO.Common;
+using QuickServePOS.Models.DTO.KOT;
 using QuickServePOS.Models.Entities.Enums;
 using QuickServePOS.Services.IService.KOT;
 
@@ -67,7 +68,17 @@ namespace QuickServePOS.WebAPI.Controllers
             });
         }
 
+        [HttpPut("item-status")]
+        public async Task<IActionResult>UpdateKOTItemStatus(UpdateKOTItemStatusDto dto)
+        {
+            await _kotService.UpdateKOTItemStatusAsync(dto.KOTItemId,Enum.Parse<KitchenItemStatus>(dto.Status));
 
+            return Ok(new
+            {
+                success = true,
+                message = "Item status updated successfully."
+            });
+        }
 
 
     }

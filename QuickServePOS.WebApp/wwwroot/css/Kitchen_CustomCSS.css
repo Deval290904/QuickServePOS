@@ -1,0 +1,38 @@
+﻿.kitchen-kot-card {
+    border-radius: 10px;
+    min-height: 250px;
+    transition: 0.3s;
+}
+
+    .kitchen-kot-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .kitchen-kot-card .card-header {
+        padding: 10px 14px;
+    }
+
+    .kitchen-kot-card .card-body {
+        padding: 14px;
+    }
+
+    .kitchen-kot-card .card-footer {
+        padding: 10px 14px;
+    }
+
+    .kitchen-kot-card p {
+        margin-bottom: 10px;
+        font-size: 15px;
+    }
+
+    .kitchen-kot-card .btn {
+        min-width: 90px;
+    }
+
+.badge {
+    font-size: 13px;
+}
+
+.status-dropdown-width {
+    min-width: 120px;
+}
