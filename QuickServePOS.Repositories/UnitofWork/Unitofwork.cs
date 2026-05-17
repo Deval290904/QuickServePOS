@@ -19,12 +19,10 @@ namespace QuickServePOS.Repositories.UnitofWork
         public IFloorRepository Floors { get; }
         public ITableRepository Tables { get; }
         public ITableMergeRepository TableMerges { get; }
-
         public IOrderRepository Orders { get; }
-
         public IOrderItemRepository OrderItems { get; }
-
         public IKOTRepository KOTs { get; }
+        public IDashboardRepository Dashboard { get; }
 
         public UnitOfWork(AppDbContext context)
         {
@@ -37,6 +35,7 @@ namespace QuickServePOS.Repositories.UnitofWork
             Orders = new OrderRepository(_context);
             OrderItems = new OrderItemRepository(_context);
             KOTs = new KOTRepository(_context);
+            Dashboard = new DashboardRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()

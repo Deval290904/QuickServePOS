@@ -25,6 +25,8 @@ namespace QuickServePOS.Repositories.IUnitofWork
 
         IKOTRepository KOTs { get; }
 
+        IDashboardRepository Dashboard { get; }
+
         Task<int> SaveChangesAsync();
     }
 }

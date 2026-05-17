@@ -1,16 +1,28 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QuickServePOS.Models.ViewModel.Admin;
+using QuickServePOS.WebApp.HttpHelper;
 
 namespace QuickServePOS.WebApp.Controllers
 {
     [Authorize]
     public class DashBoardController : Controller
     {
-        public IActionResult Index()
+        private readonly IApiHelper _apiHelper;
+
+        public DashBoardController(IApiHelper apiHelper)
+        {
+            _apiHelper = apiHelper;
+        }
+        public async Task<IActionResult> Index()
         {
             if (User.IsInRole("Admin"))
-                return View("AdminDashboard");
+            {
+                var model = await _apiHelper.GetAsync<DashboardViewModel>("DashBoardAPI/summary");
 
+                return View("AdminDashboard", model);
+               
+            }
             if (User.IsInRole("Owner"))
                 return View("OwnerDashboard");
 

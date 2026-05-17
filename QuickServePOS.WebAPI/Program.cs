@@ -22,6 +22,7 @@ using QuickServePOS.Services.IService.Menu;
 using QuickServePOS.Services.IService.Order;
 using QuickServePOS.Services.IService.Table;
 using QuickServePOS.Services.Service;
+using QuickServePOS.Services.Service.Admin;
 using QuickServePOS.Services.Service.Auth;
 using QuickServePOS.Services.Service.Common;
 using QuickServePOS.Services.Service.KOT;
@@ -222,6 +223,8 @@ namespace QuickServePOS.WebAPI
             builder.Services.AddScoped<IOrderService, OrderService>();
 
             builder.Services.AddScoped<IKOTService, KOTService>();
+
+            builder.Services.AddScoped<IDashboardService,DashboardService>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
