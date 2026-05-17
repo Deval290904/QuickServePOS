@@ -23,5 +23,7 @@ namespace QuickServePOS.Repositories.IRepositories
         Task<string> GenerateKOTNumberAsync();
 
         Task UpdateKOTItemStatusAsync(int kotItemId,KitchenItemStatus status);
+
+        Task<List<KOTEntity>> GetReadyKOTsAsync();
     }
 }

@@ -63,30 +63,43 @@
 
                             <td>
 
-                                <select class="form-select
-                                   item-status-dropdown
-                                   status-dropdown-width"
-                                        data-kot-item-id="@item.KOTItemId">
+                                @if (Model.Status == "Ready")
+                                {
+                                    <span class="badge bg-success">
 
-                                    @foreach (KitchenItemStatus status in Enum.GetValues(typeof(KitchenItemStatus)))
-                                    {
-                                        var isSelected =item.Status == status.ToString();
+                                        @item.Status
 
-                                        if (isSelected)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <select class="form-select
+                                               item-status-dropdown
+                                               status-dropdown-width"
+                                            data-kot-item-id="@item.KOTItemId">
+
+                                        @foreach (KitchenItemStatus status in
+                                                                    Enum.GetValues(typeof(KitchenItemStatus)))
                                         {
-                                            <option value="@status" selected>
-                                                @status
-                                            </option>
-                                        }
-                                        else
-                                        {
-                                            <option value="@status">
-                                                @status
-                                            </option>
-                                        }
-                                    }
+                                            var isSelected =
+                                            item.Status == status.ToString();
 
-                            </select>
+                                            if (isSelected)
+                                            {
+                                                <option value="@status" selected>
+                                                    @status
+                                                </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@status">
+                                                    @status
+                                                </option>
+                                            }
+                                        }
+
+                                    </select>
+                                }
 
                         </td>
 

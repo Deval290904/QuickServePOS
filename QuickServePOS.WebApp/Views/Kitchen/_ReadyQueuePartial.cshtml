@@ -1,0 +1,110 @@
+﻿@using QuickServePOS.Models.ViewModel.KOT
+@model List<KitchenQueueViewModel >
+
+@if (Model.Any())
+{
+    <div class="row">
+
+        @foreach (var kot in Model)
+        {
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+
+                <div class="card
+                                    shadow-sm
+                                    kitchen-kot-card">
+
+                    <div class="card-header
+                                        bg-success
+                                        text-white">
+
+                        <div class="d-flex
+                                            justify-content-between">
+
+                            <strong>
+                                @kot.KOTNumber
+                            </strong>
+
+                            <span class="badge bg-light text-dark">
+
+                                @kot.Status
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <p>
+
+                            <strong>Table:</strong>
+
+                            @kot.TableName
+
+                        </p>
+
+                        <p>
+
+                            <strong>Total Items:</strong>
+
+                            @kot.TotalItems
+
+                        </p>
+
+                        <p>
+
+                            <strong>Ready At:</strong>
+
+                            @(kot.GeneratedAt
+                                                .ToLocalTime()
+                                                .ToString("hh:mm tt"))
+
+                </p>
+
+                    </div>
+
+
+                    <div class="card-footer
+                                        d-flex
+                                        gap-2
+                                        justify-content-between
+                                        flex-wrap">
+
+                        <button class="btn
+                                               btn-info
+                                               view-details-btn"
+                                data-kot-id="@kot.KOTId">
+
+                            Details
+
+                        </button>
+
+
+                        <button class="btn
+                                               btn-success
+                                               serve-kot-btn"
+                                data-kot-id="@kot.KOTId">
+
+                            Serve
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+
+        No ready KOTs available.
+
+    </div>
+}

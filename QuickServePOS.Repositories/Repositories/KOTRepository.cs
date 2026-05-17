@@ -60,11 +60,10 @@ namespace QuickServePOS.Repositories.Repositories
                 .ToListAsync();
         }
 
-        public async Task UpdateKOTStatusAsync(
-            int kotId,
-            KOTStatus status)
+        public async Task UpdateKOTStatusAsync(int kotId,KOTStatus status)
         {
             var kot = await _AppDbContext.KOTs
+                .Include(x => x.KOTItems)
                 .FirstOrDefaultAsync(x => x.KOTId == kotId);
 
             if (kot == null)
@@ -77,15 +76,33 @@ namespace QuickServePOS.Repositories.Repositories
             switch (status)
             {
                 case KOTStatus.Preparing:
+
                     kot.PreparingAt = DateTime.UtcNow;
+
+                    foreach (var item in kot.KOTItems)
+                    {
+                        if (item.Status ==KitchenItemStatus.Pending)
+                        {
+                            item.Status =
+                                KitchenItemStatus.Preparing;
+
+                            item.PreparingAt = DateTime.UtcNow;
+                        }
+                    }
                     break;
 
                 case KOTStatus.Ready:
-                    kot.ReadyAt = DateTime.UtcNow;
-                    break;
 
-                case KOTStatus.Served:
-                    kot.ServedAt = DateTime.UtcNow;
+                    kot.ReadyAt =DateTime.UtcNow;
+
+                    foreach (var item in kot.KOTItems)
+                    {
+                        item.Status = KitchenItemStatus.Ready;
+
+                        item.ReadyAt =DateTime.UtcNow;
+
+                        item.PreparedQuantity =item.Quantity;
+                    }
                     break;
             }
 
@@ -158,6 +175,23 @@ namespace QuickServePOS.Repositories.Repositories
 
                 kotItem.KOT.ReadyAt =DateTime.UtcNow;
             }
+        }
+
+        public async Task<List<KOTEntity>>GetReadyKOTsAsync()
+        {
+            return await _AppDbContext.KOTs
+
+                .Include(x => x.RestaurantTable)
+
+                .Include(x => x.KOTItems)
+
+                .Where(x =>
+                    x.Status == KOTStatus.Ready &&
+                    !x.IsDeleted)
+
+                .OrderBy(x => x.ReadyAt)
+
+                .ToListAsync();
         }
 
     }

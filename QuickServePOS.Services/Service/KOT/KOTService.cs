@@ -21,8 +21,7 @@ namespace QuickServePOS.Services.Service.KOT
 
         public async Task GenerateKOTAsync(int orderId)
         {
-            var order = await _unitOfWork.Orders
-                .GetOrderWithItemsAsync(orderId);
+            var order = await _unitOfWork.Orders.GetOrderWithItemsAsync(orderId);
 
             if (order == null)
             {
@@ -134,6 +133,50 @@ namespace QuickServePOS.Services.Service.KOT
                     status);
 
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<List<KitchenQueueDto>> GetReadyKOTsAsync()
+        {
+            var readyKOTs =
+                await _unitOfWork.KOTs.GetReadyKOTsAsync();
+
+            return _mapper.Map<List<KitchenQueueDto>>(readyKOTs);
+        }
+
+        public async Task<bool>ServeKOTAsync(int kotId)
+        {
+            var kot =await _unitOfWork.KOTs.GetKOTByIdAsync(kotId);
+
+            if (kot == null)
+            {
+                return false;
+            }
+
+            // KOT STATUS
+
+            kot.Status =KOTStatus.Served;
+
+            kot.ServedAt =DateTime.UtcNow;
+
+
+            // ORDER STATUS
+
+            if (kot.Order != null)
+            {
+                kot.Order.Status =OrderStatus.Completed;
+            }
+
+
+            // RELEASE TABLE
+
+            if (kot.RestaurantTable != null)
+            {
+                kot.RestaurantTable.Status = TableStatus.Available;
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
         }
     }
 }

@@ -20,5 +20,9 @@ namespace QuickServePOS.Services.IService.KOT
         Task UpdateKOTStatusAsync( int kotId,KOTStatus status);
 
         Task UpdateKOTItemStatusAsync(int kotItemId,KitchenItemStatus status);
+
+        Task<List<KitchenQueueDto>> GetReadyKOTsAsync();
+
+        Task<bool>ServeKOTAsync(int kotId);
     }
 }

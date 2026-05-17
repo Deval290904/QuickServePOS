@@ -2,30 +2,36 @@
 @model List<KitchenQueueViewModel>
 
 @{
-    ViewData["Title"] = "Kitchen Queue";
+    ViewData["Title"] = "Ready Queue";
 }
 
 <div class="container-fluid px-2">
 
-    <div class="card ">
+    <div class="card">
 
         <div class="card-header d-flex
                     justify-content-between
                     align-items-center">
 
             <h4 class="mb-0">
-                Kitchen Queue
+
+                Ready Orders Queue
+
             </h4>
+
 
             <div class="d-flex gap-2">
 
-                <a asp-controller="Kitchen"
-                   asp-action="Index"
-                   class="btn btn-dark">
+                @if (User.IsInRole("KitchenStaff"))
+                {
+                    <a asp-controller="Kitchen"
+                       asp-action="Index"
+                       class="btn btn-dark">
 
-                    Kitchen Queue
+                        Kitchen Queue
 
-                </a>
+                    </a>
+                }
 
 
                 <a asp-controller="Kitchen"
@@ -38,7 +44,7 @@
 
 
                 <button class="btn btn-primary"
-                        id="refreshKitchenQueueBtn">
+                        id="refreshReadyQueueBtn">
 
                     Refresh
 
@@ -48,11 +54,12 @@
 
         </div>
 
+
         <div class="card-body p-2">
 
-            <div id="kitchenQueueContainer">
+            <div id="readyQueueContainer">
 
-                <partial name="_KitchenQueuePartial"
+                <partial name="_ReadyQueuePartial"
                          model="Model" />
 
             </div>
@@ -65,5 +72,6 @@
 
 @section Scripts
 {
-<script src="~/js/modules/kitchen.js"></script>
+    <script src="~/js/modules/ready_card.js">
+    </script>
 }

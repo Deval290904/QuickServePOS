@@ -8,7 +8,7 @@ using QuickServePOS.WebApp.HttpHelper;
 
 namespace QuickServePOS.WebApp.Controllers
 {
-    [Authorize(Roles ="Admin,KitchenStaff")]
+    [Authorize(Roles ="Admin,KitchenStaff,Waiter")]
     public class KitchenController : Controller
     {
         private readonly IApiHelper _apiHelper;
@@ -84,6 +84,40 @@ namespace QuickServePOS.WebApp.Controllers
             }
 
             return Json(new {success = true,message ="Item status updated successfully." });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult>ReadyQueue()
+        {
+            var response = await _apiHelper.GetAsync<ApiDataResponse<List<KitchenQueueDto>>>("KOTAPI/ready-queue");
+
+            var viewModel = _mapper.Map< List<KitchenQueueViewModel>>( response?.Data ?? new());
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult>ReadyQueuePartial()
+        {
+            var response =
+                await _apiHelper.GetAsync<ApiDataResponse<List<KitchenQueueDto>>>("KOTAPI/ready-queue");
+
+            var viewModel =_mapper.Map<List<KitchenQueueViewModel>>(response?.Data ?? new());
+
+            return PartialView("_ReadyQueuePartial",viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult>ServeKOT(int kotId)
+        {
+            var result = await _apiHelper.PutAsync($"KOTAPI/{kotId}/serve");
+
+            if (!result.Success)
+            {
+                return Json(new{success = false, message ="Failed to serve KOT."});
+            }
+
+            return Json(new{success = true,message = "KOT served successfully." });
         }
     }
 }

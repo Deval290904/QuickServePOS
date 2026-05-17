@@ -8,7 +8,7 @@ using QuickServePOS.Services.IService.KOT;
 
 namespace QuickServePOS.WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin,KitchenStaff")]
+    [Authorize(Roles = "Admin,KitchenStaff,Waiter")]
     [Route("api/[controller]")]
     [ApiController]
     public class KOTAPIController : ControllerBase
@@ -78,6 +78,34 @@ namespace QuickServePOS.WebAPI.Controllers
                 success = true,
                 message = "Item status updated successfully."
             });
+        }
+
+        [HttpGet("ready-queue")]
+        public async Task<IActionResult>GetReadyQueue()
+        {
+            var readyKOTs =await _kotService.GetReadyKOTsAsync();
+
+            return Ok(new ApiDataResponse<List<KitchenQueueDto>>
+            {
+                Success = true,
+
+                Data = readyKOTs,
+
+                Message ="Ready KOTs fetched successfully."
+            });
+        }
+
+        [HttpPut("{kotId}/serve")]
+        public async Task<IActionResult>ServeKOT(int kotId)
+        {
+            var result = await _kotService.ServeKOTAsync(kotId);
+
+            if (!result)
+            {
+                return BadRequest(new ApiResponse{ Success = false, Message ="Failed to serve KOT."});
+            }
+
+            return Ok(new ApiResponse{Success = true,Message ="KOT served successfully."});
         }
 
 
