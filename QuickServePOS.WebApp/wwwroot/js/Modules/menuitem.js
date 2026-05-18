@@ -17,7 +17,7 @@ function loadActiveMenuItems() {
             document.getElementById("menuItemTableContainer").innerHTML = html;
 
             initializeDataTable("#menuItemTable");
-
+            
         });
 }
 

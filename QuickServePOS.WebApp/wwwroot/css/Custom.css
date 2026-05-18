@@ -19,3 +19,9 @@
 .header {
     border-bottom: 2px solid #f7681b;
 }
+
+.active-filter-btn {
+    transform: scale(1.03);
+    transition: 0.2s ease-in-out;
+    font-weight: 600;
+}

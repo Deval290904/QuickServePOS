@@ -142,7 +142,7 @@ namespace QuickServePOS.WebApp.Controllers
 
             ViewBag.IsTrash = true;
 
-            return PartialView( "_FloorTablePartialView", model);
+            return PartialView("_FloorTablePartialView", model);
         }
 
         [HttpPost]
