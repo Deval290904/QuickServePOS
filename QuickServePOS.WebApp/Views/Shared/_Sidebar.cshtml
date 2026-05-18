@@ -33,7 +33,7 @@
 
         <li class="nav-item">
 
-            <a class="nav-link @(controller == "Dashboard" ? "active" : "")"
+            <a class="nav-link @(controller == "DashBoard" ? "active" : "")"
                asp-controller="Dashboard"
                asp-action="Index">
 
@@ -147,7 +147,7 @@
             <li class="nav-item">
 
                 <a class="nav-link @(controller == "Menu" ? "active" : "")"
-                   asp-controller="Menu"
+                   asp-controller="MenuItem"
                    asp-action="Index">
 
                     Menu
@@ -156,7 +156,7 @@
 
             </li>
 
-            <li class="nav-item">
+            @* <li class="nav-item">
 
                 <a class="nav-link @(controller == "Reports" ? "active" : "")"
                    asp-controller="Reports"
@@ -166,7 +166,7 @@
 
                 </a>
 
-            </li>
+            </li> *@
         }
 
         <!-- ================= WAITER ================= -->
@@ -178,7 +178,7 @@
 
             </li>
 
-            <li class="nav-item">
+            @* <li class="nav-item">
 
                 <a class="nav-link @(controller == "Table" ? "active" : "")"
                    asp-controller="Table"
@@ -188,7 +188,7 @@
 
                 </a>
 
-            </li>
+            </li> *@
 
             <li class="nav-item">
 
@@ -223,7 +223,7 @@
 
             </li>
 
-            <li class="nav-item">
+            @* <li class="nav-item">
 
                 <a class="nav-link @(controller == "Billing" ? "active" : "")"
                    asp-controller="Billing"
@@ -233,9 +233,9 @@
 
                 </a>
 
-            </li>
+            </li> *@
 
-            <li class="nav-item">
+            @* <li class="nav-item">
 
                 <a class="nav-link @(controller == "Payment" ? "active" : "")"
                    asp-controller="Payment"
@@ -245,7 +245,7 @@
 
                 </a>
 
-            </li>
+            </li> *@
             <li class="nav-item">
 
                 <a class="nav-link @(controller == "Kitchen" ? "active" : "")"

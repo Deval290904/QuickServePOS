@@ -16,24 +16,25 @@ namespace QuickServePOS.WebApp.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            var model = await _apiHelper.GetAsync<DashboardViewModel>("DashBoardAPI/summary");
             if (User.IsInRole("Admin"))
             {
-                var model = await _apiHelper.GetAsync<DashboardViewModel>("DashBoardAPI/summary");
+                //var model = await _apiHelper.GetAsync<DashboardViewModel>("DashBoardAPI/summary");
 
                 return View("AdminDashboard", model);
                
             }
             if (User.IsInRole("Owner"))
-                return View("OwnerDashboard");
+                return View("OwnerDashboard",model);
 
             if (User.IsInRole("Waiter"))
-                return View("WaiterDashboard");
+                return View("WaiterDashboard",model);
 
             if (User.IsInRole("Cashier"))
-                return View("CashierDashboard");
+                return View("CashierDashboard",model);
 
             if (User.IsInRole("KitchenStaff"))
-                return View("KitchenDashboard");
+                return View("KitchenDashboard", model);
 
             if (User.IsInRole("Customer"))
                 return View("CustomerDashboard");

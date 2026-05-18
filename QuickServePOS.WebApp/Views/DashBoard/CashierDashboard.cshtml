@@ -1,8 +1,80 @@
-﻿
-@{
-    ViewData["Title"] = "CashierDashboard";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+﻿@using QuickServePOS.Models.ViewModel.Admin
+@model DashboardViewModel
 
-<h1>CashierDashboard</h1>
+<!-- KPI CARDS -->
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- TOTAL ORDERS -->
+
+        <div class="col-sm-6 col-xl-3 mb-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <div class="text-medium-emphasis small">
+                                Total Orders
+                            </div>
+
+                            <div class="fs-3 fw-semibold">
+                                @(Model?.TotalOrders ?? 0)
+                            </div>
+
+                        </div>
+
+                        <div class="bg-primary bg-opacity-10 p-3 rounded">
+
+                            <i class="fa-solid fa-cart-shopping fs-3 text-primary"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PENDING ORDERS -->
+
+        <div class="col-sm-6 col-xl-3 mb-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <div class="text-medium-emphasis small">
+                                Pending Orders
+                            </div>
+
+                            <div class="fs-3 fw-semibold">
+                                @(Model?.PendingOrders ?? 0)
+                            </div>
+
+                        </div>
+
+                        <div class="bg-warning bg-opacity-10 p-3 rounded">
+
+                            <i class="fa-solid fa-clock fs-3 text-warning"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
 

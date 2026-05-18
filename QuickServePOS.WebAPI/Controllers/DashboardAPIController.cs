@@ -8,7 +8,7 @@ using QuickServePOS.Services.IService.Admin;
 
 namespace QuickServePOS.WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin,Manager")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DashboardAPIController : ControllerBase
